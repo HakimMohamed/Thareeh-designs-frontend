@@ -11,6 +11,10 @@ import {
   DropdownMenu,
   Avatar,
   Input,
+  Popover,
+  PopoverTrigger,
+  Badge,
+  PopoverContent,
 } from "@nextui-org/react";
 import {
   ChevronDown,
@@ -20,7 +24,8 @@ import {
   Server,
   TagUser,
   Scale,
-} from "./Icons.jsx";
+  Cart,
+} from "./icons/Icons.jsx";
 import { PrinterLogo } from "./PrinterLogo.jsx";
 import { SearchIcon } from "./SearchIcon.jsx";
 
@@ -81,6 +86,15 @@ export default function App() {
     ),
     user: (
       <TagUser
+        className="text-danger"
+        fill="currentColor"
+        size={30}
+        height={undefined}
+        width={undefined}
+      />
+    ),
+    cart: (
+      <Cart
         className="text-danger"
         fill="currentColor"
         size={30}
@@ -177,6 +191,7 @@ export default function App() {
       </NavbarContent>
 
       <NavbarContent as="div" className="items-center" justify="end">
+        {/* Search Input */}
         <Input
           classNames={{
             base: "max-w-full sm:max-w-[20rem] h-10",
@@ -192,6 +207,40 @@ export default function App() {
           }
           type="search"
         />
+
+        {/* Cart Icon with Badge and Popover */}
+        <Popover placement="bottom-end">
+          <PopoverTrigger>
+            <Button className="relative bg-transparent">
+              <Badge
+                color="primary"
+                content={3} // The number of items in the cart
+                className="absolute "
+              >
+                <Cart size={24} />
+              </Badge>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="p-4 w-64">
+              <h4 className="text-lg font-semibold">Cart</h4>
+              <p className="text-sm text-gray-500">
+                You have 3 items in your cart.
+              </p>
+              {/* Cart items would go here */}
+              <div className="mt-2 flex justify-between space-x-2">
+                <Button color="primary" size="sm">
+                  View Cart
+                </Button>
+                <Button color="secondary" size="sm">
+                  Checkout
+                </Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* User Avatar and Dropdown */}
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
