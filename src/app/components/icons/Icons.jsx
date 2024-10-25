@@ -216,10 +216,11 @@ export const Scale = ({
   );
 };
 export const Cart = ({
-  fill = "currentColor",
+  fill = "none",
   size = 24,
   height = size,
   width = size,
+  stroke = "currentColor",
   ...props
 }) => {
   return (
@@ -229,12 +230,12 @@ export const Cart = ({
       height={height}
       viewBox="0 0 24 24"
       fill={fill}
-      stroke="currentColor"
-      strokeWidth="2" // camelCase
-      strokeLinecap="round" // camelCase
-      strokeLinejoin="round" // camelCase
-      className="icon icon-tabler icon-tabler-basket" // class -> className
-      {...props} // Spread any additional props
+      stroke={stroke}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="icon icon-tabler icons-tabler-outline icon-tabler-basket"
+      {...props}
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M10 14a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />

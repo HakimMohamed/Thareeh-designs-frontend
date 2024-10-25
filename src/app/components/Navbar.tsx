@@ -215,7 +215,7 @@ export default function App() {
               <Badge
                 color="primary"
                 content={3} // The number of items in the cart
-                className="absolute "
+                className="absolute w-1 h-1 top-0 right-0"
               >
                 <Cart size={24} />
               </Badge>
