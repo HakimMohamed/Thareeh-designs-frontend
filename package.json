@@ -1,5 +1,5 @@
 {
-  "name": "print-ecommerce",
+  "name": "thareeh-designs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.8",
+    "@tabler/icons-react": "^3.21.0",
     "framer-motion": "^11.11.9",
     "next": "15.0.1",
     "react": "^18.3.1",

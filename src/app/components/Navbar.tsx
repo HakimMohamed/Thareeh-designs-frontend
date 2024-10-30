@@ -28,6 +28,15 @@ import {
 } from "./icons/Icons.jsx";
 import { PrinterLogo } from "./PrinterLogo.jsx";
 import { SearchIcon } from "./SearchIcon.jsx";
+import {
+  IconCreditCard,
+  IconHearts,
+  IconHomeLink,
+  IconLifebuoy,
+  IconLogout,
+  IconPackage,
+  IconUserCircle,
+} from "@tabler/icons-react";
 
 export default function App() {
   const icons = {
@@ -109,16 +118,18 @@ export default function App() {
       <NavbarContent justify="start">
         <Button
           className="bg-transparent py-2 px-4 rounded transition-colors"
-          size="sm"
+          size="lg"
         >
           <NavbarBrand className="mr-4">
-            <PrinterLogo />
-            <p className="hidden sm:block font-bold text-inherit">
-              Thareeh Designs
-            </p>
+            <div className="flex items-center">
+              <PrinterLogo />
+              <p className="hidden sm:block font-bold text-inherit">
+                Thareeh Designs
+              </p>
+            </div>
           </NavbarBrand>
         </Button>
-        <NavbarContent className="hidden sm:flex gap-3">
+        <NavbarContent className="hidden sm:flex gap-9">
           <Dropdown>
             <NavbarItem>
               <DropdownTrigger>
@@ -129,7 +140,7 @@ export default function App() {
                   radius="sm"
                   variant="light"
                 >
-                  Features
+                  Cool
                 </Button>
               </DropdownTrigger>
             </NavbarItem>
@@ -178,13 +189,13 @@ export default function App() {
             </DropdownMenu>
           </Dropdown>
           <NavbarItem isActive>
-            <Link href="#" aria-current="page" color="secondary">
+            <Link href="#" aria-current="page">
               Customers
             </Link>
           </NavbarItem>
           <NavbarItem>
             <Link color="foreground" href="#">
-              Integrations
+              Option3 selected
             </Link>
           </NavbarItem>
         </NavbarContent>
@@ -250,21 +261,78 @@ export default function App() {
               color="secondary"
               name="JH"
               size="sm"
+              style={{ borderRadius: "50%", width: "45px", height: "32px" }}
             />
           </DropdownTrigger>
+
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">zoey@example.com</p>
+              <p className="font-semibold">010-1234-5678</p>
             </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              Log Out
+            <DropdownItem key="my-orders">
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="flex items-center gap-2">
+                  {/* Imported Wallet icon */}
+                  <IconPackage size={24} stroke={1} />
+                  <p>My Orders</p>
+                </div>
+              </div>
+            </DropdownItem>
+            <DropdownItem key="addreesses">
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="flex items-center gap-2">
+                  {/* Imported Wallet icon */}
+                  <IconHomeLink size={24} stroke={1} />
+                  <p>Addreesses</p>
+                </div>
+              </div>
+            </DropdownItem>
+
+            <DropdownItem key="favorites">
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="flex items-center gap-2">
+                  <IconHearts size={24} stroke={1} />
+                  <p>Favorites</p>
+                </div>
+              </div>
+            </DropdownItem>
+
+            <DropdownItem key="payment">
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="flex items-center gap-2">
+                  <IconCreditCard size={24} stroke={1} />
+                  <p>Payment</p>
+                </div>
+              </div>
+            </DropdownItem>
+            <DropdownItem key="account">
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="flex items-center gap-2">
+                  <IconUserCircle size={24} stroke={1} />
+                  <p>Account</p>
+                </div>
+              </div>
+            </DropdownItem>
+            <DropdownItem key="support">
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="flex items-center gap-2">
+                  <IconLifebuoy size={24} stroke={1} />
+                  <p>Support</p>
+                </div>
+              </div>
+            </DropdownItem>
+
+            <DropdownItem
+              key="logout"
+              className="text-red-600 hover:text-red-700"
+            >
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="flex items-center gap-2">
+                  <IconLogout size={24} stroke={1} />
+                  <p>Logout</p>
+                </div>
+              </div>
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
