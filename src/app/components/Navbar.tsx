@@ -37,6 +37,7 @@ import {
   IconPackage,
   IconUserCircle,
 } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
 
 export default function App() {
   const icons = {
@@ -112,36 +113,62 @@ export default function App() {
       />
     ),
   };
+  const pathname = usePathname();
 
+  const isActivePathStartsWith = (path: string) => {
+    return pathname.startsWith(path);
+  };
   return (
-    <Navbar isBordered>
-      <NavbarContent justify="start">
-        <Button
-          className="bg-transparent py-2 px-4 rounded transition-colors"
-          size="lg"
-        >
-          <NavbarBrand className="mr-4">
-            <div className="flex items-center">
-              <PrinterLogo />
-              <p className="hidden sm:block font-bold text-inherit">
-                Thareeh Designs
-              </p>
-            </div>
-          </NavbarBrand>
-        </Button>
+    <Navbar
+      isBordered
+      classNames={{
+        item: [
+          "flex",
+          "relative",
+          "h-full",
+          "items-center",
+          "data-[active=true]:after:content-['']",
+          "data-[active=true]:after:absolute",
+          "data-[active=true]:after:bottom-0",
+          "data-[active=true]:after:left-0",
+          "data-[active=true]:after:right-0",
+          "data-[active=true]:after:h-[2px]",
+          "data-[active=true]:after:rounded-[2px]",
+          "data-[active=true]:after:bg-primary",
+        ],
+      }}
+    >
+      <NavbarContent justify="start" className="mr-8">
+        <Link href="/">
+          <Button
+            className="bg-transparent py-2 px-4 rounded transition-colors"
+            size="lg"
+          >
+            <NavbarBrand className="mr-4">
+              <div className="flex items-center">
+                <PrinterLogo />
+                <p className="hidden sm:block font-bold text-inherit">
+                  Thareeh Designs
+                </p>
+              </div>
+            </NavbarBrand>
+          </Button>
+        </Link>
         <NavbarContent className="hidden sm:flex gap-9">
           <Dropdown>
-            <NavbarItem>
+            <NavbarItem isActive={isActivePathStartsWith("/collections")}>
               <DropdownTrigger>
-                <Button
-                  disableRipple
-                  className="p-0 bg-transparent data-[hover=true]:bg-transparent"
-                  endContent={icons.chevron}
-                  radius="sm"
-                  variant="light"
-                >
-                  Cool
-                </Button>
+                <Link href="/collections">
+                  <Button
+                    disableRipple
+                    className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                    endContent={icons.chevron}
+                    radius="sm"
+                    variant="light"
+                  >
+                    Categories
+                  </Button>
+                </Link>
               </DropdownTrigger>
             </NavbarItem>
             <DropdownMenu
@@ -188,14 +215,14 @@ export default function App() {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page">
-              Customers
+          <NavbarItem isActive={isActivePathStartsWith("/deals")}>
+            <Link href="/deals">
+              <Button className="bg-transparent">Deals</Button>
             </Link>
           </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Option3 selected
+          <NavbarItem isActive={isActivePathStartsWith("/test2")}>
+            <Link href="/test2">
+              <Button className="bg-transparent">test2</Button>
             </Link>
           </NavbarItem>
         </NavbarContent>
@@ -260,8 +287,12 @@ export default function App() {
               className="transition-transform"
               color="secondary"
               name="JH"
-              size="sm"
-              style={{ borderRadius: "50%", width: "45px", height: "32px" }}
+              style={{
+                borderRadius: "50%",
+                width: "45px",
+                height: "45px",
+                flexShrink: 0,
+              }}
             />
           </DropdownTrigger>
 
@@ -279,12 +310,12 @@ export default function App() {
                 </div>
               </div>
             </DropdownItem>
-            <DropdownItem key="addreesses">
+            <DropdownItem key="addresses">
               <div className="flex justify-between items-center w-full gap-4">
                 <div className="flex items-center gap-2">
                   {/* Imported Wallet icon */}
                   <IconHomeLink size={24} stroke={1} />
-                  <p>Addreesses</p>
+                  <p>Addresses</p>
                 </div>
               </div>
             </DropdownItem>
