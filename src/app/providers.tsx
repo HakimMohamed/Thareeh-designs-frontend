@@ -13,10 +13,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="flex flex-col items-center w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="w-full mb-4">
+          {children}
+          <div className="w-full">
             <Filters />
           </div>
-          {children}
         </div>
       </div>
     </NextUIProvider>

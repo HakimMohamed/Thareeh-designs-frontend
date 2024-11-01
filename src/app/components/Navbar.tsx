@@ -15,6 +15,9 @@ import {
   PopoverTrigger,
   Badge,
   PopoverContent,
+  NavbarMenu,
+  NavbarMenuToggle,
+  NavbarMenuItem,
 } from "@nextui-org/react";
 import {
   ChevronDown,
@@ -35,9 +38,9 @@ import {
   IconLifebuoy,
   IconLogout,
   IconPackage,
-  IconUserCircle,
 } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function App() {
   const icons = {
@@ -118,9 +121,18 @@ export default function App() {
   const isActivePathStartsWith = (path: string) => {
     return pathname.startsWith(path);
   };
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuItems = [
+    { title: "home", path: "/" },
+    { title: "Categories", path: "/categories" },
+    { title: "Deals", path: "/deals" },
+    { title: "Test2", path: "/test2" },
+  ];
   return (
     <Navbar
       isBordered
+      onMenuOpenChange={setIsMenuOpen}
       classNames={{
         item: [
           "flex",
@@ -139,6 +151,10 @@ export default function App() {
       }}
     >
       <NavbarContent justify="start" className="mr-8">
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="sm:hidden"
+        />
         <Link href="/">
           <Button
             className="bg-transparent py-2 px-4 rounded transition-colors"
@@ -154,6 +170,8 @@ export default function App() {
             </NavbarBrand>
           </Button>
         </Link>
+
+        {/* Visible when screen is large */}
         <NavbarContent className="hidden sm:flex gap-9">
           <Dropdown>
             <NavbarItem isActive={isActivePathStartsWith("/collections")}>
@@ -171,13 +189,7 @@ export default function App() {
                 </Link>
               </DropdownTrigger>
             </NavbarItem>
-            <DropdownMenu
-              aria-label="ACME features"
-              className="w-[340px]"
-              itemClasses={{
-                base: "gap-4",
-              }}
-            >
+            <DropdownMenu aria-label="ACME features" className="w-[340px]">
               <DropdownItem
                 key="autoscaling"
                 description="ACME scales apps to meet user demand, automagically, based on load."
@@ -232,7 +244,7 @@ export default function App() {
         {/* Search Input */}
         <Input
           classNames={{
-            base: "max-w-full sm:max-w-[20rem] h-10",
+            base: "max-w-full sm:max-w-[20rem] h-10 hidden sm:flex",
             mainWrapper: "h-full",
             input: "text-small",
             inputWrapper:
@@ -265,7 +277,6 @@ export default function App() {
               <p className="text-sm text-gray-500">
                 You have 3 items in your cart.
               </p>
-              {/* Cart items would go here */}
               <div className="mt-2 flex justify-between space-x-2">
                 <Button color="primary" size="sm">
                   View Cart
@@ -289,8 +300,8 @@ export default function App() {
               name="JH"
               style={{
                 borderRadius: "50%",
-                width: "45px",
-                height: "45px",
+                width: "35px",
+                height: "35px",
                 flexShrink: 0,
               }}
             />
@@ -302,72 +313,59 @@ export default function App() {
               <p className="font-semibold">010-1234-5678</p>
             </DropdownItem>
             <DropdownItem key="my-orders">
-              <div className="flex justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2">
-                  {/* Imported Wallet icon */}
-                  <IconPackage size={24} stroke={1} />
-                  <p>My Orders</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <IconPackage size={24} stroke={1} />
+                <p>My Orders</p>
               </div>
             </DropdownItem>
             <DropdownItem key="addresses">
-              <div className="flex justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2">
-                  {/* Imported Wallet icon */}
-                  <IconHomeLink size={24} stroke={1} />
-                  <p>Addresses</p>
-                </div>
-              </div>
-            </DropdownItem>
-
-            <DropdownItem key="favorites">
-              <div className="flex justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2">
-                  <IconHearts size={24} stroke={1} />
-                  <p>Favorites</p>
-                </div>
-              </div>
-            </DropdownItem>
-
-            <DropdownItem key="payment">
-              <div className="flex justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2">
-                  <IconCreditCard size={24} stroke={1} />
-                  <p>Payment</p>
-                </div>
-              </div>
-            </DropdownItem>
-            <DropdownItem key="account">
-              <div className="flex justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2">
-                  <IconUserCircle size={24} stroke={1} />
-                  <p>Account</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <IconHomeLink size={24} stroke={1} />
+                <p>Addresses</p>
               </div>
             </DropdownItem>
             <DropdownItem key="support">
-              <div className="flex justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2">
-                  <IconLifebuoy size={24} stroke={1} />
-                  <p>Support</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <IconLifebuoy size={24} stroke={1} />
+                <p>Support</p>
               </div>
             </DropdownItem>
-
-            <DropdownItem
-              key="logout"
-              className="text-red-600 hover:text-red-700"
-            >
-              <div className="flex justify-between items-center w-full gap-4">
-                <div className="flex items-center gap-2">
-                  <IconLogout size={24} stroke={1} />
-                  <p>Logout</p>
-                </div>
+            <DropdownItem key="favorites">
+              <div className="flex items-center gap-2">
+                <IconHearts size={24} stroke={1} />
+                <p>Favorites</p>
+              </div>
+            </DropdownItem>
+            <DropdownItem key="payments">
+              <div className="flex items-center gap-2">
+                <IconCreditCard size={24} stroke={1} />
+                <p>Payments</p>
+              </div>
+            </DropdownItem>
+            <DropdownItem key="logout" color="danger">
+              <div className="flex items-center gap-2">
+                <IconLogout size={24} stroke={1} />
+                <p>Log Out</p>
               </div>
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
+      <NavbarMenu>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={index}>
+            <Link href={item.path}>
+              <Button
+                className={`bg-transparent ${
+                  isActivePathStartsWith(item.path) ? "text-blue-500" : ""
+                }`}
+              >
+                {item.title}
+              </Button>
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
     </Navbar>
   );
 }
