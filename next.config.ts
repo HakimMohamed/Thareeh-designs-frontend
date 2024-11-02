@@ -1,7 +1,16 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["www.google.com", "ih1.redbubble.net"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.google.com",
+      },
+      {
+        protocol: "https",
+        hostname: "ih1.redbubble.net",
+      },
+    ],
   },
 };
 
