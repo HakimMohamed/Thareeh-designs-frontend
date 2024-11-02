@@ -47,6 +47,7 @@ export default function Filters() {
         variant="contained"
         onClick={toggleDrawer}
         className="md:hidden bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-blue-600 transition duration-300"
+        aria-label="Open Filters"
       >
         Open Filters
       </Button>
@@ -54,6 +55,7 @@ export default function Filters() {
       {/* Filters displayed in horizontal order for larger screens */}
       <div className="hidden md:flex items-center space-x-4">
         <Select
+          aria-label="Category selection"
           items={categories}
           placeholder="Select a category"
           labelPlacement="outside"
@@ -85,6 +87,7 @@ export default function Filters() {
         </Select>
 
         <Select
+          aria-label="Finish selection"
           items={finishes}
           placeholder="Select a finish"
           labelPlacement="outside"
@@ -115,12 +118,13 @@ export default function Filters() {
           )}
         </Select>
         <Slider
+          aria-label="Price range selector"
           label="Price Range"
           step={50}
           minValue={0}
           maxValue={1000}
           defaultValue={[100, 500]}
-          formatOptions={{ style: "currency", currency: "USD" }}
+          formatOptions={{ style: "currency", currency: "EGP" }}
           className="max-w-md"
         />
       </div>
@@ -140,6 +144,7 @@ export default function Filters() {
         <div className="flex flex-col p-4 space-y-4">
           <h2 className="text-lg font-bold">Filters</h2>
           <Select
+            aria-label="Category selection"
             items={categories}
             placeholder="Select a category"
             labelPlacement="outside"
@@ -171,6 +176,7 @@ export default function Filters() {
           </Select>
 
           <Select
+            aria-label="Finish selection"
             items={finishes}
             placeholder="Select a finish"
             labelPlacement="outside"
@@ -201,6 +207,7 @@ export default function Filters() {
             )}
           </Select>
           <Slider
+            aria-label="Price range selector"
             label="Price Range"
             step={50}
             minValue={0}

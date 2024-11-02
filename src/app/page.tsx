@@ -1,8 +1,21 @@
 import Filters from "./components/Filters";
 import ProductGrid from "./components/ItemCard";
 
-const HomePage: React.FC = () => {
-  const items = [
+// Define the type for your item
+interface Item {
+  name: string;
+  price: number;
+  description: string;
+  onSale: boolean;
+  discount: number;
+  imageUrl: string;
+}
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetchItems = async (): Promise<Item[]> => {
+  await delay(2000); // Simulate a 2 seconds delay
+  return [
     {
       name: "Wireless Headphones",
       price: 99.99,
@@ -111,24 +124,25 @@ const HomePage: React.FC = () => {
       imageUrl:
         "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
     },
+    // Add more items as needed...
   ];
+};
+
+const HomePage = async () => {
+  const items = await fetchItems();
 
   return (
     <div className="mb-8">
-      {/* custom stickers section*/}
+      {/* custom stickers section */}
       <div className="max-h-100 w-full p-4 bg-gradient-to-br from-indigo-50 to-purple-50 mb-8">
         <div className="max-w-7xl mx-auto animate-fade-in">
           <div className="w-full overflow-hidden bg-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-lg">
             <div className="p-4 bg-gradient-to-r from-indigo-600 to-purple-600">
-              {" "}
-              {/* Reduced padding */}
               <div className="text-3xl md:text-5xl font-bold text-white text-center animate-pulse">
                 Create Your Custom Stickers! ✨
               </div>
             </div>
             <div className="p-4">
-              {" "}
-              {/* Reduced padding */}
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div className="space-y-6 animate-slide-in">
                   <h2 className="text-2xl md:text-4xl font-bold text-gray-800">

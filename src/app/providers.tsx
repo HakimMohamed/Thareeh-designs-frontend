@@ -7,9 +7,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NextUIProvider>
       <div className="flex flex-col min-h-screen w-full">
-        <div className="w-full mb-4">
-          <AppNavBar />
-        </div>
+        {/* <div className="w-full mb-4">
+        </div> */}
+        <AppNavBar />
 
         <div className="flex flex-col items-center w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8">
           {children}

@@ -149,6 +149,7 @@ export default function App() {
           "data-[active=true]:after:bg-primary",
         ],
       }}
+      className="sticky top-0 z-50 bg-white shadow" // Tailwind classes for sticky effect
     >
       <NavbarContent justify="start" className="mr-8">
         <NavbarMenuToggle
