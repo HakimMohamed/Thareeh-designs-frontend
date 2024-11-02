@@ -2,7 +2,6 @@
 
 import { NextUIProvider } from "@nextui-org/react";
 import AppNavBar from "../app/components/Navbar";
-import Filters from "./components/Filters";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -14,9 +13,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
         <div className="flex flex-col items-center w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8">
           {children}
-          <div className="w-full">
-            <Filters />
-          </div>
         </div>
       </div>
     </NextUIProvider>

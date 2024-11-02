@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mui/material": "^6.1.6",
     "@nextui-org/react": "^2.4.8",
     "@tabler/icons-react": "^3.21.0",
     "framer-motion": "^11.11.10",

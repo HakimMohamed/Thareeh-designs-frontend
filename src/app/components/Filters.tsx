@@ -1,3 +1,6 @@
+"use client";
+import { useState } from "react";
+import { Drawer, Button } from "@mui/material";
 import { Select, SelectedItems, SelectItem, Slider } from "@nextui-org/react";
 import {
   IconPalette,
@@ -11,7 +14,7 @@ import {
 interface Selection {
   key: string;
   label: string;
-  icon: React.ReactNode; // Add an icon property
+  icon: React.ReactNode;
 }
 
 const categories: Selection[] = [
@@ -31,78 +34,183 @@ const finishes: Selection[] = [
 ];
 
 export default function Filters() {
-  return (
-    <div className="flex flex-col md:flex-row md:space-x-4 w-full">
-      <Select
-        items={categories}
-        placeholder="Select a category"
-        labelPlacement="outside"
-        classNames={{
-          base: "max-w-[200px]",
-          trigger: "h-12",
-        }}
-        renderValue={(items: SelectedItems<Selection>) => {
-          return items.map((item) => (
-            <div key={item.key} className="flex items-center gap-2">
-              {item.data?.icon}
-              <div className="flex flex-col">
-                <span>{item?.data?.label || ""}</span>
-              </div>
-            </div>
-          ));
-        }}
-      >
-        {(item) => (
-          <SelectItem key={item.key} textValue={item.label}>
-            <div className="flex gap-2 items-center">
-              {item?.icon}
-              <div className="flex flex-col">
-                <span className="text-small">{item.label}</span>
-              </div>
-            </div>
-          </SelectItem>
-        )}
-      </Select>
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-      <Select
-        items={finishes}
-        placeholder="Select a finish"
-        labelPlacement="outside"
-        classNames={{
-          base: "max-w-[200px]",
-          trigger: "h-12",
-        }}
-        renderValue={(items: SelectedItems<Selection>) => {
-          return items.map((item) => (
-            <div key={item.key} className="flex items-center gap-2">
-              {item.data?.icon}
-              <div className="flex flex-col">
-                <span>{item?.data?.label || ""}</span>
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row md:space-x-8 w-full">
+      {/* Button to open filters (visible on small screens) */}
+      <Button
+        variant="contained"
+        onClick={toggleDrawer}
+        className="md:hidden bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-blue-600 transition duration-300"
+      >
+        Open Filters
+      </Button>
+
+      {/* Filters displayed in horizontal order for larger screens */}
+      <div className="hidden md:flex items-center space-x-4">
+        <Select
+          items={categories}
+          placeholder="Select a category"
+          labelPlacement="outside"
+          classNames={{
+            base: "max-w-[200px]",
+            trigger: "h-12",
+          }}
+          renderValue={(items: SelectedItems<Selection>) => {
+            return items.map((item) => (
+              <div key={item.key} className="flex items-center gap-2">
+                {item.data?.icon}
+                <div className="flex flex-col">
+                  <span>{item?.data?.label || ""}</span>
+                </div>
               </div>
-            </div>
-          ));
+            ));
+          }}
+        >
+          {(item) => (
+            <SelectItem key={item.key} textValue={item.label}>
+              <div className="flex gap-2 items-center">
+                {item?.icon}
+                <div className="flex flex-col">
+                  <span className="text-small">{item.label}</span>
+                </div>
+              </div>
+            </SelectItem>
+          )}
+        </Select>
+
+        <Select
+          items={finishes}
+          placeholder="Select a finish"
+          labelPlacement="outside"
+          classNames={{
+            base: "max-w-[200px]",
+            trigger: "h-12",
+          }}
+          renderValue={(items: SelectedItems<Selection>) => {
+            return items.map((item) => (
+              <div key={item.key} className="flex items-center gap-2">
+                {item.data?.icon}
+                <div className="flex flex-col">
+                  <span>{item?.data?.label || ""}</span>
+                </div>
+              </div>
+            ));
+          }}
+        >
+          {(item) => (
+            <SelectItem key={item.key} textValue={item.label}>
+              <div className="flex gap-2 items-center">
+                {item?.icon}
+                <div className="flex flex-col">
+                  <span className="text-small">{item.label}</span>
+                </div>
+              </div>
+            </SelectItem>
+          )}
+        </Select>
+        <Slider
+          label="Price Range"
+          step={50}
+          minValue={0}
+          maxValue={1000}
+          defaultValue={[100, 500]}
+          formatOptions={{ style: "currency", currency: "USD" }}
+          className="max-w-md"
+        />
+      </div>
+
+      {/* Drawer for filters on small screens */}
+      <Drawer
+        anchor="bottom"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+        sx={{
+          "& .MuiDrawer-paper": {
+            height: "50%", // Adjust this value to increase the height of the drawer
+            overflow: "visible", // Allow content to be fully visible
+          },
         }}
       >
-        {(item) => (
-          <SelectItem key={item.key} textValue={item.label}>
-            <div className="flex gap-2 items-center">
-              {item?.icon}
-              <div className="flex flex-col">
-                <span className="text-small">{item.label}</span>
-              </div>
-            </div>
-          </SelectItem>
-        )}
-      </Select>
-      <Slider
-        label="Price Range"
-        step={50}
-        minValue={0}
-        maxValue={1000}
-        defaultValue={[100, 500]}
-        formatOptions={{ style: "currency", currency: "USD" }}
-        className="max-w-md"
-      />
+        <div className="flex flex-col p-4 space-y-4">
+          <h2 className="text-lg font-bold">Filters</h2>
+          <Select
+            items={categories}
+            placeholder="Select a category"
+            labelPlacement="outside"
+            classNames={{
+              base: "max-w-[200px]",
+              trigger: "h-12",
+            }}
+            renderValue={(items: SelectedItems<Selection>) => {
+              return items.map((item) => (
+                <div key={item.key} className="flex items-center gap-2">
+                  {item.data?.icon}
+                  <div className="flex flex-col">
+                    <span>{item?.data?.label || ""}</span>
+                  </div>
+                </div>
+              ));
+            }}
+          >
+            {(item) => (
+              <SelectItem key={item.key} textValue={item.label}>
+                <div className="flex gap-2 items-center">
+                  {item?.icon}
+                  <div className="flex flex-col">
+                    <span className="text-small">{item.label}</span>
+                  </div>
+                </div>
+              </SelectItem>
+            )}
+          </Select>
+
+          <Select
+            items={finishes}
+            placeholder="Select a finish"
+            labelPlacement="outside"
+            classNames={{
+              base: "max-w-[200px]",
+              trigger: "h-12",
+            }}
+            renderValue={(items: SelectedItems<Selection>) => {
+              return items.map((item) => (
+                <div key={item.key} className="flex items-center gap-2">
+                  {item.data?.icon}
+                  <div className="flex flex-col">
+                    <span>{item?.data?.label || ""}</span>
+                  </div>
+                </div>
+              ));
+            }}
+          >
+            {(item) => (
+              <SelectItem key={item.key} textValue={item.label}>
+                <div className="flex gap-2 items-center">
+                  {item?.icon}
+                  <div className="flex flex-col">
+                    <span className="text-small">{item.label}</span>
+                  </div>
+                </div>
+              </SelectItem>
+            )}
+          </Select>
+          <Slider
+            label="Price Range"
+            step={50}
+            minValue={0}
+            maxValue={1000}
+            defaultValue={[100, 500]}
+            formatOptions={{ style: "currency", currency: "USD" }}
+            className="max-w-md"
+          />
+        </div>
+      </Drawer>
     </div>
   );
 }
