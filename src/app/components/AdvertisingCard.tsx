@@ -1,6 +1,6 @@
 export default function AdvertisingCard() {
   return (
-    <div className="max-w-7xl mx-auto animate-fade-in">
+    <div className="max-w-screen mx-auto animate-fade-in">
       <div className="w-full overflow-hidden bg-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-lg">
         <div className="p-4 bg-gradient-to-r from-indigo-600 to-purple-600">
           <div className="text-3xl md:text-5xl font-bold text-white text-center animate-pulse">

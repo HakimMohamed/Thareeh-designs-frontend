@@ -135,7 +135,7 @@ const HomePage = async () => {
   return (
     <div className="mb-8">
       {/* custom stickers section */}
-      <div className="mb-8">
+      <div className="mb-8 w-full">
         <AdvertisingCard />
       </div>
       <div className="mb-8">
