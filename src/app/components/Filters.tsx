@@ -41,27 +41,25 @@ export default function Filters() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:space-x-8 w-full">
-      {/* Button to open filters (visible on small screens) */}
+    <div className="flex flex-col md:flex-row w-full">
       <Button
         variant="contained"
         onClick={toggleDrawer}
-        className="md:hidden bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-blue-600 transition duration-300"
+        className="md:hidden bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-blue-600"
         aria-label="Open Filters"
       >
         Open Filters
       </Button>
 
-      {/* Filters displayed in horizontal order for larger screens */}
-      <div className="hidden md:flex items-center space-x-4">
+      <div className="hidden md:flex items-center space-x-6">
         <Select
           aria-label="Category selection"
           items={categories}
           placeholder="Select a category"
           labelPlacement="outside"
           classNames={{
-            base: "max-w-[200px]",
-            trigger: "h-12",
+            base: "min-w-[200px]",
+            trigger: "h-15",
           }}
           renderValue={(items: SelectedItems<Selection>) => {
             return items.map((item) => (
@@ -92,8 +90,8 @@ export default function Filters() {
           placeholder="Select a finish"
           labelPlacement="outside"
           classNames={{
-            base: "max-w-[200px]",
-            trigger: "h-12",
+            base: "min-w-[200px]",
+            trigger: "h-15",
           }}
           renderValue={(items: SelectedItems<Selection>) => {
             return items.map((item) => (
@@ -125,11 +123,10 @@ export default function Filters() {
           maxValue={1000}
           defaultValue={[100, 500]}
           formatOptions={{ style: "currency", currency: "EGP" }}
-          className="max-w-md"
+          className="min-w-[400px]"
         />
       </div>
 
-      {/* Drawer for filters on small screens */}
       <Drawer
         anchor="bottom"
         open={drawerOpen}

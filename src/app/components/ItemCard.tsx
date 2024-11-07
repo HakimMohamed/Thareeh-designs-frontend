@@ -46,13 +46,13 @@ const ItemCard: React.FC<ProductItemProps> = ({
   return (
     <div className="flex flex-col  bg-white rounded-lg shadow-lg overflow-hidden">
       {imageUrl && (
-        <div className="w-full h-48 relative shrink-0">
+        <div className="relative w-full h-48 overflow-hidden group">
           <Image
             src={imageUrl}
             alt={name}
             fill
+            className="object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
             priority={false}
           />
           {onSale && discount > 0 && (
@@ -104,8 +104,8 @@ interface ProductGridProps {
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
-    <div className="container">
-      <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-6">
+    <div className="w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
         {products &&
           products.map((product, index) => (
             <div key={index} className="h-full">
