@@ -148,20 +148,37 @@ export default function App() {
           "data-[active=true]:after:rounded-[2px]",
           "data-[active=true]:after:bg-primary",
         ],
+        menu: [
+          "z-30",
+          "px-6",
+          "pt-2",
+          "fixed",
+          "flex",
+          "max-w-full",
+          "top-[var(--navbar-height)]",
+          "inset-x-0",
+          "bottom-0",
+          "w-screen",
+          "flex-col",
+          "gap-2",
+          "overflow-y-auto",
+          "bg-white",
+        ],
       }}
-      className="sticky top-0 z-50 bg-white shadow" // Tailwind classes for sticky effect
+      className="sticky top-0 z-50 bg-white shadow mb-8"
+      maxWidth="2xl"
     >
-      <NavbarContent justify="start" className="mr-8">
+      <NavbarContent justify="start">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
         <Link href="/">
           <Button
-            className="bg-transparent py-2 px-4 rounded transition-colors"
+            className="bg-transparent rounded transition-colors"
             size="lg"
           >
-            <NavbarBrand className="mr-4">
+            <NavbarBrand>
               <div className="flex items-center">
                 <PrinterLogo />
                 <p className="hidden sm:block font-bold text-inherit">
@@ -172,15 +189,14 @@ export default function App() {
           </Button>
         </Link>
 
-        {/* Visible when screen is large */}
-        <NavbarContent className="hidden sm:flex gap-9">
+        <NavbarContent className="hidden sm:flex">
           <Dropdown>
             <NavbarItem isActive={isActivePathStartsWith("/collections")}>
               <DropdownTrigger>
                 <Link href="/collections">
                   <Button
                     disableRipple
-                    className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                    className="bg-transparent data-[hover=true]:bg-transparent"
                     endContent={icons.chevron}
                     radius="sm"
                     variant="light"
@@ -190,7 +206,7 @@ export default function App() {
                 </Link>
               </DropdownTrigger>
             </NavbarItem>
-            <DropdownMenu aria-label="ACME features" className="w-[340px]">
+            <DropdownMenu aria-label="ACME features">
               <DropdownItem
                 key="autoscaling"
                 description="ACME scales apps to meet user demand, automagically, based on load."
@@ -242,10 +258,9 @@ export default function App() {
       </NavbarContent>
 
       <NavbarContent as="div" className="items-center" justify="end">
-        {/* Search Input */}
         <Input
           classNames={{
-            base: "max-w-full sm:max-w-[20rem] h-10 hidden sm:flex",
+            base: "max-w-full sm:max-w-full h-10 hidden sm:flex",
             mainWrapper: "h-full",
             input: "text-small",
             inputWrapper:
@@ -258,8 +273,6 @@ export default function App() {
           }
           type="search"
         />
-
-        {/* Cart Icon with Badge and Popover */}
         <Popover placement="bottom-end">
           <PopoverTrigger>
             <Button className="relative bg-transparent">
@@ -273,7 +286,7 @@ export default function App() {
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <div className="p-4 w-64">
+            <div className="w-64">
               <h4 className="text-lg font-semibold">Cart</h4>
               <p className="text-sm text-gray-500">
                 You have 3 items in your cart.
@@ -289,7 +302,6 @@ export default function App() {
             </div>
           </PopoverContent>
         </Popover>
-
         {/* User Avatar and Dropdown */}
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
