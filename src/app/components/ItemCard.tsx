@@ -44,7 +44,7 @@ const ItemCard: React.FC<ProductItemProps> = ({
   const finalPrice = calculateFinalPrice(price, onSale, discount);
 
   return (
-    <div className="flex flex-col  bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden max-w-[300px] w-full">
       {imageUrl && (
         <div className="relative w-full h-48 overflow-hidden group">
           <Image
@@ -68,7 +68,7 @@ const ItemCard: React.FC<ProductItemProps> = ({
           <h3 className="text-xl font-bold line-clamp-2 min-h-[3.5rem] text-gray-900">
             {name || "Untitled Product"}
           </h3>
-          <p className="mt-2 text-sm text-gray-600 line-clamp-2 after:content-['...'] after:inline">
+          <p className="mt-2 text-sm text-gray-600 line-clamp-2">
             {description || "No description available"}
           </p>
         </div>
