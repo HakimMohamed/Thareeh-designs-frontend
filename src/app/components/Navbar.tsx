@@ -1,8 +1,8 @@
+"use client";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
-  NavbarItem,
   Link,
   Button,
   DropdownItem,
@@ -19,16 +19,7 @@ import {
   NavbarMenuToggle,
   NavbarMenuItem,
 } from "@nextui-org/react";
-import {
-  ChevronDown,
-  Lock,
-  Activity,
-  Flash,
-  Server,
-  TagUser,
-  Scale,
-  Cart,
-} from "./icons/Icons.jsx";
+import { Cart } from "./icons/Icons.jsx";
 import { PrinterLogo } from "./PrinterLogo.jsx";
 import { SearchIcon } from "./SearchIcon.jsx";
 import {
@@ -43,79 +34,6 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function App() {
-  const icons = {
-    chevron: (
-      <ChevronDown
-        fill="currentColor"
-        size={16}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-    scale: (
-      <Scale
-        className="text-warning"
-        fill="currentColor"
-        size={30}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-    lock: (
-      <Lock
-        className="text-success"
-        fill="currentColor"
-        size={30}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-    activity: (
-      <Activity
-        className="text-secondary"
-        fill="currentColor"
-        size={30}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-    flash: (
-      <Flash
-        className="text-primary"
-        fill="currentColor"
-        size={30}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-    server: (
-      <Server
-        className="text-success"
-        fill="currentColor"
-        size={30}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-    user: (
-      <TagUser
-        className="text-danger"
-        fill="currentColor"
-        size={30}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-    cart: (
-      <Cart
-        className="text-danger"
-        fill="currentColor"
-        size={30}
-        height={undefined}
-        width={undefined}
-      />
-    ),
-  };
   const pathname = usePathname();
 
   const isActivePathStartsWith = (path: string) => {
@@ -166,7 +84,7 @@ export default function App() {
         ],
       }}
       className="sticky top-0 z-50 bg-white shadow mb-8"
-      maxWidth="2xl"
+      maxWidth="xl"
     >
       <NavbarContent justify="start">
         <NavbarMenuToggle
@@ -188,91 +106,23 @@ export default function App() {
             </NavbarBrand>
           </Button>
         </Link>
-
-        <NavbarContent className="hidden sm:flex">
-          <Dropdown>
-            <NavbarItem isActive={isActivePathStartsWith("/collections")}>
-              <DropdownTrigger>
-                <Link href="/collections">
-                  <Button
-                    disableRipple
-                    className="bg-transparent data-[hover=true]:bg-transparent"
-                    endContent={icons.chevron}
-                    radius="sm"
-                    variant="light"
-                  >
-                    Categories
-                  </Button>
-                </Link>
-              </DropdownTrigger>
-            </NavbarItem>
-            <DropdownMenu aria-label="ACME features">
-              <DropdownItem
-                key="autoscaling"
-                description="ACME scales apps to meet user demand, automagically, based on load."
-                startContent={icons.scale}
-              >
-                Autoscaling
-              </DropdownItem>
-              <DropdownItem
-                key="usage_metrics"
-                description="Real-time metrics to debug issues. Slow query added? We’ll show you exactly where."
-                startContent={icons.activity}
-              >
-                Usage Metrics
-              </DropdownItem>
-              <DropdownItem
-                key="production_ready"
-                description="ACME runs on ACME, join us and others serving requests at web scale."
-                startContent={icons.flash}
-              >
-                Production Ready
-              </DropdownItem>
-              <DropdownItem
-                key="99_uptime"
-                description="Applications stay on the grid with high availability and high uptime guarantees."
-                startContent={icons.server}
-              >
-                +99% Uptime
-              </DropdownItem>
-              <DropdownItem
-                key="supreme_support"
-                description="Overcome any challenge with a supporting team ready to respond."
-                startContent={icons.user}
-              >
-                +Supreme Support
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-          <NavbarItem isActive={isActivePathStartsWith("/deals")}>
-            <Link href="/deals">
-              <Button className="bg-transparent">Deals</Button>
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive={isActivePathStartsWith("/test2")}>
-            <Link href="/test2">
-              <Button className="bg-transparent">test2</Button>
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
       </NavbarContent>
-
+      <Input
+        classNames={{
+          base: "max-w-[500px] h-10 sm:flex",
+          mainWrapper: "h-full",
+          input: "text-small",
+          inputWrapper:
+            "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+        }}
+        placeholder="Search..."
+        size="sm"
+        startContent={
+          <SearchIcon size={18} width={undefined} height={undefined} />
+        }
+        type="search"
+      />
       <NavbarContent as="div" className="items-center" justify="end">
-        <Input
-          classNames={{
-            base: "max-w-full sm:max-w-full h-10 hidden sm:flex",
-            mainWrapper: "h-full",
-            input: "text-small",
-            inputWrapper:
-              "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="Search..."
-          size="sm"
-          startContent={
-            <SearchIcon size={18} width={undefined} height={undefined} />
-          }
-          type="search"
-        />
         <Popover placement="bottom-end">
           <PopoverTrigger>
             <Button className="relative bg-transparent">

@@ -1,140 +1,45 @@
 import AdvertisingCard from "./components/AdvertisingCard";
 import Filters from "./components/Filters";
 import ProductGrid from "./components/ItemCard";
+import { Item } from "./interfaces/Item.interface";
+import api from "../app/lib/api";
+import PaginationContainer from "./components/Pagination";
 
-// Define the type for your item
-interface Item {
-  name: string;
-  price: number;
-  description: string;
-  onSale: boolean;
-  discount: number;
-  imageUrl: string;
-}
+const pageSize = 12;
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const fetchItems = async (): Promise<Item[]> => {
-  await delay(2000); // Simulate a 2 seconds delay
-  return [
-    {
-      name: "Wireless Headphones",
-      price: 99.99,
-      description: "High-quality wireless headphones with noise cancellation",
-      onSale: true,
-      discount: 20,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Bluetooth Speaker",
-      price: 49.99,
-      description: "Portable Bluetooth speaker with 12-hour battery life",
-      onSale: false,
-      discount: 0,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Smartwatch",
-      price: 199.99,
-      description: "Feature-rich smartwatch with fitness tracking",
-      onSale: true,
-      discount: 30,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Gaming Mouse",
-      price: 59.99,
-      description: "Ergonomic gaming mouse with customizable buttons",
-      onSale: true,
-      discount: 15,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Mechanical Keyboard",
-      price: 89.99,
-      description: "RGB mechanical keyboard with programmable keys",
-      onSale: false,
-      discount: 0,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "4K Monitor",
-      price: 299.99,
-      description: "Ultra HD monitor with stunning visuals",
-      onSale: true,
-      discount: 50,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Portable SSD",
-      price: 129.99,
-      description: "Fast and reliable portable SSD for on-the-go storage",
-      onSale: false,
-      discount: 0,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Action Camera",
-      price: 199.99,
-      description: "Compact action camera with 4K recording",
-      onSale: true,
-      discount: 40,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Wireless Charger",
-      price: 29.99,
-      description: "Convenient wireless charger for compatible devices",
-      onSale: true,
-      discount: 10,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Smart Thermostat",
-      price: 149.99,
-      description: "Smart thermostat for efficient temperature control",
-      onSale: false,
-      discount: 0,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Fitness Tracker",
-      price: 79.99,
-      description: "Water-resistant fitness tracker with heart rate monitor",
-      onSale: true,
-      discount: 20,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    {
-      name: "Bluetooth Earbuds",
-      price: 39.99,
-      description: "Compact wireless earbuds with great sound quality",
-      onSale: false,
-      discount: 0,
-      imageUrl:
-        "https://ih1.redbubble.net/image.129595100.4852/sss,small,product,750x1000.u2.webp",
-    },
-    // Add more items as needed...
-  ];
+const fetchItems = async (
+  page: number
+): Promise<{ items: Item[]; count: number }> => {
+  try {
+    const response = await api.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/items`,
+      {
+        params: { page, pageSize },
+      }
+    );
+    return response.data.data;
+  } catch (err: unknown) {
+    if (process.env.NODE_ENV === "development") console.error(err);
+    return { items: [], count: 0 };
+  }
 };
 
-const HomePage = async () => {
-  const items = await fetchItems();
+type Params = Promise<{ slug: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
+export default async function Page(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const searchParams = await props.searchParams;
+  const page = searchParams.page;
+  const { items, count } = await fetchItems(Number(page));
+
+  const totalPages = Math.ceil(count / pageSize);
   return (
     <div className="mb-8">
-      {/* custom stickers section */}
+      {/* Custom stickers section */}
+
       <div className="mb-8 w-full">
         <AdvertisingCard />
       </div>
@@ -144,9 +49,19 @@ const HomePage = async () => {
       <div className="w-full mb-8">
         <Filters />
       </div>
-      <ProductGrid products={items} />
+
+      <div className="mb-10">
+        <ProductGrid products={items} />
+      </div>
+
+      <div className="flex justify-center">
+        <div className="bg-white bg-opacity-90 shadow-lg p-4 rounded-lg">
+          <PaginationContainer
+            totalPages={totalPages}
+            currentPage={Number(page)}
+          />
+        </div>
+      </div>
     </div>
   );
-};
-
-export default HomePage;
+}

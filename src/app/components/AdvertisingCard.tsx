@@ -29,7 +29,7 @@ export default function AdvertisingCard() {
                 <div className="flex items-start space-x-3">
                   <span className="text-2xl">📦</span>
                   <p className="text-lg text-gray-600">
-                    Fast shipping worldwide - Get your stickers in days
+                    Fast shipping throughout egypt - Get your stickers in days
                   </p>
                 </div>
               </div>

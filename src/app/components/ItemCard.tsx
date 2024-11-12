@@ -1,63 +1,29 @@
 import React from "react";
 import Image from "next/image";
+import { Item } from "../interfaces/Item.interface";
 
-interface ProductItemProps {
-  name: string;
-  price: number;
-  description: string;
-  currency?: string;
-  onSale?: boolean;
-  discount?: number;
-  imageUrl?: string;
-}
-
-const ItemCard: React.FC<ProductItemProps> = ({
+const ItemCard: React.FC<Item> = ({
   name,
   price = 0,
   description,
-  currency = "$",
-  onSale = false,
-  discount = 0,
-  imageUrl,
+  discount,
+  image,
 }) => {
-  const calculateFinalPrice = (
-    originalPrice: number,
-    isOnSale: boolean,
-    discountPercent: number
-  ) => {
-    if (typeof originalPrice !== "number" || isNaN(originalPrice)) return 0;
-    if (
-      !isOnSale ||
-      typeof discountPercent !== "number" ||
-      isNaN(discountPercent)
-    )
-      return originalPrice;
-    return originalPrice - (originalPrice * discountPercent) / 100;
-  };
-
-  const formatPrice = (amount: number) => {
-    return typeof amount === "number" && !isNaN(amount)
-      ? amount.toFixed(2)
-      : "0.00";
-  };
-
-  const finalPrice = calculateFinalPrice(price, onSale, discount);
-
   return (
     <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden max-w-[300px] w-full">
-      {imageUrl && (
+      {image && (
         <div className="relative w-full h-48 overflow-hidden group">
           <Image
-            src={imageUrl}
+            src={image}
             alt={name}
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority={false}
           />
-          {onSale && discount > 0 && (
+          {discount.active && discount.value > 0 && (
             <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">
-              {discount}% OFF
+              {discount.value}% OFF
             </span>
           )}
         </div>
@@ -76,13 +42,13 @@ const ItemCard: React.FC<ProductItemProps> = ({
         <div className="px-4 py-2">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-gray-900">
-              {currency}
-              {formatPrice(finalPrice)}
+              {price.toFixed(2)}
+              {" EGP"}
             </span>
-            {onSale && discount > 0 && (
+            {discount.active && discount.value > 0 && (
               <span className="text-sm text-gray-500 line-through">
-                {currency}
-                {formatPrice(price)}
+                {price.toFixed(2)}
+                {" EGP"}
               </span>
             )}
           </div>
@@ -99,7 +65,7 @@ const ItemCard: React.FC<ProductItemProps> = ({
 };
 
 interface ProductGridProps {
-  products: ProductItemProps[];
+  products: Item[];
 }
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
