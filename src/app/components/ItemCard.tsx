@@ -1,9 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import { Item } from "../interfaces/Item.interface";
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 
 const ItemCard: React.FC<Item> = ({
+  _id,
   name,
   price = 0,
   description,
@@ -12,23 +13,25 @@ const ItemCard: React.FC<Item> = ({
 }) => {
   return (
     <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden max-w-[300px] w-full">
-      {image && (
-        <div className="relative w-full h-48 overflow-hidden group">
-          <Image
-            src={image}
-            alt={name}
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={false}
-          />
-          {discount.active && discount.value > 0 && (
-            <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">
-              {discount.value}% OFF
-            </span>
-          )}
-        </div>
-      )}
+      <Link href={`/product/${_id}`} className="no-underline">
+        {image && (
+          <div className="relative w-full h-48 overflow-hidden group">
+            <Image
+              src={image}
+              alt={name}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={false}
+            />
+            {discount.active && discount.value > 0 && (
+              <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">
+                {discount.value}% OFF
+              </span>
+            )}
+          </div>
+        )}
+      </Link>
 
       <div className="flex flex-col flex-grow">
         <div className="p-4 flex-grow">
@@ -72,7 +75,7 @@ interface ProductGridProps {
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <div className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 ">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {products &&
           products.map((product, index) => (
             <div key={index} className="h-full">

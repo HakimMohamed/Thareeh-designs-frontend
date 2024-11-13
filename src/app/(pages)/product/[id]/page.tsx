@@ -4,9 +4,7 @@ import api from "@/app/lib/api";
 import Image from "next/image";
 
 async function getProduct(id: string): Promise<Item | null> {
-  // Replace with your actual API endpoint
   try {
-    console.log(id);
     const res = await api.get(
       `${process.env.NEXT_PUBLIC_API_URL}/api/items/${id}`
     );
