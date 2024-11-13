@@ -1,4 +1,3 @@
-import AdvertisingCard from "./components/AdvertisingCard";
 import Filters from "./components/Filters";
 import ProductGrid from "./components/ItemCard";
 import { Item } from "./interfaces/Item.interface";
@@ -32,16 +31,17 @@ export default async function Page(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = await props.searchParams;
-  const page = searchParams.page ?? 1;
-  const { items, count } = await fetchItems(Number(page));
+  const page = Number(searchParams.page) || 1;
+  const { items, count } = await fetchItems(page);
 
   const totalPages = Math.ceil(count / pageSize);
+
   return (
     <div className="mb-4">
-      {/* Custom stickers section */}
-
-      <div className="mb-4 w-full">
-        <AdvertisingCard />
+      <div className="p-4 bg-gradient-to-r from-indigo-600 to-purple-600 mb-4">
+        <div className="text-3xl md:text-5xl font-bold text-white text-center animate-pulse">
+          Create Your Custom Stickers! ✨
+        </div>
       </div>
       <div className="mb-4">
         <h3 className="text-4xl font-bold">Stickers For You</h3>
