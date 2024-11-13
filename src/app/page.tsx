@@ -5,7 +5,7 @@ import { Item } from "./interfaces/Item.interface";
 import api from "../app/lib/api";
 import PaginationContainer from "./components/Pagination";
 
-const pageSize = 12;
+const pageSize = 32;
 
 const fetchItems = async (
   page: number
@@ -32,25 +32,25 @@ export default async function Page(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = await props.searchParams;
-  const page = searchParams.page;
+  const page = searchParams.page ?? 1;
   const { items, count } = await fetchItems(Number(page));
 
   const totalPages = Math.ceil(count / pageSize);
   return (
-    <div className="mb-8">
+    <div className="mb-4">
       {/* Custom stickers section */}
 
-      <div className="mb-8 w-full">
+      <div className="mb-4 w-full">
         <AdvertisingCard />
       </div>
-      <div className="mb-8">
+      <div className="mb-4">
         <h3 className="text-4xl font-bold">Stickers For You</h3>
       </div>
-      <div className="w-full mb-8">
+      <div className="w-full mb-4">
         <Filters />
       </div>
 
-      <div className="mb-10">
+      <div className="mb-4">
         <ProductGrid products={items} />
       </div>
 
