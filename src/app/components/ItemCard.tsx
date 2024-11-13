@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Item } from "../interfaces/Item.interface";
+import { Button } from "@nextui-org/react";
 
 const ItemCard: React.FC<Item> = ({
   name,
@@ -55,9 +56,9 @@ const ItemCard: React.FC<Item> = ({
         </div>
 
         <div className="px-4 py-4 border-t border-gray-100 mt-auto">
-          <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+          <Button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
             Add to Cart
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -71,7 +72,7 @@ interface ProductGridProps {
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <div className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 ">
         {products &&
           products.map((product, index) => (
             <div key={index} className="h-full">

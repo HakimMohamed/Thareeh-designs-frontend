@@ -84,7 +84,7 @@ export default function App() {
         ],
       }}
       className="sticky top-0 z-50 bg-white shadow mb-4"
-      maxWidth="xl"
+      maxWidth="2xl"
     >
       <NavbarContent justify="start">
         <NavbarMenuToggle
