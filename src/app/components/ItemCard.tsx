@@ -12,7 +12,7 @@ const ItemCard: React.FC<Item> = ({
   image,
 }) => {
   return (
-    <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden max-w-[300px] w-full">
+    <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden  shadow-gray-400/50 max-w-[300px] w-full">
       <Link href={`/product/${_id}`} className="no-underline">
         {image && (
           <div className="relative w-full h-48 overflow-hidden group">
@@ -20,7 +20,7 @@ const ItemCard: React.FC<Item> = ({
               src={image}
               alt={name}
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out"
+              className="object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out shadow-xl shadow-gray-600/50"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority={false}
             />
