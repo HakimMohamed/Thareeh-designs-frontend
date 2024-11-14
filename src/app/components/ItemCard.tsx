@@ -3,6 +3,12 @@ import Image from "next/image";
 import { Item } from "../interfaces/Item.interface";
 import { Button, Link } from "@nextui-org/react";
 
+const truncateText = (text: string, length: number) => {
+  if (text.length <= length) return text;
+
+  return text.substring(0, length) + "...";
+};
+
 const ItemCard: React.FC<Item> = ({
   _id,
   name,
@@ -12,7 +18,7 @@ const ItemCard: React.FC<Item> = ({
   image,
 }) => {
   return (
-    <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden  shadow-gray-400/50 max-w-[300px] w-full">
+    <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden shadow-gray-400/50 max-w-[300px] w-full">
       <Link href={`/product/${_id}`} className="no-underline">
         {image && (
           <div className="relative w-full h-48 overflow-hidden group">
@@ -35,12 +41,20 @@ const ItemCard: React.FC<Item> = ({
 
       <div className="flex flex-col flex-grow">
         <div className="p-4 flex-grow">
-          <h3 className="text-xl font-bold line-clamp-2 min-h-[3.5rem] text-gray-900">
-            {name || "Untitled Product"}
-          </h3>
-          <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-            {description || "No description available"}
-          </p>
+          {/* Product Name Link with Truncation */}
+          <Link
+            href={`/product/${_id}`}
+            className="block no-underline text-xl font-bold text-gray-900"
+          >
+            {truncateText(name || "Untitled Product", 55)}
+          </Link>
+
+          {/* Product Description Link with Truncation */}
+          <Link href={`/product/${_id}`} className="block no-underline mt-2">
+            <p className="text-sm text-gray-600 line-clamp-3">
+              {truncateText(description || "No description available", 100)}
+            </p>
+          </Link>
         </div>
 
         <div className="px-4 py-2">
