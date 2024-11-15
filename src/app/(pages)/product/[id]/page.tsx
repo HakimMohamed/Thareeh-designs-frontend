@@ -54,7 +54,7 @@ export default async function ProductPage(props: {
   return (
     <main className="min-h-screen  dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl shadow-gray-600/50 overflow-hidden">
           <div className="grid md:grid-cols-2 gap-8 p-8">
             {/* Product Image */}
             <div className="relative h-[500px] rounded-lg overflow-hidden">
@@ -69,7 +69,7 @@ export default async function ProductPage(props: {
 
             {/* Product Details */}
             <div className="space-y-6">
-              <h1 className="text-3xl font-light mb-2">{product.name}</h1>
+              <h2 className="font-bold mb-2">{product.name}</h2>
 
               <div className="flex items-baseline gap-4">
                 {product.discount.active ? (
