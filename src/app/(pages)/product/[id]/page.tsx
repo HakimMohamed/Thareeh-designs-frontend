@@ -2,6 +2,7 @@
 import { Item } from "@/app/interfaces/Item.interface";
 import api from "@/app/lib/api";
 import Image from "next/image";
+import { redirect } from "next/navigation"; // Import redirect
 
 async function getProduct(id: string): Promise<Item | null> {
   try {
@@ -19,6 +20,7 @@ async function getProduct(id: string): Promise<Item | null> {
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
+// Redirect if product is not found
 export default async function ProductPage(props: {
   params: Params;
   searchParams: SearchParams;
@@ -27,7 +29,11 @@ export default async function ProductPage(props: {
 
   const product = await getProduct(params.id);
 
-  return product ? (
+  if (!product) {
+    redirect("/not-found"); // Redirect to your 'not-found' page if product is not found
+  }
+
+  return (
     <div className="bg-gray-100 dark:bg-gray-800 py-8 flex flex-col items-center mx-auto px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row -mx-4">
@@ -129,8 +135,6 @@ export default async function ProductPage(props: {
         </div>
       </div>
     </div>
-  ) : (
-    <div>Loading...</div>
   );
 }
 
