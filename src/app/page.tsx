@@ -4,7 +4,7 @@ import { Item } from "./interfaces/Item.interface";
 import api from "../app/lib/api";
 import PaginationContainer from "./components/Pagination";
 
-const pageSize = 32;
+const pageSize = 10;
 
 const fetchItems = async (
   page: number
