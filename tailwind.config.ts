@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 import { nextui } from "@nextui-org/react";
-
+import tailWindAnimate from "tailwindcss-animate";
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,43 +9,51 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    light: {
+      colors: {
+        primary: "#7828c8",
+      },
+    },
+    dark: {
+      colors: {
+        primary: "#9353d3",
+      },
+    },
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
     },
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     keyframes: {
+      "fade-up": {
+        "0%": {
+          opacity: "0",
+          transform: "translateY(20px)",
+        },
+        "100%": {
+          opacity: "1",
+          transform: "translateY(0)",
+        },
+      },
       "fade-in": {
-        "0%": { opacity: "0", transform: "translateY(20px)" },
-        "100%": { opacity: "1", transform: "translateY(0)" },
-      },
-      "slide-in": {
-        "0%": { opacity: "0", transform: "translateX(-50px)" },
-        "100%": { opacity: "1", transform: "translateX(0)" },
-      },
-      float: {
-        "0%, 100%": { transform: "translateY(0)" },
-        "50%": { transform: "translateY(-20px)" },
-      },
-      "bounce-slow": {
-        "0%, 100%": { transform: "translateY(0) rotate(-12deg)" },
-        "50%": { transform: "translateY(-20px) rotate(-12deg)" },
-      },
-      "bounce-delayed": {
-        "0%, 100%": { transform: "translateY(0) rotate(12deg)" },
-        "50%": { transform: "translateY(-15px) rotate(12deg)" },
+        "0%": { opacity: "0" },
+        "100%": { opacity: "1" },
       },
     },
     animation: {
-      "fade-in": "fade-in 0.8s ease-out",
-      "slide-in": "slide-in 0.6s ease-out",
-      float: "float 6s ease-in-out infinite",
-      "bounce-slow": "bounce-slow 4s ease-in-out infinite",
-      "bounce-delayed": "bounce-delayed 5s ease-in-out infinite",
+      "fade-up": "fade-up 0.5s ease-out",
+      "fade-in": "fade-in 0.3s ease-out",
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [nextui(), tailWindAnimate],
 };
 export default config;

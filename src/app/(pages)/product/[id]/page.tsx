@@ -1,15 +1,15 @@
-// app/products/[id]/page.tsx
 import { Item } from "@/app/interfaces/Item.interface";
 import api from "@/app/lib/api";
+import { redirect } from "next/navigation";
 import Image from "next/image";
-import { redirect } from "next/navigation"; // Import redirect
+import ProductGrid from "@/app/components/ItemCard";
+import { Button } from "@nextui-org/react";
 
 async function getProduct(id: string): Promise<Item | null> {
   try {
     const res = await api.get(
       `${process.env.NEXT_PUBLIC_API_URL}/api/items/${id}`
     );
-
     return res.data.data;
   } catch (error) {
     console.log(error);
@@ -17,124 +17,119 @@ async function getProduct(id: string): Promise<Item | null> {
   }
 }
 
+async function getFeaturedProducts(id: string): Promise<Item[]> {
+  try {
+    const res = await api.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/items/featured?excludeId=${id}`,
+      {
+        params: { pageSize: 10 },
+      }
+    );
+    return res.data.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-// Redirect if product is not found
 export default async function ProductPage(props: {
   params: Params;
   searchParams: SearchParams;
 }) {
   const params = await props.params;
-
   const product = await getProduct(params.id);
+  const featuredProducts = await getFeaturedProducts(params.id);
 
   if (!product) {
-    redirect("/not-found"); // Redirect to your 'not-found' page if product is not found
+    redirect("/not-found");
   }
 
+  const discountedPrice = product.discount.active
+    ? product.price - (product.price * product.discount.value) / 100
+    : product.price;
+
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 py-8 flex flex-col items-center mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row -mx-4">
-          <div className="md:flex-1 px-4">
-            <div className="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
+    <main className="min-h-screen  dark:bg-gray-900">
+      <div className="max-w-8xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-8 p-8">
+            {/* Product Image */}
+            <div className="relative h-[500px] rounded-lg overflow-hidden">
               <Image
                 src={product.image}
-                alt="Product Image"
-                className="rounded-lg"
-                width={500}
-                height={500}
-                // fill
+                alt={product.name}
+                fill
+                className="object-cover"
+                priority
               />
             </div>
-            <div className="flex -mx-2 mb-4">
-              <div className="w-1/2 px-2">
-                <button className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">
-                  Add to Cart
-                </button>
-              </div>
-              <div className="w-1/2 px-2">
-                <button className="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white py-2 px-4 rounded-full font-bold hover:bg-gray-300 dark:hover:bg-gray-600">
-                  Add to Wishlist
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="md:flex-1 px-4">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-              {product.name}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-              {product.description}
-            </p>
-            <div className="flex mb-4">
-              <div className="mr-4">
-                <span className="font-bold text-gray-700 dark:text-gray-300">
-                  {product.discount.active && product.discount.value > 0 ? (
-                    <span className="line-through text-gray-400">
+
+            {/* Product Details */}
+            <div className="space-y-6">
+              <h1 className="text-3xl font-light mb-2">{product.name}</h1>
+
+              <div className="flex items-baseline gap-4">
+                {product.discount.active ? (
+                  <>
+                    <span className="text-2xl font-light line-through text-gray-400">
                       ${product.price}
                     </span>
-                  ) : (
-                    <span>${product.price}</span>
-                  )}
-                </span>
-                <span className="text-gray-600 dark:text-gray-300">$29.99</span>
+                    <span className="text-2xl font-medium text-red-600">
+                      ${discountedPrice.toFixed(2)}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-2xl font-light">${product.price}</span>
+                )}
               </div>
-              <div>
-                <span className="font-bold text-gray-700 dark:text-gray-300">
-                  Availability:
-                </span>
-                <span className="text-gray-600 dark:text-gray-300">
-                  In Stock
-                </span>
+
+              <div className="prose prose-gray dark:prose-invert">
+                <p className="text-lg leading-relaxed">{product.description}</p>
               </div>
-            </div>
-            <div className="mb-4">
-              <span className="font-bold text-gray-700 dark:text-gray-300">
-                Select Color:
-              </span>
-              <div className="flex items-center mt-2">
-                <button className="w-6 h-6 rounded-full bg-gray-800 dark:bg-gray-200 mr-2"></button>
-                <button className="w-6 h-6 rounded-full bg-red-500 dark:bg-red-700 mr-2"></button>
-                <button className="w-6 h-6 rounded-full bg-blue-500 dark:bg-blue-700 mr-2"></button>
-                <button className="w-6 h-6 rounded-full bg-yellow-500 dark:bg-yellow-700 mr-2"></button>
+
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Select Size</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {["XS", "S", "M", "L", "XL"].map((size) => (
+                      <Button
+                        key={size}
+                        className="w-14 h-14 rounded-full border border-gray-200 dark:border-gray-700 hover:border-black dark:hover:border-white transition-colors flex items-center justify-center text-sm"
+                      >
+                        {size}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="mb-4">
-              <span className="font-bold text-gray-700 dark:text-gray-300">
-                Select Size:
-              </span>
-              <div className="flex items-center mt-2">
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
-                  S
-                </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
-                  M
-                </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
-                  L
-                </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
-                  XL
-                </button>
-                <button className="bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-white py-2 px-4 rounded-full font-bold mr-2 hover:bg-gray-400 dark:hover:bg-gray-600">
-                  XXL
-                </button>
+
+              <Button className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-full hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors text-sm font-medium">
+                Add to Cart
+              </Button>
+
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <h3 className="text-sm font-medium mb-4">Product Details</h3>
+                <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                  <li>• Premium materials</li>
+                  <li>• Ethically manufactured</li>
+                  <li>• Free shipping on orders over $100</li>
+                  <li>• 30-day return policy</li>
+                </ul>
               </div>
-            </div>
-            <div>
-              <span className="font-bold text-gray-700 dark:text-gray-300">
-                Product Description:
-              </span>
-              <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
-                {product.description}
-              </p>
             </div>
           </div>
         </div>
+
+        {/* Featured Products */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-light mb-8">You May Also Like</h2>
+          <ProductGrid products={featuredProducts} />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -147,13 +142,13 @@ export async function generateMetadata(props: {
 
   if (!product) {
     return {
-      name: "Product not found",
+      title: "Product not found",
       description: "The product you are looking for does not exist.",
     };
   }
 
   return {
-    name: product.name,
+    title: product.name,
     description: product.description,
   };
 }
