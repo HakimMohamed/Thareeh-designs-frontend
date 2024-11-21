@@ -123,7 +123,7 @@ export default function App() {
         type="search"
       />
       <NavbarContent as="div" className="items-center" justify="end">
-        <Popover placement="bottom-end">
+        <Popover placement="bottom-end" backdrop="transparent">
           <PopoverTrigger>
             <Button className="relative bg-transparent">
               <Badge
