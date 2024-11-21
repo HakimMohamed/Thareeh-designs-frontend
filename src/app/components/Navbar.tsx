@@ -31,7 +31,9 @@ import {
   IconPackage,
 } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../lib/api";
+import { IFormattedCart } from "../interfaces/cart.interface.jsx";
 
 export default function App() {
   const pathname = usePathname();
@@ -47,6 +49,30 @@ export default function App() {
     { title: "Deals", path: "/deals" },
     { title: "Test2", path: "/test2" },
   ];
+  const [cart, setCart] = useState<IFormattedCart>({
+    _id: "",
+    _user: "",
+    items: [],
+    price: 0,
+    originalPrice: 0,
+  });
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await api.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/cart`,
+          {
+            params: { page: 1, pageSize: 10 },
+          }
+        );
+        setCart(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCart();
+  }, []);
   return (
     <Navbar
       isBordered
@@ -128,8 +154,8 @@ export default function App() {
             <Button className="relative bg-transparent">
               <Badge
                 color="primary"
-                content={3} // The number of items in the cart
-                className="absolute w-1 h-1 top-0 right-0"
+                content={cart.items.length}
+                className="absolute w-1 h-1 top-0.5 right-0.5"
               >
                 <Cart size={24} />
               </Badge>
@@ -137,9 +163,9 @@ export default function App() {
           </PopoverTrigger>
           <PopoverContent>
             <div className="w-64">
-              <h4 className="text-lg font-semibold">Cart</h4>
+              <h4 className="text-lg font-semibold">Shopping Cart</h4>
               <p className="text-sm text-gray-500">
-                You have 3 items in your cart.
+                You have {cart.items.length} items in your cart.
               </p>
               <div className="mt-2 flex justify-between space-x-2">
                 <Button color="primary" size="sm">
