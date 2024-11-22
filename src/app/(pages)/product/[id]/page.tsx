@@ -1,8 +1,8 @@
-import { Item } from "@/app/interfaces/Item.interface";
-import api from "@/app/lib/api";
+import { Item } from "@/interfaces/Item.interface";
+import api from "@/lib/api";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import ProductGrid from "@/app/components/ItemCard";
+import ProductGrid from "@/components/ItemCard";
 import { Button } from "@nextui-org/react";
 
 async function getProduct(id: string): Promise<Item | null> {
