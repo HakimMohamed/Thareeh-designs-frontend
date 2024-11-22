@@ -12,18 +12,11 @@ import {
   Link,
 } from "@nextui-org/react";
 import { MailIcon, LockIcon } from "./icons/Icons";
-import { useEffect } from "react";
+import { useIsAuthenticated } from "../stores/auth-model";
 
 export default function Auth() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  useEffect(() => {
-    const isAuthenticated = !!localStorage.getItem("token");
-
-    if (!isAuthenticated) {
-      onOpen();
-    }
-  }, [onOpen]);
+  const { onOpenChange } = useDisclosure();
+  const { isOpen, setIsOpen } = useIsAuthenticated();
 
   return (
     <>
@@ -65,7 +58,11 @@ export default function Auth() {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="flat"
+                  onPress={() => setIsOpen(false)}
+                >
                   Close
                 </Button>
                 <Button

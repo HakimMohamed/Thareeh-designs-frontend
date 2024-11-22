@@ -61,10 +61,7 @@ export default function App() {
     const fetchCart = async () => {
       try {
         const response = await api.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/cart`,
-          {
-            params: { page: 1, pageSize: 10 },
-          }
+          `${process.env.NEXT_PUBLIC_API_URL}/api/cart`
         );
         setCart(response.data.data);
       } catch (error) {
