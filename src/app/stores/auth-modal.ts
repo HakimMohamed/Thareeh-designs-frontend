@@ -5,7 +5,7 @@ export interface AuthModalStore {
   setIsOpen: (value: boolean) => void;
 }
 
-export const useIsAuthenticated = create<AuthModalStore>((set) => ({
+export const useAuthModal = create<AuthModalStore>((set) => ({
   isOpen: false,
   setIsOpen: (value: boolean) => set({ isOpen: value }),
 }));

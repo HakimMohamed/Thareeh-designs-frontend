@@ -9,10 +9,12 @@ import {
   Link,
 } from "@nextui-org/react";
 import { MailIcon, LockIcon, GoogleIcon } from "./icons/Icons";
-import { useIsAuthenticated } from "../stores/auth-model";
+import { useAuthModal } from "../stores/auth-modal";
+import { useIsAuthenticated } from "../stores/user";
 
 export default function App() {
-  const { setIsOpen, isOpen } = useIsAuthenticated();
+  const { setIsOpen, isOpen } = useAuthModal();
+  const { setIsAuthenticated } = useIsAuthenticated();
 
   return (
     <Modal
@@ -68,6 +70,7 @@ export default function App() {
                   className="w-full bg-black text-white font-medium rounded-lg py-2"
                   onPress={() => {
                     setIsOpen(false);
+                    setIsAuthenticated(true);
                     onClose();
                   }}
                 >
