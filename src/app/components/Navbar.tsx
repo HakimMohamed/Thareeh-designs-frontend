@@ -34,8 +34,10 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "../lib/api";
 import { IFormattedCart } from "../interfaces/cart.interface.jsx";
+import { useIsAuthenticated } from "../stores/auth-model";
 
 export default function App() {
+  const { setIsOpen } = useIsAuthenticated();
   const pathname = usePathname();
 
   const isActivePathStartsWith = (path: string) => {
@@ -145,6 +147,10 @@ export default function App() {
         }
         type="search"
       />
+
+      <Button size="sm" onClick={() => setIsOpen(true)}>
+        Login
+      </Button>
       <NavbarContent as="div" className="items-center" justify="end">
         <Popover placement="bottom-end" backdrop="transparent">
           <PopoverTrigger>
