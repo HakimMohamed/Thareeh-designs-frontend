@@ -2,7 +2,6 @@ import { NextUIProvider } from "@nextui-org/react";
 import AppNavBar from "../components/Navbar";
 import AdvertisingCard from "../components/AdvertisingCard";
 import SignUp from "../components/SignUp";
-
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NextUIProvider>
