@@ -7,9 +7,7 @@ import { Button } from "@nextui-org/react";
 
 async function getProduct(id: string): Promise<Item | null> {
   try {
-    const res = await api.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/items/${id}`
-    );
+    const res = await api.get(`/api/items/${id}`);
     return res.data.data;
   } catch (error) {
     console.log(error);
@@ -19,12 +17,9 @@ async function getProduct(id: string): Promise<Item | null> {
 
 async function getFeaturedProducts(id: string): Promise<Item[]> {
   try {
-    const res = await api.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/items/featured?excludeId=${id}`,
-      {
-        params: { pageSize: 10 },
-      }
-    );
+    const res = await api.get(`/api/items/featured?excludeId=${id}`, {
+      params: { pageSize: 10 },
+    });
     return res.data.data;
   } catch (error) {
     console.log(error);

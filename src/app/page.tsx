@@ -10,12 +10,9 @@ const fetchItems = async (
   page: number
 ): Promise<{ items: Item[]; count: number }> => {
   try {
-    const response = await api.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/items`,
-      {
-        params: { page, pageSize },
-      }
-    );
+    const response = await api.get(`/api/items`, {
+      params: { page, pageSize },
+    });
     return response.data.data;
   } catch (err: unknown) {
     if (process.env.NODE_ENV === "development") console.error(err);

@@ -1,8 +1,7 @@
 import axios from "axios";
-import { getToken } from "../utils/auth";
 import { useAuthModal } from "../stores/auth-modal";
-import { useIsAuthenticated } from "../stores/user";
 import { constants } from "../utils/constants";
+import { getTokens } from "./tokens";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -14,22 +13,22 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = getToken();
+    const { accessToken } = getTokens();
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(error.response.data.message);
   }
 );
 
 api.interceptors.response.use(
   (response) => {
-    return response;
+    return Promise.resolve(response);
   },
   (error) => {
     const setIsOpen = useAuthModal.getState().setIsOpen;
@@ -39,10 +38,8 @@ api.interceptors.response.use(
       !constants.PUBLIC_ROUTES.includes(error.config?.url)
     ) {
       setIsOpen(true);
-      useIsAuthenticated.getState().setIsAuthenticated(false);
     }
-
-    return Promise.reject(error);
+    return Promise.reject(error || "Error occurred");
   }
 );
 

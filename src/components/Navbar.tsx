@@ -35,12 +35,13 @@ import { useEffect, useState } from "react";
 import api from "../lib/api";
 import { IFormattedCart } from "../interfaces/cart.interface.jsx";
 import { useAuthModal } from "../stores/auth-modal";
-import { useIsAuthenticated } from "../stores/user";
+import { useAuth } from "@/lib/authContext";
+import { AxiosError } from "axios";
 
 export default function App() {
   const { setIsOpen } = useAuthModal();
-  const { isAuthenticated } = useIsAuthenticated();
   const pathname = usePathname();
+  const { user } = useAuth();
 
   const isActivePathStartsWith = (path: string) => {
     return pathname.startsWith(path);
@@ -64,12 +65,12 @@ export default function App() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await api.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/cart`
-        );
+        const response = await api.get(`/api/cart`);
         setCart(response.data.data);
-      } catch (error) {
-        console.error(error);
+      } catch (error: AxiosError | any) {
+        if (error?.response?.status === 404) {
+          return;
+        }
       }
     };
     fetchCart();
@@ -151,11 +152,6 @@ export default function App() {
       />
 
       <NavbarContent as="div" className="items-center" justify="end">
-        {!isAuthenticated && (
-          <Button size="sm" onClick={() => setIsOpen(true)}>
-            Login
-          </Button>
-        )}
         <Popover placement="bottom-end" backdrop="transparent">
           <PopoverTrigger>
             <Button className="relative bg-transparent">
@@ -193,6 +189,11 @@ export default function App() {
               as="button"
               className="transition-transform"
               color="secondary"
+              onClick={() => {
+                if (!user) {
+                  setIsOpen(true);
+                }
+              }}
               name="JH"
               style={{
                 borderRadius: "50%",
@@ -203,48 +204,49 @@ export default function App() {
             />
           </DropdownTrigger>
 
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">zoey@example.com</p>
-              <p className="font-semibold">010-1234-5678</p>
-            </DropdownItem>
-            <DropdownItem key="my-orders">
-              <div className="flex items-center gap-2">
-                <IconPackage size={24} stroke={1} />
-                <p>My Orders</p>
-              </div>
-            </DropdownItem>
-            <DropdownItem key="addresses">
-              <div className="flex items-center gap-2">
-                <IconHomeLink size={24} stroke={1} />
-                <p>Addresses</p>
-              </div>
-            </DropdownItem>
-            <DropdownItem key="support">
-              <div className="flex items-center gap-2">
-                <IconLifebuoy size={24} stroke={1} />
-                <p>Support</p>
-              </div>
-            </DropdownItem>
-            <DropdownItem key="favorites">
-              <div className="flex items-center gap-2">
-                <IconHearts size={24} stroke={1} />
-                <p>Favorites</p>
-              </div>
-            </DropdownItem>
-            <DropdownItem key="payments">
-              <div className="flex items-center gap-2">
-                <IconCreditCard size={24} stroke={1} />
-                <p>Payments</p>
-              </div>
-            </DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              <div className="flex items-center gap-2">
-                <IconLogout size={24} stroke={1} />
-                <p>Log Out</p>
-              </div>
-            </DropdownItem>
-          </DropdownMenu>
+          {user && (
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="profile" className="h-7 gap-2">
+                <p className="font-semibold">{user?.email || ""}</p>
+              </DropdownItem>
+              <DropdownItem key="my-orders">
+                <div className="flex items-center gap-2">
+                  <IconPackage size={24} stroke={1} />
+                  <p>My Orders</p>
+                </div>
+              </DropdownItem>
+              <DropdownItem key="addresses">
+                <div className="flex items-center gap-2">
+                  <IconHomeLink size={24} stroke={1} />
+                  <p>Addresses</p>
+                </div>
+              </DropdownItem>
+              <DropdownItem key="support">
+                <div className="flex items-center gap-2">
+                  <IconLifebuoy size={24} stroke={1} />
+                  <p>Support</p>
+                </div>
+              </DropdownItem>
+              <DropdownItem key="favorites">
+                <div className="flex items-center gap-2">
+                  <IconHearts size={24} stroke={1} />
+                  <p>Favorites</p>
+                </div>
+              </DropdownItem>
+              <DropdownItem key="payments">
+                <div className="flex items-center gap-2">
+                  <IconCreditCard size={24} stroke={1} />
+                  <p>Payments</p>
+                </div>
+              </DropdownItem>
+              <DropdownItem key="logout" color="danger">
+                <div className="flex items-center gap-2">
+                  <IconLogout size={24} stroke={1} />
+                  <p>Log Out</p>
+                </div>
+              </DropdownItem>
+            </DropdownMenu>
+          )}
         </Dropdown>
       </NavbarContent>
       <NavbarMenu>
