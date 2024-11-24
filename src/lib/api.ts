@@ -1,7 +1,12 @@
 import axios from "axios";
 import { useAuthModal } from "../stores/auth-modal";
-import { constants } from "../utils/constants";
-import { getTokens } from "./tokens";
+import {
+  getTokens,
+  isTokenExpired,
+  refreshAccessToken,
+  setTokens,
+} from "./tokens";
+import { constants } from "@/utils/constants";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -11,12 +16,54 @@ const api = axios.create({
   },
 });
 
+const isServer = () => {
+  return typeof window === "undefined";
+};
 api.interceptors.request.use(
-  (config) => {
-    const { accessToken } = getTokens();
-
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
+  async (config) => {
+    if (isServer()) {
+      const cookieStore = await (await import("next/headers")).cookies();
+      const accessToken = cookieStore.get("accessToken");
+      const refreshToken = cookieStore.get("refreshToken");
+      if (accessToken) {
+        const isExpired = isTokenExpired(accessToken.value);
+        if (isExpired && refreshToken) {
+          try {
+            const newAccessToken = await refreshAccessToken();
+            if (!newAccessToken) {
+              return config;
+            }
+            setTokens(newAccessToken, refreshToken.value);
+            config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+          } catch (err: any) {
+            return config;
+          }
+        } else {
+          config.headers["Authorization"] = `Bearer ${accessToken.value}`;
+        }
+      }
+    } else {
+      const { accessToken } = getTokens();
+      if (accessToken) {
+        const isExpired = isTokenExpired(accessToken);
+        const { refreshToken } = getTokens();
+        if (isExpired && refreshToken) {
+          try {
+            const newAccessToken = await refreshAccessToken();
+            if (!newAccessToken) {
+              return config;
+            }
+            setTokens(newAccessToken, refreshToken);
+            config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+          } catch (err: any) {
+            return config;
+          }
+        } else {
+          config.headers["Authorization"] = `Bearer ${accessToken}`;
+        }
+      }
     }
 
     return config;
@@ -32,13 +79,14 @@ api.interceptors.response.use(
   },
   (error) => {
     const setIsOpen = useAuthModal.getState().setIsOpen;
-
+    console.log("Hey");
     if (
       error.response?.status === 401 &&
       !constants.PUBLIC_ROUTES.includes(error.config?.url)
     ) {
       setIsOpen(true);
     }
+
     return Promise.reject(error || "Error occurred");
   }
 );

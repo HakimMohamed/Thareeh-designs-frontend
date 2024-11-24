@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import ProductGrid from "@/components/ItemCard";
 import { Button } from "@nextui-org/react";
+import AddToCartButton from "@/components/AddToCartButton";
 
 async function getProduct(id: string): Promise<Item | null> {
   try {
@@ -101,9 +102,7 @@ export default async function ProductPage(props: {
                 </div>
               </div>
 
-              <Button className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-full hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors text-sm font-medium">
-                Add to Cart
-              </Button>
+              <AddToCartButton itemId={product._id} />
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
                 <h3 className="text-sm font-medium mb-4">Product Details</h3>

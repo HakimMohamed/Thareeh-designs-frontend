@@ -19,9 +19,9 @@ import {
   NavbarMenuToggle,
   NavbarMenuItem,
 } from "@nextui-org/react";
-import { Cart } from "./icons/Icons.jsx";
-import { PrinterLogo } from "./PrinterLogo.jsx";
-import { SearchIcon } from "./SearchIcon.jsx";
+import { Cart } from "./icons/Icons";
+import { PrinterLogo } from "./PrinterLogo";
+import { SearchIcon } from "./SearchIcon";
 import {
   IconCreditCard,
   IconHearts,
@@ -31,17 +31,16 @@ import {
   IconPackage,
 } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import api from "../lib/api";
-import { IFormattedCart } from "../interfaces/cart.interface.jsx";
+import { useState } from "react";
 import { useAuthModal } from "../stores/auth-modal";
 import { useAuth } from "@/lib/authContext";
-import { AxiosError } from "axios";
+import useCartStore from "@/stores/cart";
 
 export default function App() {
   const { setIsOpen } = useAuthModal();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const { cart } = useCartStore();
 
   const isActivePathStartsWith = (path: string) => {
     return pathname.startsWith(path);
@@ -54,27 +53,7 @@ export default function App() {
     { title: "Deals", path: "/deals" },
     { title: "Test2", path: "/test2" },
   ];
-  const [cart, setCart] = useState<IFormattedCart>({
-    _id: "",
-    _user: "",
-    items: [],
-    price: 0,
-    originalPrice: 0,
-  });
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await api.get(`/api/cart`);
-        setCart(response.data.data);
-      } catch (error: AxiosError | any) {
-        if (error?.response?.status === 404) {
-          return;
-        }
-      }
-    };
-    fetchCart();
-  }, []);
   return (
     <Navbar
       isBordered
@@ -156,11 +135,12 @@ export default function App() {
           <PopoverTrigger>
             <Button className="relative bg-transparent">
               <Badge
+                content={cart?.items?.length || 0}
+                shape="circle"
                 color="primary"
-                content={cart.items.length}
-                className="absolute w-1 h-1 top-0.5 right-0.5"
+                size="lg"
               >
-                <Cart size={24} />
+                <Cart size={28} />
               </Badge>
             </Button>
           </PopoverTrigger>
@@ -168,7 +148,7 @@ export default function App() {
             <div className="w-64">
               <h4 className="text-lg font-semibold">Shopping Cart</h4>
               <p className="text-sm text-gray-500">
-                You have {cart.items.length} items in your cart.
+                You have {cart && cart.items.length} items in your cart.
               </p>
               <div className="mt-2 flex justify-between space-x-2">
                 <Button color="primary" size="sm">
@@ -239,7 +219,7 @@ export default function App() {
                   <p>Payments</p>
                 </div>
               </DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onClick={logout}>
                 <div className="flex items-center gap-2">
                   <IconLogout size={24} stroke={1} />
                   <p>Log Out</p>

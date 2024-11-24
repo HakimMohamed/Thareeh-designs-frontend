@@ -9,7 +9,8 @@ import {
 } from "./types";
 import { getTokens, setTokens, removeTokens, isTokenExpired } from "./tokens";
 import api from "./api";
-import { AxiosError } from "axios";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { redirect } from "next/navigation";
 
 interface AuthContextType {
   user: User | null;
@@ -87,7 +88,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setTokens(accessToken, refreshToken);
       setUser(user);
-    } catch (error: AxiosError | any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       if (error.response.status === 409 || error.response.status === 403) {
         return Promise.reject(error?.response.data.message);
       }
@@ -96,12 +98,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
   const logout = async () => {
     const { refreshToken } = getTokens();
-
+    setUser(null);
+    removeTokens();
     await api.delete("/api/auth/logout", {
       data: { refreshToken },
     });
-    removeTokens();
-    setUser(null);
+    redirect("/");
   };
 
   useEffect(() => {
