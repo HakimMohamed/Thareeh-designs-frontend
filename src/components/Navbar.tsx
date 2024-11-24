@@ -18,6 +18,7 @@ import {
   NavbarMenu,
   NavbarMenuToggle,
   NavbarMenuItem,
+  Spinner,
 } from "@nextui-org/react";
 import { Cart } from "./icons/Icons";
 import { PrinterLogo } from "./PrinterLogo";
@@ -34,12 +35,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import useCartStore from "@/stores/cart";
 import { useAuthStore } from "@/stores/auth";
-import { useAuthModal } from "@/stores/auth-modal";
+// import { useAuthModal } from "@/stores/auth-modal";
 
 export default function App() {
   const pathname = usePathname();
   const { user, logout, fetchUser } = useAuthStore();
-  const { setIsOpen } = useAuthModal.getState();
+  // const { setIsOpen } = useAuthModal.getState();
 
   const isActivePathStartsWith = (path: string) => {
     return pathname.startsWith(path);
@@ -53,7 +54,7 @@ export default function App() {
     { title: "Test2", path: "/test2" },
   ];
 
-  const { fetchCart, cart } = useCartStore();
+  const { fetchCart, cart, isLoading: loadingCart } = useCartStore();
 
   useEffect(() => {
     fetchUser();
@@ -146,7 +147,7 @@ export default function App() {
                 content={cart?.items?.length || 0}
                 shape="circle"
                 color="primary"
-                size="lg"
+                size="md"
               >
                 <Cart size={28} />
               </Badge>
@@ -177,12 +178,8 @@ export default function App() {
               as="button"
               className="transition-transform"
               color="secondary"
-              onClick={() => {
-                if (!user) {
-                  setIsOpen(true);
-                }
-              }}
-              name="JH"
+              onClick={() => {}}
+              name={user ? user.email.split("@")[0].toUpperCase() : "JH"}
               style={{
                 borderRadius: "50%",
                 width: "35px",

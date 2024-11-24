@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -53,8 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const response = await api.get("/api/auth/user");
       const user = response.data.data;
       set({ user });
-    } catch (error) {
-      console.error("Error fetching user:", error);
+    } catch (error: any) {
       set({ user: null });
     }
   },

@@ -81,7 +81,8 @@ api.interceptors.response.use(
     const setIsOpen = useAuthModal.getState().setIsOpen;
     if (
       error.response?.status === 401 &&
-      !constants.PUBLIC_ROUTES.includes(error.config?.url)
+      constants.ROUTES_REQUIRE_MODAL_OPEN[error.config.url] ===
+        error.config.method
     ) {
       setIsOpen(true);
     }

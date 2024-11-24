@@ -4,10 +4,12 @@ import { create } from "zustand";
 
 interface CartState {
   cart: IFormattedCart | null;
+  isLoading: boolean;
   fetchCart: () => Promise<void>;
 }
 
-const useCartStore = create<CartState>((set) => ({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const useCartStore = create<CartState>((set, get) => ({
   cart: {
     _id: "",
     _user: "",
@@ -15,9 +17,15 @@ const useCartStore = create<CartState>((set) => ({
     price: 0,
     originalPrice: 0,
   },
+  isLoading: false,
   fetchCart: async () => {
-    const response = await api.get(`/api/cart`);
-    set({ cart: response.data.data });
+    try {
+      set({ isLoading: true });
+      const response = await api.get(`/api/cart`);
+      set({ cart: response.data.data, isLoading: false });
+    } catch (error) {
+      set({ isLoading: false });
+    }
   },
 }));
 

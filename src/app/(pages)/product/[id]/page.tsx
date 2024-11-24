@@ -102,7 +102,10 @@ export default async function ProductPage(props: {
                 </div>
               </div>
 
-              <AddToCartButton itemId={product._id} />
+              <AddToCartButton
+                itemId={product._id}
+                props="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-full hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors text-sm font-medium"
+              />
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
                 <h3 className="text-sm font-medium mb-4">Product Details</h3>
