@@ -31,16 +31,15 @@ import {
   IconPackage,
 } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { useAuthModal } from "../stores/auth-modal";
-import { useAuth } from "@/lib/authContext";
+import { useEffect, useState } from "react";
 import useCartStore from "@/stores/cart";
+import { useAuthStore } from "@/stores/auth";
+import { useAuthModal } from "@/stores/auth-modal";
 
 export default function App() {
-  const { setIsOpen } = useAuthModal();
   const pathname = usePathname();
-  const { user, logout } = useAuth();
-  const { cart } = useCartStore();
+  const { user, logout, fetchUser } = useAuthStore();
+  const { setIsOpen } = useAuthModal.getState();
 
   const isActivePathStartsWith = (path: string) => {
     return pathname.startsWith(path);
@@ -54,6 +53,15 @@ export default function App() {
     { title: "Test2", path: "/test2" },
   ];
 
+  const { fetchCart, cart } = useCartStore();
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
   return (
     <Navbar
       isBordered

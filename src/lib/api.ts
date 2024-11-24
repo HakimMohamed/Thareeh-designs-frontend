@@ -79,7 +79,6 @@ api.interceptors.response.use(
   },
   (error) => {
     const setIsOpen = useAuthModal.getState().setIsOpen;
-    console.log("Hey");
     if (
       error.response?.status === 401 &&
       !constants.PUBLIC_ROUTES.includes(error.config?.url)

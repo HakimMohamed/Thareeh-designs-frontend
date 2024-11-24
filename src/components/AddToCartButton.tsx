@@ -1,15 +1,18 @@
 "use client";
 
 import { addToCart } from "@/actions/cart";
+import useCartStore from "@/stores/cart";
 import { Button } from "@nextui-org/react";
 import { useTransition } from "react";
 
 export default function AddToCartButton({ itemId }: { itemId: string }) {
   const [isPending, startTransition] = useTransition();
+  const { fetchCart } = useCartStore();
 
   const handleAddToCart = () => {
     startTransition(async () => {
-      addToCart(itemId);
+      await addToCart(itemId);
+      await fetchCart();
     });
   };
 

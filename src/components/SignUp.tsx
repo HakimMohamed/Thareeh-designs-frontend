@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Modal,
@@ -14,11 +15,11 @@ import {
 } from "./icons/Icons";
 import { useAuthModal } from "../stores/auth-modal";
 import { useState } from "react";
-import { useAuth } from "@/lib/authContext";
+import { useAuthStore } from "@/stores/auth";
 
 export default function SignUp() {
   const { setIsOpen, isOpen } = useAuthModal();
-  const { register, completeRegistration } = useAuth();
+  const { register, completeRegistration } = useAuthStore();
   const [step, setStep] = useState<"email" | "details">("email");
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -29,16 +30,16 @@ export default function SignUp() {
   const [error, setError] = useState<string | null | unknown>(null);
 
   const handleSendOtp = async () => {
-    setError("");
-    setLoading(true);
+    setError(null); // Reset any existing errors
+    setLoading(true); // Start loading
     try {
+      // Simulate an API call or replace this with your actual logic
       await register({ email });
-      setStep("details");
-      setLoading(false);
-      // setStep("details");
-    } catch (err: string | unknown) {
-      setError(err);
-      setLoading(false);
+      setStep("details"); // Move to the next step
+    } catch (err: any) {
+      setError(err || "An unexpected error occurred"); // Handle and display error
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 

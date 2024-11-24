@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import api from "./api";
+import axios from "axios";
 
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
@@ -12,12 +12,12 @@ export const getTokens = () => ({
 
 export const setTokens = (accessToken: string, refreshToken: string) => {
   Cookies.set(ACCESS_TOKEN_KEY, accessToken, {
-    secure: true,
+    // secure: true,
     sameSite: "strict",
     path: "/",
   });
   Cookies.set(REFRESH_TOKEN_KEY, refreshToken, {
-    secure: true,
+    // secure: true,
     sameSite: "strict",
     path: "/",
   });
@@ -42,7 +42,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
   try {
     const { refreshToken } = getTokens();
     if (!refreshToken) return null;
-    const response = await api.post("/api/auth/refresh-token", {
+    const response = await axios.post("/api/auth/refresh-token", {
       refreshToken,
     });
     const { accessToken, refreshToken: newRefreshToken } = response.data;

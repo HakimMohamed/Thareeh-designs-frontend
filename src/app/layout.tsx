@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
-import { AuthProvider } from "@/lib/authContext";
 import NextTopLoader from "nextjs-toploader";
 
 const geistSans = localFont({
@@ -31,10 +30,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <NextTopLoader />
-          <Providers>{children}</Providers>
-        </AuthProvider>
+        <NextTopLoader />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
