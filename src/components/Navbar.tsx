@@ -99,8 +99,9 @@ export default function App() {
           "bg-white",
         ],
       }}
-      className="sticky top-0 z-50 bg-white shadow"
+      className="sticky bg-white shadow"
       maxWidth="xl"
+      position="sticky"
     >
       <NavbarContent justify="start">
         <NavbarMenuToggle
