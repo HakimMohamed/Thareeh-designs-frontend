@@ -18,8 +18,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/stores/auth";
 
 export default function SignUp() {
-  const { setIsOpen, isOpen } = useAuthModal();
-  console.log(isOpen);
+  const { setSignUpIsOpen, signUpIsOpen } = useAuthModal();
   const { register, completeRegistration } = useAuthStore();
   const [step, setStep] = useState<"email" | "details">("email");
   const [loading, setLoading] = useState(false);
@@ -64,10 +63,10 @@ export default function SignUp() {
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={signUpIsOpen}
       onOpenChange={(open) => {
         if (!open) {
-          setIsOpen(false);
+          setSignUpIsOpen(false);
         }
       }}
       placement="top-center"

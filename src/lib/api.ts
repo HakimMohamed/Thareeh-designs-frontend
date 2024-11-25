@@ -84,7 +84,7 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const setIsOpen = useAuthModal.getState().setIsOpen;
+    const setSignInIsOpen = useAuthModal.getState().setSignInIsOpen;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -116,7 +116,7 @@ api.interceptors.response.use(
             constants.ROUTES_REQUIRE_MODAL_OPEN[error.config.url] ===
             error.config.method
           ) {
-            setIsOpen(true);
+            setSignInIsOpen(true);
           }
           return Promise.reject(error);
         }

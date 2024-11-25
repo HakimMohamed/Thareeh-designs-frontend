@@ -40,7 +40,7 @@ import { useAuthModal } from "@/stores/auth-modal";
 export default function App() {
   const pathname = usePathname();
   const { user, logout, fetchUser } = useAuthStore();
-  const { setIsOpen } = useAuthModal.getState();
+  const { setSignInIsOpen } = useAuthModal.getState();
 
   const isActivePathStartsWith = (path: string) => {
     return pathname.startsWith(path);
@@ -181,7 +181,7 @@ export default function App() {
               color="secondary"
               onClick={() => {
                 if (!user) {
-                  setIsOpen(true);
+                  setSignInIsOpen(true);
                 }
               }}
               name={user ? user.email.split("@")[0].toUpperCase() : "JH"}
@@ -229,7 +229,14 @@ export default function App() {
                   <p>Payments</p>
                 </div>
               </DropdownItem>
-              <DropdownItem key="logout" color="danger" onClick={logout}>
+              <DropdownItem
+                key="logout"
+                color="danger"
+                onClick={async () => {
+                  await logout();
+                  window.location.reload();
+                }}
+              >
                 <div className="flex items-center gap-2">
                   <IconLogout size={24} stroke={1} />
                   <p>Log Out</p>

@@ -16,7 +16,7 @@ export default function AddToCartButton({
 }) {
   const [isPending, startTransition] = useTransition();
   const { fetchCart } = useCartStore();
-  const { setIsOpen } = useAuthModal();
+  const { setSignInIsOpen } = useAuthModal();
 
   const handleAddToCart = async () => {
     startTransition(async () => {
@@ -24,7 +24,7 @@ export default function AddToCartButton({
         await addToCart(itemId);
         await fetchCart();
       } catch (error) {
-        setIsOpen(true);
+        setSignInIsOpen(true);
       }
     });
   };

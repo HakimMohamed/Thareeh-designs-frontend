@@ -24,3 +24,8 @@ export interface comlpeteRegistrationInterface {
   password: string;
   otp: string;
 }
+
+export interface VerifyOtpCredentials {
+  email: string;
+  otp: string;
+}

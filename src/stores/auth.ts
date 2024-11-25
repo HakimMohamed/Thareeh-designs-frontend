@@ -8,10 +8,12 @@ import {
   LoginCredentials,
   RegisterCredentials,
   comlpeteRegistrationInterface,
+  VerifyOtpCredentials,
 } from "../lib/types";
 import { getTokens, setTokens, removeTokens } from "../lib/tokens";
 import api from "../lib/api";
 import { redirect } from "next/navigation";
+import axios from "axios";
 
 interface AuthState {
   user: User | null;
@@ -23,35 +25,18 @@ interface AuthState {
   completeRegistration: (
     credentials: comlpeteRegistrationInterface
   ) => Promise<void>;
-  refreshAccessToken: () => Promise<string | null>;
+  verifyOtp: (credentials: VerifyOtpCredentials) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isLoading: false,
 
-  refreshAccessToken: async (): Promise<string | null> => {
-    try {
-      const { refreshToken } = getTokens();
-      if (!refreshToken) return null;
-
-      const response = await api.post("/api/auth/refresh-token", {
-        refreshToken,
-      });
-      const { accessToken, refreshToken: newRefreshToken } = response.data;
-      setTokens(accessToken, newRefreshToken);
-      return accessToken;
-    } catch (error) {
-      console.error("Error refreshing token:", error);
-      removeTokens();
-      set({ user: null });
-      return null;
-    }
-  },
-
   fetchUser: async () => {
     try {
-      const response = await api.get("/api/auth/user");
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`
+      );
       const user = response.data.data;
       set({ user });
     } catch (error: any) {
@@ -61,22 +46,29 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (credentials: LoginCredentials) => {
     set({ isLoading: true }); // Explicitly set loading state
     try {
-      const response = await api.post("/api/auth/login", credentials);
-      const { user, accessToken, refreshToken } = response.data.data;
-      setTokens(accessToken, refreshToken);
-      set({ user });
-    } catch (error) {
-      console.error("Login error:", error);
-      throw error; // Let the calling code handle the error
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        credentials
+      );
+    } catch (error: any) {
+      console.error("Register error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong";
+
+      console.log(errorMessage);
+      return Promise.reject(errorMessage);
     } finally {
-      set({ isLoading: false }); // Ensure loading state is reset
+      set({ isLoading: false });
     }
   },
 
   register: async (credentials: RegisterCredentials) => {
     set({ isLoading: true });
     try {
-      await api.post("/api/auth/register", credentials);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+        credentials
+      );
     } catch (error: any) {
       console.error("Register error:", error);
       const errorMessage =
@@ -92,8 +84,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   completeRegistration: async (credentials: comlpeteRegistrationInterface) => {
     set({ isLoading: true });
     try {
-      const response = await api.post(
-        "/api/auth/complete-registeration",
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/complete-registeration`,
         credentials
       );
       const { user, accessToken, refreshToken } = response.data.data;
@@ -110,12 +102,30 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
+  verifyOtp: async (credentials: VerifyOtpCredentials) => {
+    set({ isLoading: true }); // Explicitly set loading state
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/otp/verify`,
+        credentials
+      );
+      const { user, accessToken, refreshToken } = response.data.data;
+      setTokens(accessToken, refreshToken);
+      set({ user });
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error; // Let the calling code handle the error
+    } finally {
+      set({ isLoading: false }); // Ensure loading state is reset
+    }
+  },
+
   logout: async () => {
     const { refreshToken } = getTokens();
     set({ user: null });
     removeTokens();
     try {
-      await api.delete("/api/auth/logout", {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
         data: { refreshToken },
       });
     } catch (error) {
