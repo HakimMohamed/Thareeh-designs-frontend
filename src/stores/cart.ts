@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IFormattedCart } from "@/interfaces/cart.interface";
 import api from "@/lib/api";
 import { create } from "zustand";

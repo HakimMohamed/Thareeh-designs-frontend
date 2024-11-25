@@ -38,19 +38,24 @@ export const isTokenExpired = (token: string) => {
   }
 };
 
-export const refreshAccessToken = async (): Promise<string | null> => {
+export const refreshAccessToken = async (
+  refreshToken: string
+): Promise<string | null> => {
   try {
-    const { refreshToken } = getTokens();
     if (!refreshToken) return null;
-    const response = await axios.post("/api/auth/refresh-token", {
-      refreshToken,
-    });
-    const { accessToken, refreshToken: newRefreshToken } = response.data;
-    setTokens(accessToken, newRefreshToken);
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`,
+      {
+        refreshToken,
+      }
+    );
+    const { accessToken } = response.data.data;
+    setTokens(accessToken, refreshToken);
     return accessToken;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    removeTokens();
+    console.log("Error refreshing token:", error);
+    // removeTokens();
     return null;
   }
 };

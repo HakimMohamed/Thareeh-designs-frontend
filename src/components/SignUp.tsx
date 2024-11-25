@@ -19,6 +19,7 @@ import { useAuthStore } from "@/stores/auth";
 
 export default function SignUp() {
   const { setIsOpen, isOpen } = useAuthModal();
+  console.log(isOpen);
   const { register, completeRegistration } = useAuthStore();
   const [step, setStep] = useState<"email" | "details">("email");
   const [loading, setLoading] = useState(false);

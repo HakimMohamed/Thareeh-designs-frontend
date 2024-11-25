@@ -99,7 +99,7 @@ export default function App() {
           "bg-white",
         ],
       }}
-      className="sticky bg-white shadow"
+      className="sticky bg-white shadow mb-4"
       maxWidth="xl"
       position="sticky"
     >
@@ -180,7 +180,9 @@ export default function App() {
               className="transition-transform"
               color="secondary"
               onClick={() => {
-                setIsOpen(true);
+                if (!user) {
+                  setIsOpen(true);
+                }
               }}
               name={user ? user.email.split("@")[0].toUpperCase() : "JH"}
               style={{
