@@ -5,21 +5,24 @@ import { IFormattedCart } from "@/interfaces/cart.interface";
 import Link from "next/link";
 import DeleteIcon from "@mui/icons-material/Delete"; // Import MUI Delete icon
 import { useRouter } from "next/navigation";
-
+import useCartStore from "@/stores/cart";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 interface CartProps {
   cart: IFormattedCart | null;
 }
 
 export default function CartModal({ cart }: CartProps) {
+  const { updateQuantity, removeItemFromCart } = useCartStore();
   const router = useRouter();
   if (!cart) {
     return (
-      <>
+      <div>
         <h2 className="text-lg font-bold">Shopping Cart</h2>
         <Button size="md" variant="flat" color="primary">
           Close
         </Button>
-      </>
+      </div>
     );
   }
 
@@ -36,31 +39,57 @@ export default function CartModal({ cart }: CartProps) {
           <ul role="list" className="divide-y divide-gray-200">
             {cart.items.slice(0, 3).map((product) => (
               <li key={product._id} className="flex items-center py-4">
-                <Link
-                  href={`/product/${product._id}`}
-                  className="flex flex-1 items-center cursor-pointer rounded-md p-2"
-                >
-                  <div className="relative h-[150px] rounded-lg overflow-hidden">
+                {/* Link only wraps the image now */}
+                <div className="relative h-[150px] w-[150px]">
+                  <Link
+                    href={`/product/${product._id}`}
+                    className="absolute inset-0"
+                  >
                     <Image
                       src={product.image}
                       alt={product.name}
                       width={150}
                       height={150}
-                      className="object-cover"
+                      className="object-cover rounded-lg"
                     />
-                  </div>
-                  <div className="ml-4 flex-1">
-                    <p>
-                      {product.name.length > 22
-                        ? `${product.name.slice(0, 19)}...`
-                        : product.name}
-                    </p>
-                    <div className="mt-1 flex justify-between">
-                      <p color="textSecondary">Qty: {product.quantity}</p>
-                      <p>{product.price.toFixed(2) + " " + "EGP"}</p>
+                  </Link>
+                </div>
+                <div className="ml-4 flex-1">
+                  <p>
+                    {product.name.length > 22
+                      ? `${product.name.slice(0, 19)}...`
+                      : product.name}
+                  </p>
+                  <div className="mt-1 flex justify-between">
+                    <div className="flex items-center">
+                      {/* Minus Button */}
+                      <Button
+                        size="sm"
+                        variant="light"
+                        color="primary"
+                        onClick={() =>
+                          updateQuantity(product._id, product.quantity - 1)
+                        }
+                        disabled={product.quantity <= 1} // Prevent decrementing below 1
+                      >
+                        <RemoveIcon />
+                      </Button>
+                      <p className="mx-2">{product.quantity}</p>
+                      {/* Plus Button */}
+                      <Button
+                        size="sm"
+                        variant="light"
+                        color="primary"
+                        onClick={() =>
+                          updateQuantity(product._id, product.quantity + 1)
+                        }
+                      >
+                        <AddIcon />
+                      </Button>
                     </div>
+                    <p>{product.price.toFixed(2) + " " + "EGP"}</p>
                   </div>
-                </Link>
+                </div>
                 <Button
                   size="md"
                   variant="light"
@@ -68,6 +97,7 @@ export default function CartModal({ cart }: CartProps) {
                   className="p-4 flex items-center justify-center"
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent click event from propagating to the Link
+                    removeItemFromCart(product._id); // Call remove item function
                   }}
                 >
                   <DeleteIcon />
@@ -77,6 +107,7 @@ export default function CartModal({ cart }: CartProps) {
           </ul>
         </div>
       )}
+
       <div className="mt-2 flex justify-between space-x-2 mb-5">
         <Button color="primary" size="sm" onClick={() => router.push("/cart")}>
           View Cart ({cart && cart.items.length})

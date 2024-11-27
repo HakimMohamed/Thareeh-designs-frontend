@@ -7,6 +7,8 @@ interface CartState {
   cart: IFormattedCart | null;
   isLoading: boolean;
   fetchCart: () => Promise<void>;
+  removeItemFromCart: (itemId: string) => Promise<void>;
+  updateQuantity: (itemId: string, quantity: number) => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,6 +28,31 @@ const useCartStore = create<CartState>((set, get) => ({
       set({ cart: response.data.data, isLoading: false });
     } catch (error) {
       set({ isLoading: false });
+    }
+  },
+  removeItemFromCart: async (itemId: string) => {
+    try {
+      set({ isLoading: true });
+      await api.delete(`/api/cart/item`, { data: { itemId } });
+      set({ isLoading: false });
+      get().fetchCart();
+    } catch (error) {
+      set({ isLoading: false });
+      console.error("Failed to remove item:", error);
+    }
+  },
+  updateQuantity: async (itemId: string, quantity: number) => {
+    try {
+      set({ isLoading: true });
+      await api.patch(`/api/cart/item`, {
+        itemId,
+        quantity,
+      });
+      set({ isLoading: false });
+      get().fetchCart();
+    } catch (error) {
+      set({ isLoading: false });
+      console.error("Failed to update quantity:", error);
     }
   },
 }));
