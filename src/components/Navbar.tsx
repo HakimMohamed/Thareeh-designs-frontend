@@ -23,7 +23,6 @@ import { Cart } from "./icons/Icons";
 import { PrinterLogo } from "./PrinterLogo";
 import { SearchIcon } from "./SearchIcon";
 import {
-  IconCreditCard,
   IconHearts,
   IconHomeLink,
   IconLifebuoy,
@@ -36,6 +35,8 @@ import useCartStore from "@/stores/cart";
 import { useAuthStore } from "@/stores/auth";
 import { useAuthModal } from "@/stores/auth-modal";
 // import { useAuthModal } from "@/stores/auth-modal";
+
+import CartModal from "./CartModal";
 
 export default function App() {
   const pathname = usePathname();
@@ -155,20 +156,7 @@ export default function App() {
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <div className="w-64">
-              <h4 className="text-lg font-semibold">Shopping Cart</h4>
-              <p className="text-sm text-gray-500">
-                You have {cart && cart.items.length} items in your cart.
-              </p>
-              <div className="mt-2 flex justify-between space-x-2">
-                <Button color="primary" size="sm">
-                  View Cart
-                </Button>
-                <Button color="secondary" size="sm">
-                  Checkout
-                </Button>
-              </div>
-            </div>
+            <CartModal cart={cart} />
           </PopoverContent>
         </Popover>
         {/* User Avatar and Dropdown */}
@@ -221,12 +209,6 @@ export default function App() {
                 <div className="flex items-center gap-2">
                   <IconHearts size={24} stroke={1} />
                   <p>Favorites</p>
-                </div>
-              </DropdownItem>
-              <DropdownItem key="payments">
-                <div className="flex items-center gap-2">
-                  <IconCreditCard size={24} stroke={1} />
-                  <p>Payments</p>
                 </div>
               </DropdownItem>
               <DropdownItem

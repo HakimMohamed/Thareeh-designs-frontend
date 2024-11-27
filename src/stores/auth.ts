@@ -35,7 +35,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   fetchUser: async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${getTokens().accessToken}`,
+          },
+        }
       );
       const user = response.data.data;
       set({ user });

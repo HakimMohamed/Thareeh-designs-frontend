@@ -55,14 +55,13 @@ api.interceptors.request.use(
       accessToken = tokens.accessToken ?? null;
       refreshToken = tokens.refreshToken ?? null;
     }
-
+    console.log(config.url === "api/user");
     if (accessToken) {
       const isExpired = isTokenExpired(accessToken);
 
       if (isExpired && refreshToken) {
         try {
           const newAccessToken = await refreshAccessToken(refreshToken);
-
           if (newAccessToken) {
             setTokens(newAccessToken, refreshToken);
             config.headers["Authorization"] = `Bearer ${newAccessToken}`;
