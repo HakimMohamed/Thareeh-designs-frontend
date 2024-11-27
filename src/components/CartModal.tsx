@@ -110,6 +110,14 @@ export default function CartModal({ cart }: CartProps) {
         </div>
       )}
 
+      {cart && cart.items.length > 3 && (
+        <div className="mt-2 flex items-center justify-center space-x-2 mb-5">
+          <p className="text-sm text-gray-500">
+            (+{cart.items.length - 3} more)
+          </p>
+        </div>
+      )}
+
       <div className="mt-2 flex justify-between space-x-2 mb-5">
         <Button color="primary" size="sm" onClick={() => router.push("/cart")}>
           View Cart ({cart && cart.items.length})
