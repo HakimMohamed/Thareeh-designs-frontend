@@ -87,7 +87,9 @@ export default function CartModal({ cart }: CartProps) {
                         <AddIcon />
                       </Button>
                     </div>
-                    <p>{product.price.toFixed(2) + " " + "EGP"}</p>
+                    <p className="mt-1">
+                      {product.price.toFixed(2) + " " + "EGP"}
+                    </p>
                   </div>
                 </div>
                 <Button
@@ -112,6 +114,22 @@ export default function CartModal({ cart }: CartProps) {
         <Button color="primary" size="sm" onClick={() => router.push("/cart")}>
           View Cart ({cart && cart.items.length})
         </Button>
+        <div className="flex items-baseline gap-4">
+          {cart.originalPrice !== cart.price ? (
+            <>
+              <span className="text-2xl font-light line-through text-gray-400">
+                {cart.originalPrice.toFixed(2) + " " + "EGP"}
+              </span>
+              <span className="text-2xl font-medium text-green-600">
+                {cart.price.toFixed(2)}
+              </span>
+            </>
+          ) : (
+            <span className="text-2xl font-light text-green-600">
+              {cart.price.toFixed(2) + " " + "EGP"}
+            </span>
+          )}
+        </div>
         <Button color="secondary" size="sm">
           Checkout
         </Button>

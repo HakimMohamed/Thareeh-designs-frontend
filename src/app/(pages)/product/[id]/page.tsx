@@ -68,17 +68,19 @@ export default async function ProductPage(props: {
               <h2 className="font-bold mb-2">{product.name}</h2>
 
               <div className="flex items-baseline gap-4">
-                {product.discount.active ? (
+                {product.discount.active && product.discount.value > 0 ? (
                   <>
                     <span className="text-2xl font-light line-through text-gray-400">
-                      ${product.price}
+                      {product.price.toFixed(2) + " " + "EGP"}
                     </span>
-                    <span className="text-2xl font-medium text-red-600">
-                      ${discountedPrice.toFixed(2)}
+                    <span className="text-2xl font-medium text-green-600">
+                      {discountedPrice.toFixed(2)}
                     </span>
                   </>
                 ) : (
-                  <span className="text-2xl font-light">${product.price}</span>
+                  <span className="text-2xl font-light text-green-600">
+                    {product.price.toFixed(2) + " " + "EGP"}
+                  </span>
                 )}
               </div>
 
