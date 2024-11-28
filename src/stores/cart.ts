@@ -20,7 +20,7 @@ const useCartStore = create<CartState>((set, get) => ({
     price: 0,
     originalPrice: 0,
   },
-  isLoading: false,
+  isLoading: true,
   fetchCart: async () => {
     try {
       set({ isLoading: true });

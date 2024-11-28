@@ -64,6 +64,9 @@ export default function App() {
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Navbar
       isBordered
@@ -142,7 +145,14 @@ export default function App() {
       />
 
       <NavbarContent as="div" className="items-center" justify="end">
-        <Popover placement="bottom-end" backdrop="transparent">
+        <Popover
+          placement="bottom-end"
+          backdrop="transparent"
+          offset={20}
+          showArrow
+          isOpen={isOpen}
+          onOpenChange={(open) => setIsOpen(open)}
+        >
           <PopoverTrigger>
             <Button className="relative bg-transparent">
               <Badge
@@ -156,7 +166,7 @@ export default function App() {
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <CartModal cart={cart} />
+            <CartModal cart={cart} setPopOverIsOpen={setIsOpen} />
           </PopoverContent>
         </Popover>
         {/* User Avatar and Dropdown */}

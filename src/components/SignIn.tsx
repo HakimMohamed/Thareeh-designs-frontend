@@ -46,7 +46,8 @@ export default function SignIn() {
     try {
       const enteredOtp = otp.join(""); // Combine OTP digits into a single string
       await verifyOtp({ email, otp: enteredOtp }); // Call the verifyOtp method from the auth store
-      setSignInIsOpen(false); // Close modal on success
+      setSignInIsOpen(false);
+      window.location.reload();
     } catch (err: string | unknown) {
       setError(err || "Invalid OTP. Please try again.");
     } finally {
@@ -65,6 +66,19 @@ export default function SignIn() {
         const nextInput = document.getElementById(`otp-${index + 1}`);
         nextInput?.focus();
       }
+    }
+  };
+
+  const handleOtpPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const pasteData = event.clipboardData.getData("text").replace(/\D/g, ""); // Extract only digits
+    if (pasteData.length === otp.length) {
+      const newOtp = pasteData.split("").slice(0, otp.length);
+      setOtp(newOtp);
+
+      // Automatically move focus to the last field
+      const lastInput = document.getElementById(`otp-${newOtp.length - 1}`);
+      lastInput?.focus();
     }
   };
 
@@ -147,10 +161,12 @@ export default function SignIn() {
                         maxLength={1}
                         value={digit}
                         onChange={(e) => handleOtpChange(e.target.value, index)}
+                        onPaste={index === 0 ? handleOtpPaste : undefined}
                         className="w-12 h-12 text-center border rounded-lg text-lg focus:outline-none focus:border-blue-500"
                       />
                     ))}
                   </div>
+
                   <Button
                     className="w-full bg-black text-white font-medium rounded-lg py-2"
                     onPress={async () => {
