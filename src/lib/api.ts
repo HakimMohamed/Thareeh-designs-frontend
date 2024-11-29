@@ -57,10 +57,13 @@ api.interceptors.request.use(
     }
     if (accessToken) {
       const isExpired = isTokenExpired(accessToken);
-
       if (isExpired && refreshToken) {
         try {
           const newAccessToken = await refreshAccessToken(refreshToken);
+          if (config.url === "/api/auth/user") {
+            console.log(newAccessToken);
+          }
+
           if (newAccessToken) {
             setTokens(newAccessToken, refreshToken);
             config.headers["Authorization"] = `Bearer ${newAccessToken}`;
@@ -81,61 +84,14 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
     const setSignInIsOpen = useAuthModal.getState().setSignInIsOpen;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers["Authorization"] = `Bearer ${token}`;
-            return api(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        const { refreshToken } = isServer()
-          ? {
-              refreshToken:
-                (await (await import("next/headers")).cookies()).get(
-                  "refreshToken"
-                )?.value || null,
-            }
-          : getTokens();
-
-        if (!refreshToken) {
-          if (
-            constants.ROUTES_REQUIRE_MODAL_OPEN[error.config.url] ===
-            error.config.method
-          ) {
-            setSignInIsOpen(true);
-          }
-          return Promise.reject(error);
-        }
-
-        const newAccessToken = await refreshAccessToken(refreshToken);
-
-        if (!newAccessToken) {
-          processQueue(null);
-          return Promise.reject(error);
-        }
-
-        setTokens(newAccessToken, refreshToken);
-        processQueue(null, newAccessToken);
-        console.log("refreshed", error.config.url);
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return api(originalRequest);
-      } catch (err) {
-        processQueue(err);
-        return Promise.reject(err);
-      } finally {
-        isRefreshing = false;
+    if (error.response?.status === 401) {
+      if (
+        constants.ROUTES_REQUIRE_MODAL_OPEN[error.config.url] ===
+        error.config.method
+      ) {
+        setSignInIsOpen(true);
       }
     }
 

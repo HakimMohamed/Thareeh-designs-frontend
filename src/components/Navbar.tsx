@@ -55,7 +55,7 @@ export default function App() {
     { title: "Test2", path: "/test2" },
   ];
 
-  const { fetchCart, cart } = useCartStore();
+  const { fetchCart, cart, isLoading } = useCartStore();
 
   useEffect(() => {
     fetchUser();
@@ -177,6 +177,7 @@ export default function App() {
               as="button"
               className="transition-transform"
               color="secondary"
+              disabled={isLoading}
               onClick={() => {
                 if (!user) {
                   setSignInIsOpen(true);
