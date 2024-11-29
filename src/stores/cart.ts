@@ -27,6 +27,7 @@ const useCartStore = create<CartState>((set, get) => ({
       const response = await api.get(`/api/cart`);
       set({ cart: response.data.data, isLoading: false });
     } catch (error) {
+      console.log("axios error", error);
       set({ isLoading: false });
     }
   },

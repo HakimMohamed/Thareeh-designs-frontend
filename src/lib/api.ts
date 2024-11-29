@@ -6,36 +6,18 @@ import {
   setTokens,
   isTokenExpired,
 } from "./tokens";
-import { constants } from "@/utils/constants";
-import { useAuthModal } from "@/stores/auth-modal";
+// import { constants } from "@/utils/constants";
+// import { useAuthModal } from "@/stores/auth-modal";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 60000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 const isServer = () => typeof window === "undefined";
-
-let isRefreshing = false;
-let failedQueue: Array<{
-  resolve: (value?: any) => void;
-  reject: (reason?: any) => void;
-}> = [];
-
-// Process the queue of failed requests
-const processQueue = (error: any, token: string | null = null) => {
-  failedQueue.forEach((prom) => {
-    if (token) {
-      prom.resolve(token);
-    } else {
-      prom.reject(error);
-    }
-  });
-  failedQueue = [];
-};
 
 // Add request interceptor
 api.interceptors.request.use(
@@ -84,17 +66,16 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const setSignInIsOpen = useAuthModal.getState().setSignInIsOpen;
+    // const setSignInIsOpen = useAuthModal.getState().setSignInIsOpen;
 
-    if (error.response?.status === 401) {
-      if (
-        constants.ROUTES_REQUIRE_MODAL_OPEN[error.config.url] ===
-        error.config.method
-      ) {
-        setSignInIsOpen(true);
-      }
-    }
-
+    // if (error.response?.status === 401) {
+    //   if (
+    //     constants.ROUTES_REQUIRE_MODAL_OPEN[error.config.url] ===
+    //     error.config.method
+    //   ) {
+    //     setSignInIsOpen(true);
+    //   }
+    // }
     return Promise.reject(error);
   }
 );

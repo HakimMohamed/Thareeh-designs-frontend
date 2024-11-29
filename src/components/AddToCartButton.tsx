@@ -24,6 +24,7 @@ export default function AddToCartButton({
         await addToCart(itemId);
         await fetchCart();
       } catch (error) {
+        console.log(error);
         setSignInIsOpen(true);
       }
     });
