@@ -23,6 +23,7 @@ const PaginationContainer = ({
       initialPage={1}
       page={currentPage}
       onChange={(page) => router.push(`${route}?page=${page}`)}
+      getItemAriaLabel={(page) => `Go to page ${page}`}
     />
   );
 };

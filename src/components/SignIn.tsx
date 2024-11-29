@@ -7,13 +7,18 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import { MailIcon, EyeSlashFilledIcon, EyeFilledIcon } from "./icons/Icons";
+import {
+  MailIcon,
+  EyeSlashFilledIcon,
+  EyeFilledIcon,
+  GoogleIcon,
+} from "./icons/Icons";
 import { useAuthModal } from "../stores/auth-modal";
 import { useAuthStore } from "@/stores/auth";
 import { useState } from "react";
 
 export default function SignIn() {
-  const { setSignInIsOpen, signInIsOpen } = useAuthModal();
+  const { setSignInIsOpen, signInIsOpen, setSignUpIsOpen } = useAuthModal();
   const { login, verifyOtp } = useAuthStore(); // Retain the auth store calls
   const [step, setStep] = useState<"email" | "otp">("email");
   const [loading, setLoading] = useState(false);
@@ -133,6 +138,18 @@ export default function SignIn() {
                       </button>
                     }
                   />
+                  <p className="text-center text-sm text-gray-600 mb-4">
+                    Already have an account?{" "}
+                    <span
+                      className="text-blue-500 font-medium cursor-pointer hover:underline"
+                      onClick={() => {
+                        setSignInIsOpen(false);
+                        setSignUpIsOpen(true);
+                      }}
+                    >
+                      Sign up
+                    </span>
+                  </p>
                   <div className="flex items-center justify-center">
                     <Button
                       className="w-full bg-black text-white font-medium rounded-lg py-2"
@@ -141,6 +158,15 @@ export default function SignIn() {
                       isDisabled={!email || !password}
                     >
                       Sign in
+                    </Button>
+                  </div>
+                  <div className="mb-4">
+                    <Button
+                      className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 hover:bg-gray-100"
+                      color="primary"
+                      variant="bordered"
+                    >
+                      {GoogleIcon({ className: "w-5 h-5" })} Sign in with Google
                     </Button>
                   </div>
                   <p className="text-red-600 mt-2">{(error as string) || ""}</p>

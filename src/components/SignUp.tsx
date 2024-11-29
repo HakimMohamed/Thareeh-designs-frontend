@@ -18,7 +18,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/stores/auth";
 
 export default function SignUp() {
-  const { setSignUpIsOpen, signUpIsOpen } = useAuthModal();
+  const { setSignUpIsOpen, signUpIsOpen, setSignInIsOpen } = useAuthModal();
   const { register, completeRegistration } = useAuthStore();
   const [step, setStep] = useState<"email" | "details">("email");
   const [loading, setLoading] = useState(false);
@@ -113,7 +113,13 @@ export default function SignUp() {
 
                   <p className="text-center text-sm text-gray-600 mb-4">
                     Already have an account?{" "}
-                    <span className="text-blue-500 font-medium cursor-pointer hover:underline">
+                    <span
+                      className="text-blue-500 font-medium cursor-pointer hover:underline"
+                      onClick={() => {
+                        setSignInIsOpen(true);
+                        setSignUpIsOpen(false);
+                      }}
+                    >
                       Sign in
                     </span>
                   </p>
