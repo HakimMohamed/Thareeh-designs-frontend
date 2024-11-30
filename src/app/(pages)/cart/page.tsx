@@ -19,12 +19,9 @@ export default function CartPage() {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const res = await api.get(
-          `/api/items/featured?cartItems=${JSON.stringify(cart)}`,
-          {
-            params: { pageSize: 5 },
-          }
-        );
+        const res = await api.get(`/api/items/featured`, {
+          params: { pageSize: 5 },
+        });
         setFeaturedProducts(res.data.data);
       } catch (error) {
         console.log(error);

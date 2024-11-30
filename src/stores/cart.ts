@@ -6,7 +6,7 @@ import { create } from "zustand";
 interface CartState {
   cart: IFormattedCart | null;
   isLoading: boolean;
-  fetchCart: () => Promise<void>;
+  fetchCart: () => Promise<IFormattedCart | null>;
   removeItemFromCart: (itemId: string) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
 }
@@ -21,13 +21,15 @@ const useCartStore = create<CartState>((set, get) => ({
     originalPrice: 0,
   },
   isLoading: true,
-  fetchCart: async () => {
+  fetchCart: async (): Promise<IFormattedCart | null> => {
     try {
       const response = await api.get(`/api/cart`);
       set({ cart: response.data.data, isLoading: false });
+      return response.data.data;
     } catch (error) {
       console.log("axios error", error);
       set({ isLoading: false });
+      return null;
     }
   },
   removeItemFromCart: async (itemId: string) => {
