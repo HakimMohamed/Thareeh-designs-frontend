@@ -23,7 +23,6 @@ const useCartStore = create<CartState>((set, get) => ({
   isLoading: true,
   fetchCart: async () => {
     try {
-      set({ isLoading: true });
       const response = await api.get(`/api/cart`);
       set({ cart: response.data.data, isLoading: false });
     } catch (error) {
@@ -33,7 +32,6 @@ const useCartStore = create<CartState>((set, get) => ({
   },
   removeItemFromCart: async (itemId: string) => {
     try {
-      set({ isLoading: true });
       await api.delete(`/api/cart/item`, { data: { itemId } });
       set({ isLoading: false });
       get().fetchCart();
@@ -44,7 +42,6 @@ const useCartStore = create<CartState>((set, get) => ({
   },
   updateQuantity: async (itemId: string, quantity: number) => {
     try {
-      set({ isLoading: true });
       await api.patch(`/api/cart/item`, {
         itemId,
         quantity,
