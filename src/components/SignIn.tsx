@@ -54,6 +54,7 @@ export default function SignIn() {
       setSignInIsOpen(false);
       window.location.reload();
     } catch (err: string | unknown) {
+      console.log("err");
       setError(err || "Invalid OTP. Please try again.");
     } finally {
       setLoading(false); // Stop loading
@@ -98,7 +99,7 @@ export default function SignIn() {
       placement="top-center"
     >
       <ModalContent>
-        {(onClose) => (
+        {() => (
           <div className="p-4 pt-10">
             <ModalBody>
               {step === "email" && (
@@ -195,10 +196,7 @@ export default function SignIn() {
 
                   <Button
                     className="w-full bg-black text-white font-medium rounded-lg py-2"
-                    onPress={async () => {
-                      await handleVerifyOtp();
-                      onClose();
-                    }}
+                    onPress={handleVerifyOtp}
                     isDisabled={otp.some((digit) => digit === "")}
                     isLoading={loading}
                   >

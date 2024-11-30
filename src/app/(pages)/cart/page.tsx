@@ -9,18 +9,34 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useEffect, useState } from "react";
 import ProductGrid from "@/components/ItemCard";
 import api from "@/lib/api";
+import { IFormattedCart } from "@/interfaces/cart.interface";
 
 export default function CartPage() {
-  const { cart, fetchCart, isLoading } = useCartStore();
+  const { cart, isLoading } = useCartStore();
   const { updateQuantity, removeItemFromCart } = useCartStore();
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loadingFeatured, setLoadingFeatured] = useState(true);
 
+  const [cartSnapshot, setCartSnapshot] = useState<IFormattedCart | null>(null); // Track the cart used for the first fetch
+
+  useEffect(() => {
+    if (!isLoading && cartSnapshot === null) {
+      setCartSnapshot(cart);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cart, isLoading]);
+
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
+      if (!cartSnapshot) return; // Wait until the cart snapshot is available
       try {
         const res = await api.get(`/api/items/featured`, {
-          params: { pageSize: 5 },
+          params: {
+            pageSize: 5,
+            cartItems: JSON.stringify(
+              cartSnapshot.items.map((item) => item._id)
+            ), // Use the snapshot
+          },
         });
         setFeaturedProducts(res.data.data);
       } catch (error) {
@@ -32,13 +48,7 @@ export default function CartPage() {
     };
 
     fetchFeaturedProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetchCart();
-  }, [fetchCart]);
-
+  }, [cartSnapshot]); // No need to depend on `cart`
   // Skeleton for Cart Items
   const renderOrderSummarySkeleton = () => (
     <div className="bg-gray-50 rounded-lg p-6 space-y-6">

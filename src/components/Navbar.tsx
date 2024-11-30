@@ -222,14 +222,7 @@ export default function App() {
                   <p>Favorites</p>
                 </div>
               </DropdownItem>
-              <DropdownItem
-                key="logout"
-                color="danger"
-                onClick={async () => {
-                  await logout();
-                  window.location.reload();
-                }}
-              >
+              <DropdownItem key="logout" color="danger" onClick={logout}>
                 <div className="flex items-center gap-2">
                   <IconLogout size={24} stroke={1} />
                   <p>Log Out</p>

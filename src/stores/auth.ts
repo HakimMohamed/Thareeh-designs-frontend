@@ -98,7 +98,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       setTokens(accessToken, refreshToken);
       set({ user });
     } catch (error: any) {
-      console.error("Complete Registration error:", error);
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
       return Promise.reject(errorMessage);
@@ -117,9 +116,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       const { user, accessToken, refreshToken } = response.data.data;
       setTokens(accessToken, refreshToken);
       set({ user });
-    } catch (error) {
-      console.error("Login error:", error);
-      throw error; // Let the calling code handle the error
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong";
+      return Promise.reject(errorMessage);
     } finally {
       set({ isLoading: false }); // Ensure loading state is reset
     }
