@@ -105,7 +105,7 @@ export default function CartPage() {
                       </Button>
                     </div>
                     <div className="flex items-center gap-2">
-                      {product.discount.active ? (
+                      {product.discount.active && product.discount.value ? (
                         <>
                           <span className="text-sm line-through text-gray-400">
                             {product.price.toFixed(2)} EGP
