@@ -8,7 +8,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 
 async function getProduct(id: string): Promise<Item | null> {
   try {
-    const res = await api.get(`/api/items/${id}`);
+    const res = await api.get(`/api/items/item?id=${id}`);
     return res.data.data;
   } catch (error) {
     console.log(error);
