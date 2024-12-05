@@ -32,6 +32,7 @@ export default function CartModal({ cart, setPopOverIsOpen }: CartProps) {
   };
 
   const handleCheckout = () => {
+    setPopOverIsOpen?.(false);
     router.push("/checkout");
   };
 

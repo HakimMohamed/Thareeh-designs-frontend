@@ -1,4 +1,5 @@
 import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export default function OrderSummary({
   originalPrice,
@@ -9,6 +10,7 @@ export default function OrderSummary({
   discount: number;
   totalPrice: number;
 }) {
+  const router = useRouter();
   return (
     <div className="bg-gray-50 rounded-lg p-6 h-fit">
       <h3 className="text-xl font-bold mb-6">Order Summary</h3>
@@ -27,7 +29,13 @@ export default function OrderSummary({
           <span>{totalPrice.toFixed(2)} EGP</span>
         </div>
       </div>
-      <Button color="primary" size="lg" fullWidth className="mt-6">
+      <Button
+        color="primary"
+        size="lg"
+        fullWidth
+        className="mt-6"
+        onClick={() => router.push("/checkout")}
+      >
         Proceed to Checkout
       </Button>
     </div>
