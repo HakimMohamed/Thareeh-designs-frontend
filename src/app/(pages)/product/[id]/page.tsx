@@ -49,7 +49,7 @@ export default async function ProductPage(props: {
 
   return (
     <main className="min-h-screen  dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto  py-6 sm:px-6 lg:px-8">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl shadow-gray-600/50 overflow-hidden">
           <div className="grid md:grid-cols-2 gap-8 p-8">
             {/* Product Image */}
