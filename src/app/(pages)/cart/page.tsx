@@ -12,7 +12,7 @@ export default function CartPage() {
   const { cart, isLoading } = useCartStore();
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container">
       {isLoading ? (
         <>
           <h2 className="text-2xl font-bold mb-6">Loading Your Cart...</h2>

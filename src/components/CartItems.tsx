@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import useCartStore from "@/stores/cart";
 import { IFormattedCart } from "@/interfaces/cart.interface";
+import { Typography } from "@mui/material";
 
 export default function CartItems({
   items,
@@ -34,11 +35,9 @@ export default function CartItems({
           {/* Product Details */}
           <div className="flex-grow">
             <div className="flex justify-between items-start mb-2">
-              <h3 className="text-base font-semibold">
-                {product.name.length > 30
-                  ? `${product.name.slice(0, 27)}...`
-                  : product.name}
-              </h3>
+              <Typography className="text-base font-semibold" fontWeight="bold">
+                {product.name}
+              </Typography>
               <Button
                 size="sm"
                 variant="light"
@@ -80,21 +79,23 @@ export default function CartItems({
               </div>
               <div className="flex items-center gap-2">
                 {product.discount.active ? (
-                  <>
-                    <span className="text-sm line-through text-gray-400">
-                      {product.price.toFixed(2)} EGP
-                    </span>
-                    <span className="text-base font-semibold text-green-600">
-                      {(
-                        product.price *
-                        (1 - product.discount.value / 100)
-                      ).toFixed(2)}{" "}
-                      EGP
-                    </span>
-                    <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">
+                  <div className="flex flex-col items-start">
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm line-through text-gray-400">
+                        {product.price.toFixed(2)} EGP
+                      </span>
+                      <span className="text-base font-semibold text-green-600">
+                        {(
+                          product.price *
+                          (1 - product.discount.value / 100)
+                        ).toFixed(2)}{" "}
+                        EGP
+                      </span>
+                    </div>
+                    <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded mt-1">
                       {product.discount.value}% OFF
                     </span>
-                  </>
+                  </div>
                 ) : (
                   <span className="text-base font-semibold">
                     {product.price.toFixed(2)} EGP
