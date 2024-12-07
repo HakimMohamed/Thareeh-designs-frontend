@@ -9,6 +9,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Divider,
   Input,
   Radio,
@@ -18,66 +19,18 @@ import CartItems from "@/components/CartItems";
 import { useState } from "react";
 import { CustomRadio } from "@/components/Radio";
 import { CashOnDeliveryIcon, CreditCardIcon } from "@/components/icons/Icons";
+import { useAuthStore } from "@/stores/auth";
 
-export const animals = [
+export const countries = [
   {
-    label: "Cat",
-    key: "cat",
-    description: "The second most popular pet in the world",
-  },
-  {
-    label: "Dog",
-    key: "dog",
-    description: "The most popular pet in the world",
-  },
-  {
-    label: "Elephant",
-    key: "elephant",
-    description: "The largest land animal",
-  },
-  { label: "Lion", key: "lion", description: "The king of the jungle" },
-  { label: "Tiger", key: "tiger", description: "The largest cat species" },
-  { label: "Giraffe", key: "giraffe", description: "The tallest land animal" },
-  {
-    label: "Dolphin",
-    key: "dolphin",
-    description: "A widely distributed and diverse group of aquatic mammals",
-  },
-  {
-    label: "Penguin",
-    key: "penguin",
-    description: "A group of aquatic flightless birds",
-  },
-  {
-    label: "Zebra",
-    key: "zebra",
-    description: "A several species of African equids",
-  },
-  {
-    label: "Shark",
-    key: "shark",
-    description:
-      "A group of elasmobranch fish characterized by a cartilaginous skeleton",
-  },
-  {
-    label: "Whale",
-    key: "whale",
-    description: "Diverse group of fully aquatic placental marine mammals",
-  },
-  {
-    label: "Otter",
-    key: "otter",
-    description: "A carnivorous mammal in the subfamily Lutrinae",
-  },
-  {
-    label: "Crocodile",
-    key: "crocodile",
-    description: "A large semiaquatic reptile",
+    label: "Egypt",
+    key: "egypt",
   },
 ];
 
 export default function CartPage() {
   const { cart, isLoading } = useCartStore();
+  const { user } = useAuthStore();
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -88,6 +41,8 @@ export default function CartPage() {
     country: "",
     postalCode: "",
     phoneNumber: "",
+    paymentMethod: "cashOnDelivery",
+    addressType: "home",
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,7 +68,9 @@ export default function CartPage() {
             label="Email Address"
             type="email"
             variant="bordered"
-            value={formData.email}
+            isDisabled={!!user?.email}
+            value={user?.email || formData.email}
+            disabled={!!user?.email}
             onChange={handleInputChange}
             required
             fullWidth
@@ -142,10 +99,10 @@ export default function CartPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <Autocomplete
-              defaultItems={animals}
+              defaultItems={countries}
               label="Country"
               name="country"
-              autoComplete="new-country"
+              autoComplete="new-country-selection"
               value={formData.country}
               onChange={handleInputChange}
               fullWidth
@@ -212,11 +169,32 @@ export default function CartPage() {
           </div>
 
           <RadioGroup
+            color="warning"
+            label="Address type"
+            name="addressType"
+            orientation="horizontal"
+            value={formData.addressType}
+            onChange={handleInputChange}
+          >
+            <Radio description="All Day Delivery" value="home">
+              Home
+            </Radio>
+            <Radio description="Delivery Between 9am to 6pm" value="office">
+              Office
+            </Radio>
+          </RadioGroup>
+          <Checkbox defaultSelected>
+            Save this information for next time
+          </Checkbox>
+
+          <RadioGroup
             className="flex gap-4 w-full lg:flex-wrap lg:w-full lg:gap-4 md:flex-nowrap" // flex-wrap for large screens, flex-nowrap for smaller screens
             orientation="horizontal"
             label="Payment Method"
-            value="cashOnDelivery"
             size="sm"
+            name="paymentMethod"
+            value={formData.paymentMethod}
+            onChange={handleInputChange}
           >
             <CustomRadio
               description="Pay in cash upon delivery."
@@ -237,25 +215,10 @@ export default function CartPage() {
               Credit/Debit Card
             </CustomRadio>
           </RadioGroup>
-
-          <RadioGroup
-            color="warning"
-            label="Address type"
-            orientation="horizontal"
-            value="buenos-aires"
-          >
-            <Radio description="The capital of Argentina" value="buenos-aires">
-              Buenos Aires
-            </Radio>
-            <Radio description="The capital of Australia" value="canberra">
-              Canberra
-            </Radio>
-          </RadioGroup>
         </div>
-
         {/* Order Summary */}
-        <div className="col-span-2">
-          <Card className="w-full">
+        <div className="col-span-2 ">
+          <Card className="w-full h-full">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col">
                 <p className="text-md">Your Order</p>
