@@ -326,13 +326,13 @@ export default function CartPage() {
                   <span>{cart?.price + " " + "EGP" ? "Free" : ""}</span>
                 </div>
 
-                <Divider className="w-[85%] mx-auto mb-4 mt-4" />
+                <Divider className="mb-4 mt-4" />
 
                 <div className="flex justify-between mb-4">
                   <span>Total</span>
                   <span>{cart?.price} EGP</span>
                 </div>
-                <Button fullWidth color="primary">
+                <Button fullWidth color="primary" className="mb-4">
                   Checkout
                 </Button>
               </div>
