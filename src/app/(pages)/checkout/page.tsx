@@ -103,9 +103,9 @@ export default function CartPage() {
     <p>Loading...</p>
   ) : (
     <div className="container mx-auto px-4 py-8 max-w-screen-xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-8">
         {/* Customer Details Form */}
-        <div className="space-y-6">
+        <div className="col-span-4 space-y-6">
           <h2 className="text-2xl font-semibold mb-4">Shipping Information</h2>
           <Input
             isRequired
@@ -144,9 +144,8 @@ export default function CartPage() {
             <Autocomplete
               defaultItems={animals}
               label="Country"
-              placeholder="country"
               name="country"
-              autoComplete="off"
+              autoComplete="new-country"
               value={formData.country}
               onChange={handleInputChange}
               fullWidth
@@ -187,6 +186,7 @@ export default function CartPage() {
               required
             />
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <Input
               name="addressDetails"
@@ -254,7 +254,7 @@ export default function CartPage() {
         </div>
 
         {/* Order Summary */}
-        <div>
+        <div className="col-span-2">
           <Card className="w-full">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col">
