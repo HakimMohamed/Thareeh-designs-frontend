@@ -26,8 +26,8 @@ export default function CartItems({
             <Image
               src={product.image}
               alt={product.name}
-              width={100}
-              height={100}
+              width={64}
+              height={64}
               className="object-cover rounded-lg"
             />
           </Link>
@@ -51,7 +51,7 @@ export default function CartItems({
 
             {/* Quantity and Price */}
             <div className="flex justify-between items-center">
-              <div className="flex items-center border rounded-full">
+              <div className="flex items-center border rounded-full mr-4">
                 <Button
                   size="sm"
                   variant="light"

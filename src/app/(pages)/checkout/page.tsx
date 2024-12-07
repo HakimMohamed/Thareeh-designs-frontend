@@ -17,6 +17,7 @@ import {
 import CartItems from "@/components/CartItems";
 import { useState } from "react";
 import { CustomRadio } from "@/components/Radio";
+import { CashOnDeliveryIcon, CreditCardIcon } from "@/components/icons/Icons";
 
 export const animals = [
   {
@@ -143,9 +144,9 @@ export default function CartPage() {
             <Autocomplete
               defaultItems={animals}
               label="Country"
-              placeholder="Select a country"
+              placeholder="country"
               name="country"
-              autoComplete="off" // Add this to disable Chrome suggestions
+              autoComplete="off"
               value={formData.country}
               onChange={handleInputChange}
               fullWidth
@@ -211,26 +212,32 @@ export default function CartPage() {
           </div>
 
           <RadioGroup
-            className="flex gap-4 w-full flex-wrap"
+            className="flex gap-4 w-full lg:flex-wrap lg:w-full lg:gap-4 md:flex-nowrap" // flex-wrap for large screens, flex-nowrap for smaller screens
             orientation="horizontal"
             label="Payment Method"
             value="cashOnDelivery"
+            size="sm"
           >
             <CustomRadio
               description="Pay in cash upon delivery."
               value="cashOnDelivery"
-              imageSrc="credit-card.svg" // Provide the path to your image
+              image={CashOnDeliveryIcon({
+                className: "w-10 h-10 flex items-center justify-center",
+              })}
             >
               Cash on Delivery
             </CustomRadio>
             <CustomRadio
               description="Secure credit/debit card payment."
               value="credit"
-              imageSrc="cash-on-delivery.svg" // Provide the path to another image
+              image={CreditCardIcon({
+                className: "w-10 h-10 flex items-center justify-center",
+              })}
             >
               Credit/Debit Card
             </CustomRadio>
           </RadioGroup>
+
           <RadioGroup
             color="warning"
             label="Address type"

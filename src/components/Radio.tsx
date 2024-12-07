@@ -1,12 +1,10 @@
 import { useRadio, VisuallyHidden, RadioProps, cn } from "@nextui-org/react";
-import { Image } from "@nextui-org/react"; // Import the Next UI Image component
 
 interface CustomRadioProps extends RadioProps {
-  imageSrc?: string; // Prop to pass image URL
+  image: React.ReactNode; // Image must always be a React component
 }
-
 export const CustomRadio = ({
-  imageSrc,
+  image,
   children,
   description,
   ...props
@@ -26,24 +24,16 @@ export const CustomRadio = ({
       {...getBaseProps()}
       className={cn(
         "group inline-flex items-center justify-between hover:bg-content2 flex-row-reverse",
-        "flex-1 cursor-pointer border-2 border-default rounded-lg gap-2 p-2", // Reduced padding and gap
+        "flex-1 cursor-pointer border-2 border-default rounded-lg gap-2 p-2", // Adjust styling for mobile
         "data-[selected=true]:border-primary"
       )}
     >
-      {imageSrc && (
-        <Image
-          src={imageSrc}
-          alt="radio-icon"
-          width={32} // Adjust the width as needed
-          height={32} // Adjust the height as needed
-          className="mr-2" // Optional, adds margin to the right
-        />
-      )}
+      {/* Ensure the image scales properly */}
+      {image}
+
       <VisuallyHidden>
         <input {...getInputProps()} />
       </VisuallyHidden>
-
-      {/* Display Image if imageSrc is provided */}
 
       <span {...getWrapperProps()}>
         <span {...getControlProps()} />
