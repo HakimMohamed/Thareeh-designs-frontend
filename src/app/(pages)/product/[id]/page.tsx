@@ -49,7 +49,7 @@ export default async function ProductPage(props: {
 
   return (
     <main className="min-h-screen  dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto  py-6 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto sm:px-4 lg:px-4">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl shadow-gray-600/50 overflow-hidden">
           <div className="grid md:grid-cols-2 gap-8 p-8">
             {/* Product Image */}
@@ -123,7 +123,7 @@ export default async function ProductPage(props: {
         </div>
 
         {/* Featured Products */}
-        <div className="mt-16">
+        <div className="mt-8">
           <h2 className="text-2xl font-light mb-8">You May Also Like</h2>
           <ProductGrid products={featuredProducts} />
         </div>
