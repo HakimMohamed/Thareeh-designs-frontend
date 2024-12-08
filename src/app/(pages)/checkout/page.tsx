@@ -60,7 +60,7 @@ export default function CartPage() {
     <div className="container mx-auto px-4 py-8 max-w-screen-xl">
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-8">
         {/* Customer Details Form */}
-        <div className="col-span-4 space-y-6">
+        <div className="lg:col-span-4 md:col-span-4 sm:col-span-6 col-span-1 space-y-6">
           <h2 className="text-2xl font-semibold mb-4">Shipping Information</h2>
           <Input
             isRequired
@@ -216,8 +216,9 @@ export default function CartPage() {
             </CustomRadio>
           </RadioGroup>
         </div>
+
         {/* Order Summary */}
-        <div className="col-span-2 ">
+        <div className="lg:col-span-2 md:col-span-2 sm:col-span-6 col-span-1">
           <Card className="w-full h-full">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col">
@@ -233,24 +234,6 @@ export default function CartPage() {
                   scrollbarColor: "rgba(0,0,0,0.2) transparent",
                 }}
               >
-                <style jsx>{`
-                  .cart-scrollbar::-webkit-scrollbar {
-                    width: 8px;
-                  }
-                  .cart-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                    border-radius: 10px;
-                  }
-                  .cart-scrollbar::-webkit-scrollbar-thumb {
-                    background-color: rgba(0, 0, 0, 0.2);
-                    border-radius: 10px;
-                    border: 2px solid transparent;
-                    background-clip: content-box;
-                  }
-                  .cart-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background-color: rgba(0, 0, 0, 0.3);
-                  }
-                `}</style>
                 {cart && cart.items && <CartItems items={cart.items} />}
               </div>
             </CardBody>
@@ -269,12 +252,10 @@ export default function CartPage() {
                     Apply
                   </Button>
                 </div>
-
                 <div className="flex justify-between mb-2">
                   <span>Subtotal</span>
-                  <span>{cart?.originalPrice + " " + "EGP" || "0"}</span>
+                  <span>{cart?.originalPrice || "0"} EGP</span>
                 </div>
-
                 <div className="flex justify-between mb-2">
                   <span>Discount</span>
                   <span className="text-red-500">
@@ -286,7 +267,7 @@ export default function CartPage() {
 
                 <div className="flex justify-between mb-2">
                   <span>Delivery</span>
-                  <span>{cart?.price + " " + "EGP" ? "Free" : ""}</span>
+                  <span>{cart?.price ? "Free" : ""}</span>
                 </div>
 
                 <Divider className="mb-4 mt-4" />

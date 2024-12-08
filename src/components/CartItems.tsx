@@ -15,27 +15,30 @@ export default function CartItems({
   const { updateQuantity, removeItemFromCart } = useCartStore();
 
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="space-y-4">
       {items.map((product) => (
         <div
           key={product._id}
-          className="flex items-center p-5 hover:bg-gray-50 transition-colors"
+          className="flex flex-col md:flex-row items-center bg-white shadow-sm rounded-lg p-4 transition-transform hover:scale-[1.01]"
         >
           {/* Product Image */}
-          <Link href={`/product/${product._id}`} className="flex-shrink-0 mr-5">
+          <Link href={`/product/${product._id}`} className="md:mr-4">
             <Image
               src={product.image}
               alt={product.name}
-              width={64}
-              height={64}
+              width={120}
+              height={120}
               className="object-cover rounded-lg"
             />
           </Link>
 
           {/* Product Details */}
-          <div className="flex-grow">
-            <div className="flex justify-between items-start mb-2">
-              <Typography className="text-base font-semibold" fontWeight="bold">
+          <div className="flex-grow w-full md:w-auto mt-3 md:mt-0">
+            <div className="flex justify-between items-start">
+              <Typography
+                variant="body1"
+                className="font-semibold text-gray-800"
+              >
                 {product.name}
               </Typography>
               <Button
@@ -44,13 +47,14 @@ export default function CartItems({
                 color="danger"
                 isIconOnly
                 onClick={() => removeItemFromCart(product._id)}
+                className="hover:bg-red-100"
               >
-                <DeleteIcon />
+                <DeleteIcon fontSize="small" />
               </Button>
             </div>
 
             {/* Quantity and Price */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mt-3">
               <div className="flex items-center border rounded-full mr-4">
                 <Button
                   size="sm"
@@ -77,27 +81,25 @@ export default function CartItems({
                   <AddIcon />
                 </Button>
               </div>
-              <div className="flex items-center gap-2">
+
+              {/* Price Details */}
+              <div className="text-right">
                 {product.discount.active ? (
-                  <div className="flex flex-col items-start">
-                    <div className="flex gap-2 items-center">
+                  <>
+                    <div className="flex items-center gap-2">
                       <span className="text-sm line-through text-gray-400">
+                        {product.originalPrice.toFixed(2)} EGP
+                      </span>
+                      <span className="text-lg font-bold text-green-600">
                         {product.price.toFixed(2)} EGP
                       </span>
-                      <span className="text-base font-semibold text-green-600">
-                        {(
-                          product.price *
-                          (1 - product.discount.value / 100)
-                        ).toFixed(2)}{" "}
-                        EGP
-                      </span>
                     </div>
-                    <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded mt-1">
+                    <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">
                       {product.discount.value}% OFF
                     </span>
-                  </div>
+                  </>
                 ) : (
-                  <span className="text-base font-semibold">
+                  <span className="text-lg font-bold text-gray-800">
                     {product.price.toFixed(2)} EGP
                   </span>
                 )}
