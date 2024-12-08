@@ -29,7 +29,7 @@ import {
   IconLogout,
   IconPackage,
 } from "@tabler/icons-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useCartStore from "@/stores/cart";
 import { useAuthStore } from "@/stores/auth";
@@ -42,7 +42,7 @@ export default function App() {
   const pathname = usePathname();
   const { user, logout, fetchUser } = useAuthStore();
   const { setSignInIsOpen } = useAuthModal.getState();
-
+  const router = useRouter();
   const isActivePathStartsWith = (path: string) => {
     return pathname.startsWith(path);
   };
@@ -210,7 +210,10 @@ export default function App() {
                   <p>Addresses</p>
                 </div>
               </DropdownItem>
-              <DropdownItem key="support">
+              <DropdownItem
+                key="support"
+                onClick={() => router.push("/support")}
+              >
                 <div className="flex items-center gap-2">
                   <IconLifebuoy size={24} stroke={1} />
                   <p>Support</p>
