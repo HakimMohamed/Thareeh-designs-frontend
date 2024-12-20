@@ -100,17 +100,17 @@ export default function SignIn() {
                     onValueChange={setPassword}
                     type={isPasswordVisible ? "text" : "password"}
                     endContent={
-                      <Button
+                      <button
                         className="focus:outline-none"
-                        onPress={togglePasswordVisibility}
+                        onClick={togglePasswordVisibility}
                         aria-label="Toggle password visibility"
                       >
                         {isPasswordVisible ? (
-                          <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                          <EyeSlashFilledIcon className="text-2xl text-gray-400 pointer-events-none flex-shrink-0" />
                         ) : (
-                          <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                          <EyeFilledIcon className="text-2xl text-gray-400 pointer-events-none flex-shrink-0" />
                         )}
-                      </Button>
+                      </button>
                     }
                   />
                   <p className="text-center text-sm text-gray-600 mb-4">

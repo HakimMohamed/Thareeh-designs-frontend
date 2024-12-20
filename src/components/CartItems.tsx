@@ -19,7 +19,7 @@ export default function CartItems({
       {items.map((product) => (
         <div
           key={product._id}
-          className="flex flex-col md:flex-row items-center bg-white shadow-sm rounded-lg p-4 transition-transform hover:scale-[1.01]"
+          className="flex flex-col md:flex-row items-center bg-white shadow-sm rounded-lg p-4 transition-transform"
         >
           {/* Product Image */}
           <Link href={`/product/${product._id}`} className="md:mr-4">
