@@ -34,7 +34,7 @@ export default function OrderSummary({
         size="lg"
         fullWidth
         className="mt-6"
-        onClick={() => router.push("/checkout")}
+        onPress={() => router.push("/checkout")}
       >
         Proceed to Checkout
       </Button>

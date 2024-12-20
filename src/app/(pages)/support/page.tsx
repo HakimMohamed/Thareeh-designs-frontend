@@ -118,7 +118,7 @@ export default function TicketPage() {
               </Button>
               <Button
                 color="primary"
-                onClick={handleSubmit}
+                onPress={handleSubmit}
                 isLoading={isSubmitting}
                 isDisabled={
                   isSubmitting ||

@@ -46,7 +46,7 @@ export default function CartItems({
                 variant="light"
                 color="danger"
                 isIconOnly
-                onClick={() => removeItemFromCart(product._id)}
+                onPress={() => removeItemFromCart(product._id)}
                 className="hover:bg-red-100"
               >
                 <DeleteIcon fontSize="small" />
@@ -61,7 +61,7 @@ export default function CartItems({
                   variant="light"
                   color="primary"
                   isIconOnly
-                  onClick={() =>
+                  onPress={() =>
                     updateQuantity(product._id, product.quantity - 1)
                   }
                   disabled={product.quantity <= 1}
@@ -74,7 +74,7 @@ export default function CartItems({
                   variant="light"
                   color="primary"
                   isIconOnly
-                  onClick={() =>
+                  onPress={() =>
                     updateQuantity(product._id, product.quantity + 1)
                   }
                 >

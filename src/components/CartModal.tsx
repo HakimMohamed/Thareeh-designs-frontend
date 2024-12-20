@@ -95,11 +95,11 @@ export default function CartModal({ cart, setPopOverIsOpen }: CartProps) {
             color="primary"
             variant="bordered"
             size="md"
-            onClick={handleViewCart}
+            onPress={handleViewCart}
           >
             View Cart ({cart.items.length})
           </Button>
-          <Button color="primary" size="md" onClick={handleCheckout}>
+          <Button color="primary" size="md" onPress={handleCheckout}>
             Checkout
           </Button>
         </div>

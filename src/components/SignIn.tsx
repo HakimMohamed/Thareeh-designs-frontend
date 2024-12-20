@@ -6,6 +6,8 @@ import {
   ModalBody,
   Button,
   Input,
+  InputOtp,
+  Form,
 } from "@nextui-org/react";
 import {
   MailIcon,
@@ -25,7 +27,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState("");
   const [error, setError] = useState<string | null | unknown>(null);
 
   const togglePasswordVisibility = () =>
@@ -49,8 +51,7 @@ export default function SignIn() {
     setError(null); // Reset any existing errors
     setLoading(true); // Start loading
     try {
-      const enteredOtp = otp.join(""); // Combine OTP digits into a single string
-      await verifyOtp({ email, otp: enteredOtp }); // Call the verifyOtp method from the auth store
+      await verifyOtp({ email, otp }); // Call the verifyOtp method from the auth store
       setSignInIsOpen(false);
       window.location.reload();
     } catch (err: string | unknown) {
@@ -58,33 +59,6 @@ export default function SignIn() {
       setError(err || "Invalid OTP. Please try again.");
     } finally {
       setLoading(false); // Stop loading
-    }
-  };
-
-  const handleOtpChange = (value: string, index: number) => {
-    if (/^\d$/.test(value) || value === "") {
-      const newOtp = [...otp];
-      newOtp[index] = value;
-      setOtp(newOtp);
-
-      // Automatically move to the next input if a digit is entered
-      if (value !== "" && index < otp.length - 1) {
-        const nextInput = document.getElementById(`otp-${index + 1}`);
-        nextInput?.focus();
-      }
-    }
-  };
-
-  const handleOtpPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const pasteData = event.clipboardData.getData("text").replace(/\D/g, ""); // Extract only digits
-    if (pasteData.length === otp.length) {
-      const newOtp = pasteData.split("").slice(0, otp.length);
-      setOtp(newOtp);
-
-      // Automatically move focus to the last field
-      const lastInput = document.getElementById(`otp-${newOtp.length - 1}`);
-      lastInput?.focus();
     }
   };
 
@@ -126,9 +100,9 @@ export default function SignIn() {
                     onValueChange={setPassword}
                     type={isPasswordVisible ? "text" : "password"}
                     endContent={
-                      <button
+                      <Button
                         className="focus:outline-none"
-                        onClick={togglePasswordVisibility}
+                        onPress={togglePasswordVisibility}
                         aria-label="Toggle password visibility"
                       >
                         {isPasswordVisible ? (
@@ -136,7 +110,7 @@ export default function SignIn() {
                         ) : (
                           <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                         )}
-                      </button>
+                      </Button>
                     }
                   />
                   <p className="text-center text-sm text-gray-600 mb-4">
@@ -175,35 +149,39 @@ export default function SignIn() {
               )}
 
               {step === "otp" && (
-                <>
+                <Form
+                  className="flex justify-content items-center"
+                  validationBehavior="native"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleVerifyOtp();
+                  }}
+                >
                   <p className="text-center text-sm text-gray-600 mb-4">
                     Enter the OTP sent to your email
                   </p>
-                  <div className="flex justify-center gap-2 mb-4">
-                    {otp.map((digit, index) => (
-                      <input
-                        key={index}
-                        id={`otp-${index}`}
-                        type="text"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleOtpChange(e.target.value, index)}
-                        onPaste={index === 0 ? handleOtpPaste : undefined}
-                        className="w-12 h-12 text-center border rounded-lg text-lg focus:outline-none focus:border-blue-500"
-                      />
-                    ))}
-                  </div>
-
+                  <InputOtp
+                    isRequired
+                    size="lg"
+                    aria-label="OTP input field"
+                    length={4}
+                    name="otp"
+                    placeholder="Enter code"
+                    validationBehavior="native"
+                    value={otp}
+                    onValueChange={setOtp}
+                    className="mb-4"
+                  />
                   <Button
                     className="w-full bg-black text-white font-medium rounded-lg py-2"
                     onPress={handleVerifyOtp}
-                    isDisabled={otp.some((digit) => digit === "")}
+                    type="submit"
+                    isDisabled={otp.length !== 4}
                     isLoading={loading}
                   >
                     Verify OTP
                   </Button>
-                  <p className="text-red-600 mt-2">{(error as string) || ""}</p>
-                </>
+                </Form>
               )}
             </ModalBody>
           </div>

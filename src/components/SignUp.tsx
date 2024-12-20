@@ -168,10 +168,10 @@ export default function SignUp() {
                     autoComplete="new-password"
                     onValueChange={setPassword}
                     endContent={
-                      <button
+                      <Button
                         className="focus:outline-none"
                         type="button"
-                        onClick={toggleVisibility}
+                        onPress={toggleVisibility}
                         aria-label="toggle password visibility"
                       >
                         {isVisible ? (
@@ -179,7 +179,7 @@ export default function SignUp() {
                         ) : (
                           <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                         )}
-                      </button>
+                      </Button>
                     }
                     type={isVisible ? "text" : "password"}
                   />

@@ -212,7 +212,7 @@ export default function App() {
               </DropdownItem>
               <DropdownItem
                 key="support"
-                onClick={() => router.push("/support")}
+                onPress={() => router.push("/support")}
               >
                 <div className="flex items-center gap-2">
                   <IconLifebuoy size={24} stroke={1} />
@@ -225,7 +225,7 @@ export default function App() {
                   <p>Favorites</p>
                 </div>
               </DropdownItem>
-              <DropdownItem key="logout" color="danger" onClick={logout}>
+              <DropdownItem key="logout" color="danger" onPress={logout}>
                 <div className="flex items-center gap-2">
                   <IconLogout size={24} stroke={1} />
                   <p>Log Out</p>

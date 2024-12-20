@@ -32,7 +32,7 @@ export default function AddToCartButton({
 
   return (
     <Button
-      onClick={handleAddToCart}
+      onPress={handleAddToCart}
       isLoading={isPending}
       disabled={isPending}
       className={props}
