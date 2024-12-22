@@ -44,6 +44,8 @@ const useCartStore = create<CartState>((set, get) => ({
   },
   updateQuantity: async (itemId: string, quantity: number) => {
     try {
+      console.log(quantity);
+      console.log(itemId);
       await api.patch(`/api/cart/item`, {
         itemId,
         quantity,
