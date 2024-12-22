@@ -28,16 +28,16 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { IOrder } from "@/interfaces/order.interface";
 
-export const countries = [
-  {
-    label: "Egypt",
-    key: "egypt",
-  },
-];
-
 export default function CartPage() {
   const { cart, isLoading } = useCartStore();
   const { user } = useAuthStore();
+  const countries = [
+    {
+      label: "Egypt",
+      key: "egypt",
+    },
+  ];
+
   const [formData, setFormData] = useState<{
     address: {
       city: string;
