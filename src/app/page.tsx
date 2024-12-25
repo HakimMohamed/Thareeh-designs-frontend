@@ -8,11 +8,14 @@ const pageSize = 10;
 
 const fetchItems = async (
   page: number,
-  categories: string
+  categories: string,
+  minPrice: string,
+  maxPrice: string,
+  sort: string
 ): Promise<{ items: Item[]; count: number }> => {
   try {
     const response = await api.get(`/api/items`, {
-      params: { page, pageSize, categories },
+      params: { page, pageSize, categories, minPrice, maxPrice, sort },
     });
     return response.data.data;
   } catch (err: unknown) {
@@ -30,9 +33,17 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const page = Number(searchParams.page) || 1;
-  console.log(searchParams.categories);
   const categories = (searchParams.categories as string) || "";
-  const { items, count } = await fetchItems(page, categories);
+  const minPrice = (searchParams.minPrice as string) || "";
+  const maxPrice = (searchParams.maxPrice as string) || "";
+  const sort = (searchParams.sort as string) || "";
+  const { items, count } = await fetchItems(
+    page,
+    categories,
+    minPrice,
+    maxPrice,
+    sort
+  );
 
   const totalPages = Math.ceil(count / pageSize);
 
@@ -42,7 +53,13 @@ export default async function Page(props: {
         <h3 className="text-4xl font-bold">Stickers For You</h3>
       </div> */}
       <div className="w-full mb-4">
-        <Filters itemsCount={count} />
+        <Filters
+          itemsCount={count}
+          selectedCats={categories}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          sort={sort}
+        />
       </div>
 
       <div className="mb-4">

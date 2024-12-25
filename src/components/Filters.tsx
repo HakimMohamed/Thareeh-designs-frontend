@@ -15,8 +15,9 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import { useState } from "react";
+import Slider from "@mui/material/Slider";
 import TuneIcon from "@mui/icons-material/Tune";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface Selection {
@@ -51,12 +52,32 @@ const options: Selection[] = [
   },
 ];
 
-export default function Filters({ itemsCount }: { itemsCount: number }) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // Applied filters
+export default function Filters({
+  itemsCount,
+  selectedCats,
+  minPrice,
+  maxPrice,
+  sort,
+}: {
+  itemsCount: number;
+  selectedCats?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  sort?: string;
+}) {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    selectedCats?.split(",") || []
+  );
   const [tempSelectedCategories, setTempSelectedCategories] = useState<
     string[]
-  >([]); // Temporary selections
+  >(selectedCats?.split(",") || []);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
+
+  const [priceRange, setPriceRange] = useState<number[]>([
+    Number(minPrice) || 0,
+    Number(maxPrice) || 1000,
+  ]);
+  const [sortOption, setSortOption] = useState<string>(sort || "most-popular");
   const router = useRouter();
 
   const handleSelect = (key: string) => {
@@ -65,15 +86,32 @@ export default function Filters({ itemsCount }: { itemsCount: number }) {
     );
   };
 
+  const handleSliderChange = (_event: Event, newValue: number | number[]) => {
+    setPriceRange(newValue as number[]);
+  };
+
   const handleApply = () => {
     setSelectedCategories(tempSelectedCategories);
     setPopoverOpen(false);
-    router.push(`/?categories=${tempSelectedCategories.join(",")}`);
+    const [minPrice, maxPrice] = priceRange;
+    router.push(
+      `/?categories=${tempSelectedCategories.join(
+        ","
+      )}&minPrice=${minPrice}&maxPrice=${maxPrice}&sort=${sortOption}`
+    );
   };
 
   const handleCancel = () => {
-    setTempSelectedCategories(selectedCategories); // Reset to currently applied filters
+    setTempSelectedCategories(selectedCategories);
+    setPriceRange([0, 1000]); // Reset to full range
     setPopoverOpen(false);
+  };
+
+  const handleSortChange = (key: string) => {
+    setSortOption(key);
+    const params = new URLSearchParams(window.location.search);
+    params.set("sort", key);
+    router.push(`/?${params.toString()}`);
   };
 
   const chips = categories.map((category) => {
@@ -116,10 +154,29 @@ export default function Filters({ itemsCount }: { itemsCount: number }) {
                   Filters
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="p-4 w-[250px]">
-                <div className="flex flex-col gap-4">
-                  <p className="font-semibold text-lg">Filter Categories</p>
+              <PopoverContent className="p-4 w-[300px]">
+                <div className="flex flex-col gap-6">
+                  <p className="font-semibold">Categories</p>
                   <div className="grid grid-cols-1 gap-2">{chips}</div>
+
+                  {/* Price Range Slider */}
+                  <div className="flex flex-col gap-4 mt-4">
+                    <p className="font-semibold mb-4">Price Range</p>
+                    <Slider
+                      value={priceRange}
+                      onChange={handleSliderChange}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={1000}
+                      step={10}
+                      marks={[
+                        { value: 0, label: "$0" },
+                        { value: 1000, label: "$1000" },
+                      ]}
+                    />
+                  </div>
+
+                  {/* Apply and Cancel Buttons */}
                   <div className="flex justify-end gap-2 mt-4">
                     <Button
                       color="default"
@@ -140,8 +197,9 @@ export default function Filters({ itemsCount }: { itemsCount: number }) {
             {/* Sort Options */}
             <Select
               size="sm"
-              defaultSelectedKeys={["most-popular"]}
+              defaultSelectedKeys={[sortOption]}
               className="w-full sm:w-[222px] sm:min-w-[200px] min-w-[200px]"
+              onChange={(event) => handleSortChange(event.target.value)}
             >
               {options.map((option) => (
                 <SelectItem key={option.key}>{option.label}</SelectItem>
