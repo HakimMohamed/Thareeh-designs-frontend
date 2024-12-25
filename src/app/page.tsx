@@ -7,11 +7,12 @@ import PaginationContainer from "../components/Pagination";
 const pageSize = 10;
 
 const fetchItems = async (
-  page: number
+  page: number,
+  categories: string
 ): Promise<{ items: Item[]; count: number }> => {
   try {
     const response = await api.get(`/api/items`, {
-      params: { page, pageSize },
+      params: { page, pageSize, categories },
     });
     return response.data.data;
   } catch (err: unknown) {
@@ -29,7 +30,9 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const page = Number(searchParams.page) || 1;
-  const { items, count } = await fetchItems(page);
+  console.log(searchParams.categories);
+  const categories = (searchParams.categories as string) || "";
+  const { items, count } = await fetchItems(page, categories);
 
   const totalPages = Math.ceil(count / pageSize);
 
