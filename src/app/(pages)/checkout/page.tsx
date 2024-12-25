@@ -109,9 +109,9 @@ export default function CartPage() {
         }}
       >
         <div className="container mx-auto px-4 py-8 max-w-screen-xl">
-          <div className="grid grid-cols-1 lg:grid-cols-6 gap-8">
+          <div className="grid grid-cols-6 gap-8">
             {/* Customer Details Form */}
-            <div className="lg:col-span-4 md:col-span-4 sm:col-span-6 col-span-1 space-y-6">
+            <div className="col-span-6 xl:col-span-4 space-y-6">
               <h2 className="text-2xl font-semibold mb-4">
                 Shipping Information
               </h2>
@@ -285,7 +285,7 @@ export default function CartPage() {
             </div>
 
             {/* Order Summary */}
-            <div className="lg:col-span-2 md:col-span-2 sm:col-span-6 col-span-1">
+            <div className="col-span-6 xl:col-span-2">
               <Card className="w-full h-full">
                 <CardHeader className="flex gap-3">
                   <div className="flex flex-col">
