@@ -1,7 +1,4 @@
 "use client";
-import { useState } from "react";
-import { Drawer, Button } from "@mui/material";
-import { Select, SelectedItems, SelectItem, Slider } from "@nextui-org/react";
 import {
   IconPalette,
   IconMovie,
@@ -10,6 +7,16 @@ import {
   IconPhoto,
   IconGlobe,
 } from "@tabler/icons-react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Divider,
+} from "@nextui-org/react";
+import { useState } from "react";
 
 interface Selection {
   key: string;
@@ -26,195 +33,74 @@ const categories: Selection[] = [
   { key: "random", label: "Random", icon: <IconPalette size={16} /> },
 ];
 
-const finishes: Selection[] = [
-  { key: "matte", label: "Matte", icon: <IconPalette size={16} /> },
-  { key: "glossy", label: "Glossy", icon: <IconPalette size={16} /> },
-  { key: "transparent", label: "Transparent", icon: <IconPalette size={16} /> },
-  { key: "holographic", label: "Holographic", icon: <IconPalette size={16} /> },
-];
+export default function Filters({ itemsCount }: { itemsCount: number }) {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-export default function Filters() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
+  const handleSelect = (key: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+    );
   };
 
+  const handleApply = () => {
+    console.log("Selected Categories: ", selectedCategories);
+    // Perform filtering or any other action based on selected categories
+  };
+
+  const handleCancel = () => {
+    setSelectedCategories([]); // Reset selections
+  };
+
+  const chips = categories.map((category) => (
+    <Button
+      key={category.key}
+      startContent={category.icon}
+      color="default"
+      variant={selectedCategories.includes(category.key) ? "solid" : "bordered"}
+      size="sm"
+      className="w-full"
+      onPress={() => handleSelect(category.key)}
+    >
+      {category.label}
+    </Button>
+  ));
+
   return (
-    <div className="flex flex-col md:flex-row w-full">
-      <Button
-        variant="contained"
-        onClick={toggleDrawer}
-        className="md:hidden bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-blue-600"
-        aria-label="Open Filters"
-      >
-        Open Filters
-      </Button>
+    <Card>
+      <CardBody>
+        <div className="flex items-center justify-between">
+          {/* Stickers title and count on the left */}
+          <div className="flex items-center space-x-2">
+            <p className="font-bold">Stickers</p>
+            <p className="text-slate-500">({itemsCount})</p>
+          </div>
 
-      <div className="hidden md:flex items-center space-x-6">
-        <Select
-          aria-label="Category selection"
-          items={categories}
-          placeholder="Select a category"
-          labelPlacement="outside"
-          classNames={{
-            base: "min-w-[200px]",
-            trigger: "h-15",
-          }}
-          renderValue={(items: SelectedItems<Selection>) => {
-            return items.map((item) => (
-              <div key={item.key} className="flex items-center gap-2">
-                {item.data?.icon}
-                <div className="flex flex-col">
-                  <span>{item?.data?.label || ""}</span>
-                </div>
-              </div>
-            ));
-          }}
-        >
-          {(item) => (
-            <SelectItem key={item.key} textValue={item.label}>
-              <div className="flex gap-2 items-center">
-                {item?.icon}
-                <div className="flex flex-col">
-                  <span className="text-small">{item.label}</span>
-                </div>
-              </div>
-            </SelectItem>
-          )}
-        </Select>
+          {/* Filter dropdown on the right */}
+          <Popover color="default" placement="bottom">
+            <PopoverTrigger>
+              <Button color="default" variant="flat" size="sm">
+                Filter
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className="grid grid-cols-3 gap-2 p-2">{chips}</div>
 
-        <Select
-          aria-label="Finish selection"
-          items={finishes}
-          placeholder="Select a finish"
-          labelPlacement="outside"
-          classNames={{
-            base: "min-w-[200px]",
-            trigger: "h-15",
-          }}
-          renderValue={(items: SelectedItems<Selection>) => {
-            return items.map((item) => (
-              <div key={item.key} className="flex items-center gap-2">
-                {item.data?.icon}
-                <div className="flex flex-col">
-                  <span>{item?.data?.label || ""}</span>
-                </div>
-              </div>
-            ));
-          }}
-        >
-          {(item) => (
-            <SelectItem key={item.key} textValue={item.label}>
-              <div className="flex gap-2 items-center">
-                {item?.icon}
-                <div className="flex flex-col">
-                  <span className="text-small">{item.label}</span>
-                </div>
-              </div>
-            </SelectItem>
-          )}
-        </Select>
-        <Slider
-          aria-label="Price range selector"
-          label="Price Range"
-          step={50}
-          minValue={0}
-          maxValue={1000}
-          defaultValue={[100, 500]}
-          formatOptions={{ style: "currency", currency: "EGP" }}
-          className="min-w-[400px]"
-        />
-      </div>
+              {/* Divider */}
+              <Divider className="my-2" />
 
-      <Drawer
-        anchor="bottom"
-        open={drawerOpen}
-        onClose={toggleDrawer}
-        sx={{
-          "& .MuiDrawer-paper": {
-            height: "50%", // Adjust this value to increase the height of the drawer
-            overflow: "visible", // Allow content to be fully visible
-          },
-        }}
-      >
-        <div className="flex flex-col p-4 space-y-4">
-          <h2 className="text-lg font-bold">Filters</h2>
-          <Select
-            aria-label="Category selection"
-            items={categories}
-            placeholder="Select a category"
-            labelPlacement="outside"
-            classNames={{
-              base: "max-w-[200px]",
-              trigger: "h-12",
-            }}
-            renderValue={(items: SelectedItems<Selection>) => {
-              return items.map((item) => (
-                <div key={item.key} className="flex items-center gap-2">
-                  {item.data?.icon}
-                  <div className="flex flex-col">
-                    <span>{item?.data?.label || ""}</span>
-                  </div>
-                </div>
-              ));
-            }}
-          >
-            {(item) => (
-              <SelectItem key={item.key} textValue={item.label}>
-                <div className="flex gap-2 items-center">
-                  {item?.icon}
-                  <div className="flex flex-col">
-                    <span className="text-small">{item.label}</span>
-                  </div>
-                </div>
-              </SelectItem>
-            )}
-          </Select>
-
-          <Select
-            aria-label="Finish selection"
-            items={finishes}
-            placeholder="Select a finish"
-            labelPlacement="outside"
-            classNames={{
-              base: "max-w-[200px]",
-              trigger: "h-12",
-            }}
-            renderValue={(items: SelectedItems<Selection>) => {
-              return items.map((item) => (
-                <div key={item.key} className="flex items-center gap-2">
-                  {item.data?.icon}
-                  <div className="flex flex-col">
-                    <span>{item?.data?.label || ""}</span>
-                  </div>
-                </div>
-              ));
-            }}
-          >
-            {(item) => (
-              <SelectItem key={item.key} textValue={item.label}>
-                <div className="flex gap-2 items-center">
-                  {item?.icon}
-                  <div className="flex flex-col">
-                    <span className="text-small">{item.label}</span>
-                  </div>
-                </div>
-              </SelectItem>
-            )}
-          </Select>
-          <Slider
-            aria-label="Price range selector"
-            label="Price Range"
-            step={50}
-            minValue={0}
-            maxValue={1000}
-            defaultValue={[100, 500]}
-            formatOptions={{ style: "currency", currency: "USD" }}
-            className="max-w-md"
-          />
+              {/* Action Buttons */}
+              <div className="justify-content space-x-2 p-2">
+                <Button color="default" onPress={handleCancel} size="sm">
+                  Cancel
+                </Button>
+                <Button color="primary" onPress={handleApply} size="sm">
+                  Apply
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
-      </Drawer>
-    </div>
+      </CardBody>
+    </Card>
   );
 }

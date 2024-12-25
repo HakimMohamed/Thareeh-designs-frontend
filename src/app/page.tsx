@@ -35,11 +35,11 @@ export default async function Page(props: {
 
   return (
     <div className="mb-4">
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <h3 className="text-4xl font-bold">Stickers For You</h3>
-      </div>
+      </div> */}
       <div className="w-full mb-4">
-        <Filters />
+        <Filters itemsCount={count} />
       </div>
 
       <div className="mb-4">

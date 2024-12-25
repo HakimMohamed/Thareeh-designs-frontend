@@ -14,7 +14,7 @@ const ItemCard: React.FC<Item> = ({
   _id,
   name,
   price = 0,
-  description,
+  // description,
   discount,
   image,
 }) => {
@@ -51,11 +51,11 @@ const ItemCard: React.FC<Item> = ({
           </Link>
 
           {/* Product Description Link with Truncation */}
-          <Link href={`/product/${_id}`} className="block no-underline mt-2">
+          {/* <Link href={`/product/${_id}`} className="block no-underline mt-2">
             <p className="text-sm text-gray-600 line-clamp-3">
               {truncateText(description || "No description available", 100)}
             </p>
-          </Link>
+          </Link> */}
         </div>
 
         <div className="px-4 py-2">
