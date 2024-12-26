@@ -178,12 +178,7 @@ export default function Filters({
 
                   {/* Apply and Cancel Buttons */}
                   <div className="flex justify-end gap-2 mt-4">
-                    <Button
-                      color="default"
-                      onPress={handleCancel}
-                      size="sm"
-                      variant="light"
-                    >
+                    <Button color="default" onPress={handleCancel} size="sm">
                       Cancel
                     </Button>
                     <Button color="primary" onPress={handleApply} size="sm">
