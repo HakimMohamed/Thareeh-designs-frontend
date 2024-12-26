@@ -48,11 +48,9 @@ export default async function Page(props: {
   const totalPages = Math.ceil(count / pageSize);
 
   return (
-    <div className="mb-4">
-      {/* <div className="mb-4">
-        <h3 className="text-4xl font-bold">Stickers For You</h3>
-      </div> */}
-      <div className="w-full mb-4">
+    <div className="container mx-auto px-4 min-h-screen">
+      <div className="max-w-screen-xl mx-auto space-y-6">
+        {/* Filters directly without card wrapping */}
         <Filters
           itemsCount={count}
           selectedCats={categories}
@@ -60,19 +58,23 @@ export default async function Page(props: {
           maxPrice={maxPrice}
           sort={sort}
         />
-      </div>
 
-      <div className="mb-4">
-        <ProductGrid products={items} />
-      </div>
-
-      <div className="flex justify-center">
-        <div className="bg-white bg-opacity-90 shadow-lg p-4 rounded-lg">
-          <PaginationContainer
-            totalPages={totalPages}
-            currentPage={Number(page)}
-          />
+        {/* Products Grid Section */}
+        <div>
+          <ProductGrid products={items} />
         </div>
+
+        {/* Pagination Section */}
+        {count > 0 && (
+          <div className="flex justify-center">
+            <div className="bg-white bg-opacity-90 shadow-lg p-4 rounded-xl">
+              <PaginationContainer
+                totalPages={totalPages}
+                currentPage={Number(page)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

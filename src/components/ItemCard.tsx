@@ -3,10 +3,10 @@ import Image from "next/image";
 import { Item } from "../interfaces/Item.interface";
 import { Link } from "@nextui-org/react";
 import AddToCartButton from "./AddToCartButton";
+import { NoResultsFound } from "./NoItemsFound";
 
 const truncateText = (text: string, length: number) => {
   if (text.length <= length) return text;
-
   return text.substring(0, length) + "...";
 };
 
@@ -18,64 +18,67 @@ const ItemCard: React.FC<Item> = ({
   discount,
   image,
 }) => {
+  const discountedPrice =
+    discount.active && discount.value > 0
+      ? price * (1 - discount.value / 100)
+      : price;
+
   return (
-    <div className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden shadow-gray-400/50 max-w-[300px] w-full">
-      <Link href={`/product/${_id}`} className="no-underline">
+    <div className="group flex flex-col bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.2)] transition-all duration-300 overflow-hidden h-full">
+      <Link
+        href={`/product/${_id}`}
+        className="no-underline relative block aspect-square"
+      >
         {image && (
-          <div className="relative w-full h-48 overflow-hidden group">
+          <div className="w-full h-full relative overflow-hidden">
             <Image
               src={image}
               alt={name}
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out shadow-xl shadow-gray-600/50"
+              className="object-cover transform group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority={false}
             />
             {discount.active && discount.value > 0 && (
-              <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">
-                {discount.value}% OFF
-              </span>
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                -{discount.value}%
+              </div>
             )}
           </div>
         )}
       </Link>
 
-      <div className="flex flex-col flex-grow">
-        <div className="p-4 flex-grow">
-          {/* Product Name Link with Truncation */}
+      <div className="flex flex-col flex-grow p-4 space-y-3">
+        <div className="flex-grow space-y-2">
           <Link
             href={`/product/${_id}`}
-            className="block no-underline text-xl font-bold text-gray-900"
+            className="block no-underline group-hover:text-blue-600 transition-colors duration-200"
           >
-            {truncateText(name || "Untitled Product", 55)}
+            <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
+              {truncateText(name || "Untitled Product", 55)}
+            </h3>
           </Link>
 
-          {/* Product Description Link with Truncation */}
-          <Link href={`/product/${_id}`} className="block no-underline mt-2">
-            <p className="text-sm text-gray-600 line-clamp-3">
-              {truncateText(description || "No description available", 100)}
-            </p>
-          </Link>
+          <p className="text-sm text-gray-600 line-clamp-2">
+            {truncateText(description || "No description available", 100)}
+          </p>
         </div>
 
-        <div className="px-4 py-2">
+        <div className="space-y-4">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-gray-900">
-              {price.toFixed(2)}
-              {" EGP"}
+            <span className="text-xl font-bold text-gray-900">
+              {discountedPrice.toFixed(2)} EGP
             </span>
             {discount.active && discount.value > 0 && (
-              <span className="text-sm text-gray-500 line-through">
-                {price.toFixed(2)}
-                {" EGP"}
+              <span className="text-sm text-gray-400 line-through">
+                {price.toFixed(2)} EGP
               </span>
             )}
           </div>
-        </div>
-        <div className="px-4 py-4 border-t border-gray-100 mt-auto">
+
           <AddToCartButton
             itemId={_id}
-            props="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+            props="w-full px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md hover:shadow-lg"
           />
         </div>
       </div>
@@ -89,15 +92,18 @@ interface ProductGridProps {
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
-    <div className="max-w-screen-xl">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {products &&
-          products.map((product, index) => (
-            <div key={index} className="h-full">
+    <div className="w-full max-w-screen-xl mx-auto">
+      {products && products.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+          {products.map((product, index) => (
+            <div key={product._id || index} className="h-full">
               <ItemCard {...product} />
             </div>
           ))}
-      </div>
+        </div>
+      ) : (
+        <NoResultsFound />
+      )}
     </div>
   );
 };
