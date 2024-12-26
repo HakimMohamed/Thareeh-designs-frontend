@@ -21,6 +21,7 @@ const PaginationContainer = ({
     <Pagination
       total={totalPages}
       initialPage={1}
+      variant="faded"
       page={currentPage}
       onChange={(page) => router.push(`${route}?page=${page}`)}
       getItemAriaLabel={(page) => `Go to page ${page}`}
