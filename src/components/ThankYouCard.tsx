@@ -1,7 +1,10 @@
+"use client";
 import React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useRouter } from "next/navigation";
 
 const ThankYouCard = ({ orderId }: { orderId: string }) => {
+  const router = useRouter();
   return (
     <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="p-8">
@@ -33,8 +36,11 @@ const ThankYouCard = ({ orderId }: { orderId: string }) => {
         </div>
 
         <div className="flex justify-center">
-          <button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg">
-            View Order
+          <button
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg"
+            onClick={() => router.push("/orders")}
+          >
+            View My Orders
           </button>
         </div>
       </div>
