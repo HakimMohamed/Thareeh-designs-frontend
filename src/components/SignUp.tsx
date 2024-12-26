@@ -6,6 +6,8 @@ import {
   ModalBody,
   Button,
   Input,
+  Form,
+  InputOtp,
 } from "@nextui-org/react";
 import {
   MailIcon,
@@ -168,10 +170,10 @@ export default function SignUp() {
                     autoComplete="new-password"
                     onValueChange={setPassword}
                     endContent={
-                      <Button
+                      <button
                         className="focus:outline-none"
                         type="button"
-                        onPress={toggleVisibility}
+                        onClick={toggleVisibility}
                         aria-label="toggle password visibility"
                       >
                         {isVisible ? (
@@ -179,7 +181,7 @@ export default function SignUp() {
                         ) : (
                           <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                         )}
-                      </Button>
+                      </button>
                     }
                     type={isVisible ? "text" : "password"}
                   />
@@ -187,34 +189,48 @@ export default function SignUp() {
                   <p className="text-center text-sm text-gray-600 mb-4">
                     Enter the OTP sent to your email
                   </p>
-                  <Input
-                    autoFocus
-                    label="OTP"
-                    placeholder="Enter OTP"
-                    variant="bordered"
-                    className="mb-4"
-                    value={otp}
-                    onValueChange={setOtp}
-                  />
-                  <Button
-                    className="w-full bg-black text-white font-medium rounded-lg py-2"
-                    isDisabled={
-                      !firstName ||
-                      !lastName ||
-                      !password ||
-                      !otp ||
-                      otp.length !== 4
-                    }
-                    isLoading={loading}
-                    onPress={async () => {
-                      const success = await handleVerifyOtp();
-                      if (success) {
-                        onClose();
-                      }
+                  <Form
+                    className="flex justify-content items-center"
+                    validationBehavior="native"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleVerifyOtp();
                     }}
                   >
-                    Submit
-                  </Button>
+                    <InputOtp
+                      isRequired
+                      size="lg"
+                      aria-label="OTP input field"
+                      length={4}
+                      name="otp"
+                      placeholder="Enter code"
+                      validationBehavior="native"
+                      value={otp}
+                      onValueChange={setOtp}
+                      className="mb-4"
+                    />
+                    <Button
+                      className="w-full bg-black text-white font-medium rounded-lg py-2"
+                      onPress={async () => {
+                        const success = await handleVerifyOtp();
+                        if (success) {
+                          onClose();
+                        }
+                      }}
+                      type="submit"
+                      isDisabled={
+                        !firstName ||
+                        !lastName ||
+                        !password ||
+                        !otp ||
+                        otp.length !== 4
+                      }
+                      isLoading={loading}
+                    >
+                      Verify OTP
+                    </Button>
+                  </Form>
+
                   <p className="text-red-600">{(error as string) || ""}</p>
                 </>
               )}
