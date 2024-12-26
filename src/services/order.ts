@@ -22,4 +22,9 @@ export const OrdersService = {
     const res = await api.get(`/api/orders/order?id=${id}`);
     return res.data.data;
   },
+
+  getOrders: async (page: number, pageSize: number) => {
+    const res = await api.get(`/api/orders?page=${page}&pageSize=${pageSize}`);
+    return res.data.data;
+  },
 };

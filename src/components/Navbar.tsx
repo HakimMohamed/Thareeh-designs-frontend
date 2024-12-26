@@ -198,7 +198,10 @@ export default function App() {
               <DropdownItem key="profile" className="h-7 gap-2">
                 <p className="font-semibold">{user?.email || ""}</p>
               </DropdownItem>
-              <DropdownItem key="my-orders">
+              <DropdownItem
+                key="my-orders"
+                onPress={() => router.push("/orders")}
+              >
                 <div className="flex items-center gap-2">
                   <IconPackage size={24} stroke={1} />
                   <p>My Orders</p>

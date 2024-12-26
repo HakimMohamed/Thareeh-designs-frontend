@@ -35,4 +35,6 @@ export interface IOrder {
     discount: number;
     tax: number;
   };
+  createdAt: string;
+  updatedAt: string;
 }
