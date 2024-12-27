@@ -100,10 +100,16 @@ const AddressesPage = () => {
         setEditForm(null);
         toast.dismiss();
         toast.success("Address saved successfully!");
-      } catch (error) {
-        console.error("Error saving address:", error);
-        toast.dismiss();
-        toast.error("Failed to save the address. Please try again.");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error.response.status === 400) {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        } else {
+          console.error("Error saving address:", error);
+          toast.dismiss();
+          toast.error("Failed to save the address. Please try again.");
+        }
       }
     }
   };
@@ -112,6 +118,7 @@ const AddressesPage = () => {
     const isFormChanged =
       JSON.stringify(editForm) !==
       JSON.stringify(addresses.find((a) => a._id === editingAddressId));
+
     setIsSaveDisabled(!isFormChanged);
   }, [addresses, editForm, editingAddressId]);
   return (
@@ -238,7 +245,7 @@ const AddressesPage = () => {
                     <>
                       <div>
                         <label className="block text-gray-700 text-sm font-medium mb-1">
-                          Region
+                          Province
                         </label>
                         <Input
                           value={editForm?.region || ""}
