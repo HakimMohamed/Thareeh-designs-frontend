@@ -207,7 +207,10 @@ export default function App() {
                   <p>My Orders</p>
                 </div>
               </DropdownItem>
-              <DropdownItem key="addresses">
+              <DropdownItem
+                key="addresses"
+                onPress={() => router.push("/addresses")}
+              >
                 <div className="flex items-center gap-2">
                   <IconHomeLink size={24} stroke={1} />
                   <p>Addresses</p>
