@@ -110,9 +110,10 @@ const AddressesPage = () => {
 
   useEffect(() => {
     const isFormChanged =
-      JSON.stringify(editForm) !== JSON.stringify(addresses);
+      JSON.stringify(editForm) !==
+      JSON.stringify(addresses.find((a) => a._id === editingAddressId));
     setIsSaveDisabled(!isFormChanged);
-  }, [addresses, editForm]);
+  }, [addresses, editForm, editingAddressId]);
   return (
     <div className="w-full max-w-screen-xl">
       {addresses && (
@@ -158,25 +159,9 @@ const AddressesPage = () => {
               <CardBody>
                 <div className="flex justify-between items-start">
                   <div>
-                    {editingAddressId === address._id ? (
-                      <div>
-                        <label className="block text-gray-700 text-sm font-medium mb-1">
-                          Region
-                        </label>
-                        <Input
-                          value={editForm?.region || ""}
-                          onChange={(e) =>
-                            handleEditChange("region", e.target.value)
-                          }
-                          placeholder="Enter region"
-                          className="text-lg font-semibold text-gray-900"
-                        />
-                      </div>
-                    ) : (
-                      <h3 className="font-semibold text-lg text-gray-900">
-                        {address.region}
-                      </h3>
-                    )}
+                    <h3 className="font-semibold text-lg text-gray-900">
+                      {address.region}
+                    </h3>
                   </div>
                   <div className="flex gap-4">
                     {editingAddressId === address._id ? (
@@ -248,10 +233,21 @@ const AddressesPage = () => {
                   </div>
                 </div>
 
-                <div className="mt-4 space-y-2 text-gray-600">
+                <div className="mt-4 space-y-2 text-gray-600 max-w-[300px]">
                   {editingAddressId === address._id ? (
                     <>
                       <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Region
+                        </label>
+                        <Input
+                          value={editForm?.region || ""}
+                          onChange={(e) =>
+                            handleEditChange("region", e.target.value)
+                          }
+                          placeholder="Enter region"
+                          className="text-lg font-semibold text-gray-900"
+                        />
                         <label className="block text-gray-700 text-sm font-medium mb-1">
                           First Name
                         </label>
