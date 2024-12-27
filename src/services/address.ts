@@ -10,4 +10,8 @@ export const AddressService = {
     const res = await api.delete(`/api/addresses/address?id=${addressId}`);
     return res.data.data;
   },
+  updateAddress: async (address: IAddress): Promise<IAddress[]> => {
+    const res = await api.patch(`/api/addresses/address`, address);
+    return res.data.data;
+  },
 };

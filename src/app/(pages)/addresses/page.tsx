@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   CardBody,
+  Input,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -14,17 +15,21 @@ import {
 } from "@nextui-org/react";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const AddressesPage = () => {
   const [addresses, setAddresses] = useState<IAddress[]>([]);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<IAddress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
   const [refreshCounter, setRefreshCounter] = useState(0);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
   useEffect(() => {
     const fetchAddresses = async () => {
-      setLoading(true); // Set loading to true before the fetch
+      if (refreshCounter === 0) setLoading(true);
       try {
         const result = await AddressService.getAddresses();
         setAddresses(result);
@@ -33,7 +38,7 @@ const AddressesPage = () => {
         console.error("Error fetching addresses:", error);
         setError("Failed to load addresses. Please try again.");
       } finally {
-        setLoading(false); // Set loading to false after fetch completes
+        setLoading(false);
       }
     };
 
@@ -42,17 +47,72 @@ const AddressesPage = () => {
 
   const handleDelete = async () => {
     if (addressToDelete) {
+      toast.loading("Deleting address...");
       try {
         await AddressService.removeAddress(addressToDelete);
         setRefreshCounter((prev) => prev + 1);
-        setAddressToDelete(null); // Reset the delete state
+        toast.dismiss();
+        toast.success("Address deleted successfully!");
+        setAddressToDelete(null);
       } catch (error) {
         console.error("Error deleting address:", error);
-        setError("Failed to delete the address. Please try again.");
+        toast.dismiss();
+        toast.error("Failed to delete the address. Please try again.");
       }
     }
   };
 
+  const handleEditClick = (address: IAddress) => {
+    setEditingAddressId(address._id!);
+    setEditForm({ ...address }); // Clone the address to edit form
+  };
+
+  const handleEditChange = (field: keyof IAddress | string, value: string) => {
+    if (editForm) {
+      if (field.includes(".")) {
+        // Handle nested fields like 'name.first'
+        const [parentField, childField] = field.split(".");
+        setEditForm((prev) =>
+          prev
+            ? {
+                ...prev,
+                [parentField]: {
+                  ...(prev[parentField as keyof IAddress] as object),
+                  [childField]: value,
+                },
+              }
+            : null
+        );
+      } else {
+        // Handle top-level fields
+        setEditForm((prev) => (prev ? { ...prev, [field]: value } : null));
+      }
+    }
+  };
+
+  const handleSave = async () => {
+    if (editForm) {
+      toast.loading("Saving address...");
+      try {
+        await AddressService.updateAddress(editForm);
+        setRefreshCounter((prev) => prev + 1);
+        setEditingAddressId(null);
+        setEditForm(null);
+        toast.dismiss();
+        toast.success("Address saved successfully!");
+      } catch (error) {
+        console.error("Error saving address:", error);
+        toast.dismiss();
+        toast.error("Failed to save the address. Please try again.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const isFormChanged =
+      JSON.stringify(editForm) !== JSON.stringify(addresses);
+    setIsSaveDisabled(!isFormChanged);
+  }, [addresses, editForm]);
   return (
     <div className="w-full max-w-screen-xl">
       {addresses && (
@@ -65,7 +125,6 @@ const AddressesPage = () => {
         </div>
       )}
 
-      {/* Loading Spinner */}
       {loading ? (
         <div className="flex justify-center items-center">
           <Spinner size="lg" />
@@ -99,25 +158,61 @@ const AddressesPage = () => {
               <CardBody>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-semibold text-lg text-gray-900">
-                      {address.region}
-                    </h3>
+                    {editingAddressId === address._id ? (
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Region
+                        </label>
+                        <Input
+                          value={editForm?.region || ""}
+                          onChange={(e) =>
+                            handleEditChange("region", e.target.value)
+                          }
+                          placeholder="Enter region"
+                          className="text-lg font-semibold text-gray-900"
+                        />
+                      </div>
+                    ) : (
+                      <h3 className="font-semibold text-lg text-gray-900">
+                        {address.region}
+                      </h3>
+                    )}
                   </div>
                   <div className="flex gap-4">
-                    <Button
-                      size="sm"
-                      className="flex items-center gap-2"
-                      onPress={() => console.log(address._id)}
-                    >
-                      <IconPencil className="w-4 h-4" />
-                      Edit
-                    </Button>
+                    {editingAddressId === address._id ? (
+                      <>
+                        <Button
+                          size="sm"
+                          className="flex items-center gap-2"
+                          onPress={handleSave}
+                          isDisabled={isSaveDisabled}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="flex items-center gap-2"
+                          onPress={() => setEditingAddressId(null)}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        size="sm"
+                        className="flex items-center gap-2"
+                        onPress={() => handleEditClick(address)}
+                      >
+                        <IconPencil className="w-4 h-4" />
+                        Edit
+                      </Button>
+                    )}
                     <Popover
-                      onOpenChange={(open: boolean) => {
+                      onOpenChange={(open) => {
                         if (open) setAddressToDelete(address._id!);
                       }}
                     >
-                      <PopoverTrigger key={address._id}>
+                      <PopoverTrigger>
                         <Button
                           size="sm"
                           className="flex items-center gap-2 text-red-600 hover:text-red-700"
@@ -135,14 +230,14 @@ const AddressesPage = () => {
                             <Button
                               size="sm"
                               className="text-gray-500"
-                              onPress={() => setAddressToDelete(null)} // Reset onPress as well
+                              onPress={() => setAddressToDelete(null)}
                             >
                               Cancel
                             </Button>
                             <Button
                               size="sm"
                               className="text-red-600 hover:text-red-700"
-                              onPress={handleDelete} // Deletion onPress
+                              onPress={handleDelete}
                             >
                               Confirm
                             </Button>
@@ -154,11 +249,103 @@ const AddressesPage = () => {
                 </div>
 
                 <div className="mt-4 space-y-2 text-gray-600">
-                  <p>{`${address.name.first} ${address.name.last}`}</p>
-                  <p>{address.city}</p>
-                  {address.postalCode && <p>{address.postalCode}</p>}
-                  <p>{`${address.city}, ${address.country}`}</p>
-                  <p>{address.phone}</p>
+                  {editingAddressId === address._id ? (
+                    <>
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          First Name
+                        </label>
+                        <Input
+                          value={editForm?.name?.first || ""}
+                          onChange={(e) =>
+                            handleEditChange("name.first", e.target.value)
+                          }
+                          placeholder="Enter first name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Last Name
+                        </label>
+                        <Input
+                          value={editForm?.name?.last || ""}
+                          onChange={(e) =>
+                            handleEditChange("name.last", e.target.value)
+                          }
+                          placeholder="Enter last name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          City
+                        </label>
+                        <Input
+                          value={editForm?.city || ""}
+                          onChange={(e) =>
+                            handleEditChange("city", e.target.value)
+                          }
+                          placeholder="Enter city"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Postal Code
+                        </label>
+                        <Input
+                          value={editForm?.postalCode || ""}
+                          onChange={(e) =>
+                            handleEditChange("postalCode", e.target.value)
+                          }
+                          placeholder="Enter postal code"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Country
+                        </label>
+                        <Input
+                          value={editForm?.country || ""}
+                          onChange={(e) =>
+                            handleEditChange("country", e.target.value)
+                          }
+                          placeholder="Enter country"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Phone
+                        </label>
+                        <Input
+                          value={editForm?.phone || ""}
+                          onChange={(e) =>
+                            handleEditChange("phone", e.target.value)
+                          }
+                          placeholder="Enter phone number"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Details
+                        </label>
+                        <Input
+                          value={editForm?.details || ""}
+                          onChange={(e) =>
+                            handleEditChange("details", e.target.value)
+                          }
+                          placeholder="Enter additional details"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p>{`${address.name.first} ${address.name.last}`}</p>
+                      <p>{address.city}</p>
+                      {address.postalCode && <p>{address.postalCode}</p>}
+                      <p>{`${address.city}, ${address.country}`}</p>
+                      <p>{address.phone}</p>
+                      {address.details && <p>{address.details}</p>}
+                    </>
+                  )}
                 </div>
               </CardBody>
             </Card>

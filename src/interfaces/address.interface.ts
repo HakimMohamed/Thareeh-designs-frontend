@@ -9,4 +9,5 @@ export interface IAddress {
   phone: string;
   postalCode?: string;
   region: string;
+  details: string;
 }
