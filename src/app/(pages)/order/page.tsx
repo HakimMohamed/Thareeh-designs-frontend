@@ -85,6 +85,22 @@ const OrderDetailsPage = () => {
     return <Alert className="max-w-4xl mx-auto mt-8">Order not found.</Alert>;
   }
 
+  const calculateItemDiscount = (item: IOrder["items"][0]) => {
+    const totalBeforeDiscount = orderDetails.items.reduce(
+      (sum, i) => sum + i.price,
+      0
+    );
+    const discountRatio = orderDetails.price.discount / totalBeforeDiscount;
+    return item.price * discountRatio;
+  };
+
+  const colors = {
+    pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    active: "bg-blue-100 text-blue-800 border-blue-200",
+    delivered: "bg-purple-100 text-purple-800 border-purple-200",
+    cancelled: "bg-red-100 text-red-800 border-red-200",
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
@@ -96,19 +112,26 @@ const OrderDetailsPage = () => {
         {/* Order Summary Card */}
         <Card>
           <CardHeader>
-            <Clock className="w-5 h-5  mr-2" />
+            <Clock className="w-5 h-5 mr-2" />
             Order Summary
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="font-medium">Order Date:</span>
                 <span>{formatDate(orderDetails.createdAt)}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="font-medium">Status:</span>
-                <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full">
-                  {orderDetails.status}
+                <span
+                  className={`px-3 py-1 rounded-full ${
+                    colors[
+                      orderDetails.status.toLowerCase() as keyof typeof colors
+                    ]
+                  }`}
+                >
+                  {orderDetails.status.charAt(0).toUpperCase() +
+                    orderDetails.status.slice(1)}
                 </span>
               </div>
             </div>
@@ -118,37 +141,57 @@ const OrderDetailsPage = () => {
         {/* Items Card */}
         <Card>
           <CardHeader>
-            <Package className="w-5 h-5  mr-2" />
+            <Package className="w-5 h-5 mr-2" />
             Items
           </CardHeader>
           <CardContent>
-            <div className="divide-y">
-              {orderDetails.items.map((item) => (
-                <div key={item._id} className="py-4 first:pt-0 last:pb-0">
-                  <div className="flex gap-4">
-                    <Image
-                      src={item.image || "/api/placeholder/80/80"}
-                      alt={item.name}
-                      width={80}
-                      height={80}
-                      className="object-cover rounded"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-gray-600">Quantity: {item.quantity}</p>
-                      <p className="text-gray-600">
-                        {formatPrice(item.price / item.quantity)} each
-                      </p>
+            <div>
+              <div className="divide-y">
+                {orderDetails.items.map((item) => {
+                  const itemDiscount = calculateItemDiscount(item);
+                  const finalPrice = item.price - itemDiscount;
+                  return (
+                    <div key={item._id} className="py-4 first:pt-0 last:pb-0">
+                      <div className="flex gap-4">
+                        <Image
+                          src={item.image || "/api/placeholder/80/80"}
+                          alt={item.name}
+                          width={80}
+                          height={80}
+                          className="object-cover rounded"
+                        />
+                        <div className="flex-1">
+                          <h3 className="font-medium">{item.name}</h3>
+                          <p className="text-gray-600">
+                            Quantity: {item.quantity}
+                          </p>
+                          {item.quantity > 1 && (
+                            <p className="text-gray-600">
+                              <span className="mr-2">
+                                {formatPrice(item.price / item.quantity)} each
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                        <div className="text-right">
+                          <p className="line-through text-gray-500">
+                            {formatPrice(item.price)}
+                          </p>
+                          <p className="font-medium text-green-600">
+                            {formatPrice(finalPrice)}
+                          </p>
+                          <p className="text-sm text-red-500">
+                            -{formatPrice(itemDiscount)}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium">{formatPrice(item.price)}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
+              </div>
               <div className="pt-4">
                 <div className="flex justify-between font-bold">
-                  <span>Discount</span>
+                  <span>Total Discount</span>
                   <span className="text-red-500">
                     -{formatPrice(orderDetails.price.discount)}
                   </span>
@@ -156,7 +199,7 @@ const OrderDetailsPage = () => {
               </div>
               <div className="pt-4">
                 <div className="flex justify-between font-bold">
-                  <span>Total</span>
+                  <span>Final Total</span>
                   <span>{formatPrice(orderDetails.price.total)}</span>
                 </div>
               </div>
@@ -167,7 +210,7 @@ const OrderDetailsPage = () => {
         {/* Shipping Address Card */}
         <Card>
           <CardHeader>
-            <MapPin className="w-5 h-5  mr-2" />
+            <MapPin className="w-5 h-5 mr-2" />
             Shipping Address
           </CardHeader>
           <CardContent>
