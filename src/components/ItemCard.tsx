@@ -24,7 +24,7 @@ const ItemCard: React.FC<Item> = ({
       : price;
 
   return (
-    <div className="group flex flex-col bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.2)] transition-all duration-300 overflow-hidden h-full">
+    <div className="group flex flex-col bg-white rounded-3xl shadow-[0_22px_24px_rgba(0,0,0,0.1),_0_10px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.2),_0_14px_20px_rgba(0,0,0,0.05)] transition-all duration-300 overflow-hidden h-full">
       <Link
         href={`/product/${_id}`}
         className="no-underline relative block aspect-square"
