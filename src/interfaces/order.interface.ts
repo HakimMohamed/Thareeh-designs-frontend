@@ -24,7 +24,7 @@ export interface IOrder {
     region: string;
     type: "home" | "office";
     details: string;
-  }[];
+  };
   payment: {
     method: "online" | "cod";
     status: string;

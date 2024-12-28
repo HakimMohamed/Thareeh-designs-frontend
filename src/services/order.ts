@@ -1,4 +1,5 @@
 import { IAddress } from "@/interfaces/address.interface";
+import { IOrder } from "@/interfaces/order.interface";
 import api from "@/lib/api";
 
 export const OrdersService = {
@@ -18,7 +19,7 @@ export const OrdersService = {
       address,
     });
   },
-  getOrderById: async (id: string) => {
+  getOrderById: async (id: string): Promise<IOrder> => {
     const res = await api.get(`/api/orders/order?id=${id}`);
     return res.data.data;
   },
