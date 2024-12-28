@@ -27,6 +27,7 @@ import { set } from "lodash";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { IOrder } from "@/interfaces/order.interface";
+import { IAddress } from "@/interfaces/address.interface";
 
 export default function CartPage() {
   const { cart, isLoading } = useCartStore();
@@ -39,16 +40,7 @@ export default function CartPage() {
   ];
 
   const [formData, setFormData] = useState<{
-    address: {
-      city: string;
-      country: string;
-      name: { first: string; last: string };
-      phone: string;
-      postalCode: string;
-      region: string;
-      type: string;
-      details: string;
-    };
+    address: IAddress;
     paymentMethod: string;
     saveInfo: boolean;
   }>({

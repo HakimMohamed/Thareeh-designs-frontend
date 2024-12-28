@@ -10,4 +10,5 @@ export interface IAddress {
   postalCode?: string;
   region: string;
   details: string;
+  type: "office" | "home";
 }
