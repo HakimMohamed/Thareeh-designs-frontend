@@ -18,7 +18,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import CartItems from "@/components/CartItems";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomRadio } from "@/components/Radio";
 import { CashOnDeliveryIcon, CreditCardIcon } from "@/components/icons/Icons";
 import { useAuthStore } from "@/stores/auth";
@@ -28,6 +28,8 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { IOrder } from "@/interfaces/order.interface";
 import { IAddress } from "@/interfaces/address.interface";
+import { AddressService } from "@/services/address";
+import { Plus } from "lucide-react";
 
 export default function CartPage() {
   const { cart, isLoading } = useCartStore();
@@ -73,6 +75,22 @@ export default function CartPage() {
 
   const router = useRouter();
 
+  const [addresses, setAddresses] = useState<IAddress[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+  const [addNewAddress, setAddNewAddress] = useState(false);
+
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      const result = await AddressService.getAddresses();
+      setAddresses(result);
+      if (result.length > 0) {
+        setSelectedAddress(result[0]._id ?? null);
+      }
+    };
+
+    fetchAddresses();
+  }, []);
+
   return isLoading ? (
     <Spinner />
   ) : (
@@ -84,6 +102,20 @@ export default function CartPage() {
           event.preventDefault();
           try {
             toast.loading("Submitting...");
+
+            const updatedForm = { ...formData };
+
+            if (addNewAddress) {
+              const foundAddress = addresses.find(
+                (address) => address._id === selectedAddress
+              );
+              if (foundAddress) {
+                updatedForm.address = foundAddress;
+                updatedForm.saveInfo = false;
+              } else {
+                throw new Error("Selected address not found");
+              }
+            }
 
             const response = await OrdersService.createOrder(formData);
 
@@ -107,6 +139,36 @@ export default function CartPage() {
               <h2 className="text-2xl font-semibold mb-4">
                 Shipping Information
               </h2>
+              <Card className="w-full p-5">
+                <RadioGroup value={selectedAddress}>
+                  {addresses &&
+                    addresses.length > 0 &&
+                    addresses.map((address) => (
+                      <Radio
+                        key={address._id}
+                        value={address._id!}
+                        onChange={(e) => setSelectedAddress(e.target.value)}
+                      >
+                        {`${address.name.first} ${address.name.last}, ${address.city}, ${address.region}, ${address.country}, ${address.postalCode},  ${address.type},  ${address.details}`}
+                      </Radio>
+                    ))}
+                </RadioGroup>
+                <Button
+                  size="sm"
+                  className="flex items-center gap-2 mt-4 max-w-[200px]"
+                  onPress={() => {
+                    if (!addNewAddress) {
+                      setSelectedAddress(null);
+                    } else {
+                      setSelectedAddress(addresses[0]._id ?? null);
+                    }
+                    setAddNewAddress(!addNewAddress);
+                  }}
+                >
+                  <Plus className="w-4 h-4" />
+                  Add New Address
+                </Button>
+              </Card>
               <Input
                 isRequired
                 name="email"
@@ -121,123 +183,127 @@ export default function CartPage() {
                 fullWidth
               />
 
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  isRequired
-                  name="address.name.first"
-                  label="First Name"
-                  variant="bordered"
-                  value={formData.address.name.first}
-                  onChange={handleInputChange}
-                  required
-                />
-                <Input
-                  isRequired
-                  name="address.name.last"
-                  label="Last Name"
-                  variant="bordered"
-                  value={formData.address.name.last}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+              {!addNewAddress || (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      isRequired
+                      name="address.name.first"
+                      label="First Name"
+                      variant="bordered"
+                      value={formData.address.name.first}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    <Input
+                      isRequired
+                      name="address.name.last"
+                      label="Last Name"
+                      variant="bordered"
+                      value={formData.address.name.last}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Autocomplete
+                      defaultItems={countries}
+                      label="Country"
+                      name="address.country"
+                      autoComplete="country"
+                      value={formData.address.country}
+                      onInputChange={(key) => {
+                        handleInputChange({
+                          target: { name: "address.country", value: key },
+                        });
+                      }}
+                      onSelectionChange={(key) =>
+                        handleInputChange({
+                          target: { name: "address.country", value: key },
+                        })
+                      }
+                      fullWidth
+                      required
+                    >
+                      {(item) => (
+                        <AutocompleteItem key={item.key}>
+                          {item.label}
+                        </AutocompleteItem>
+                      )}
+                    </Autocomplete>
 
-              <div className="grid grid-cols-2 gap-4">
-                <Autocomplete
-                  defaultItems={countries}
-                  label="Country"
-                  name="address.country"
-                  autoComplete="country"
-                  value={formData.address.country}
-                  onInputChange={(key) => {
-                    handleInputChange({
-                      target: { name: "address.country", value: key },
-                    });
-                  }}
-                  onSelectionChange={(key) =>
-                    handleInputChange({
-                      target: { name: "address.country", value: key },
-                    })
-                  }
-                  fullWidth
-                  required
-                >
-                  {(item) => (
-                    <AutocompleteItem key={item.key}>
-                      {item.label}
-                    </AutocompleteItem>
-                  )}
-                </Autocomplete>
+                    <Input
+                      isRequired
+                      name="address.region"
+                      label="Province"
+                      variant="bordered"
+                      value={formData.address.region}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      isRequired
+                      name="address.city"
+                      label="City"
+                      variant="bordered"
+                      value={formData.address.city}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    <Input
+                      name="address.postalCode"
+                      label="Postal Code"
+                      variant="bordered"
+                      value={formData.address.postalCode}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      name="address.details"
+                      label="Address Details"
+                      placeholder="House number, street name, etc."
+                      variant="bordered"
+                      value={formData.address.details}
+                      onChange={handleInputChange}
+                      isRequired
+                      fullWidth
+                    />
 
-                <Input
-                  isRequired
-                  name="address.region"
-                  label="Province"
-                  variant="bordered"
-                  value={formData.address.region}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+                    <Input
+                      name="address.phone"
+                      label="Phone Number"
+                      placeholder="123-456-7890"
+                      variant="bordered"
+                      value={formData.address.phone}
+                      onChange={handleInputChange}
+                      isRequired
+                      fullWidth
+                    />
+                  </div>
+                  <RadioGroup
+                    color="warning"
+                    label="Address type"
+                    name="address.type"
+                    orientation="horizontal"
+                    value={formData.address.type}
+                    onChange={handleInputChange}
+                  >
+                    <Radio description="All Day Delivery" value="home">
+                      Home
+                    </Radio>
+                    <Radio
+                      description="Delivery Between 9am to 6pm"
+                      value="office"
+                    >
+                      Office
+                    </Radio>
+                  </RadioGroup>
+                </>
+              )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  isRequired
-                  name="address.city"
-                  label="City"
-                  variant="bordered"
-                  value={formData.address.city}
-                  onChange={handleInputChange}
-                  required
-                />
-                <Input
-                  name="address.postalCode"
-                  label="Postal Code"
-                  variant="bordered"
-                  value={formData.address.postalCode}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  name="address.details"
-                  label="Address Details"
-                  placeholder="House number, street name, etc."
-                  variant="bordered"
-                  value={formData.address.details}
-                  onChange={handleInputChange}
-                  isRequired
-                  fullWidth
-                />
-
-                <Input
-                  name="address.phone"
-                  label="Phone Number"
-                  placeholder="123-456-7890"
-                  variant="bordered"
-                  value={formData.address.phone}
-                  onChange={handleInputChange}
-                  isRequired
-                  fullWidth
-                />
-              </div>
-
-              <RadioGroup
-                color="warning"
-                label="Address type"
-                name="address.type"
-                orientation="horizontal"
-                value={formData.address.type}
-                onChange={handleInputChange}
-              >
-                <Radio description="All Day Delivery" value="home">
-                  Home
-                </Radio>
-                <Radio description="Delivery Between 9am to 6pm" value="office">
-                  Office
-                </Radio>
-              </RadioGroup>
               <Checkbox
                 name="saveInfo"
                 isSelected={formData.saveInfo}
@@ -287,7 +353,7 @@ export default function CartPage() {
                 <Divider className=" mx-auto" />
                 <CardBody>
                   <div
-                    className="cart-scrollbar px-1 max-h-[300px] overflow-y-auto"
+                    className="cart-scrollbar px-1 max-h-[600px] overflow-y-auto"
                     style={{
                       scrollbarWidth: "thin",
                       scrollbarColor: "rgba(0,0,0,0.2) transparent",
