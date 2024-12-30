@@ -14,4 +14,9 @@ export const AddressService = {
     const res = await api.patch(`/api/addresses/address`, address);
     return res.data.data;
   },
+
+  addNewAddress: async (address: IAddress): Promise<IAddress[]> => {
+    const res = await api.post(`/api/addresses`, address);
+    return res.data.data;
+  },
 };
