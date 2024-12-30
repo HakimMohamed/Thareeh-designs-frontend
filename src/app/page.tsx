@@ -11,11 +11,12 @@ const fetchItems = async (
   categories: string,
   minPrice: string,
   maxPrice: string,
-  sort: string
+  sort: string,
+  text: string
 ): Promise<{ items: Item[]; count: number }> => {
   try {
     const response = await api.get(`/api/items`, {
-      params: { page, pageSize, categories, minPrice, maxPrice, sort },
+      params: { page, pageSize, categories, minPrice, maxPrice, sort, text },
     });
     return response.data.data;
   } catch (err: unknown) {
@@ -37,12 +38,14 @@ export default async function Page(props: {
   const minPrice = (searchParams.minPrice as string) || "";
   const maxPrice = (searchParams.maxPrice as string) || "";
   const sort = (searchParams.sort as string) || "";
+  const text = (searchParams.text as string) || "";
   const { items, count } = await fetchItems(
     page,
     categories,
     minPrice,
     maxPrice,
-    sort
+    sort,
+    text
   );
 
   const totalPages = Math.ceil(count / pageSize);

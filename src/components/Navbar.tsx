@@ -18,10 +18,14 @@ import {
   NavbarMenu,
   NavbarMenuToggle,
   NavbarMenuItem,
+  Modal,
+  useDisclosure,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
 } from "@nextui-org/react";
 import { Cart } from "./icons/Icons";
 import { PrinterLogo } from "./PrinterLogo";
-import { SearchIcon } from "./SearchIcon";
 import {
   IconHearts,
   IconHomeLink,
@@ -30,13 +34,16 @@ import {
   IconPackage,
 } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useCartStore from "@/stores/cart";
 import { useAuthStore } from "@/stores/auth";
 import { useAuthModal } from "@/stores/auth-modal";
+import Image from "next/image";
 // import { useAuthModal } from "@/stores/auth-modal";
-
+import SearchIcon from "@mui/icons-material/Search";
 import CartModal from "./CartModal";
+import { ItemService } from "@/services/items";
+import { Item } from "@/interfaces/Item.interface";
 
 export default function App() {
   const pathname = usePathname();
@@ -66,6 +73,42 @@ export default function App() {
   }, [fetchCart]);
 
   const [isOpen, setIsOpen] = useState(false);
+  const {
+    onClose: onSearchModalClose,
+    isOpen: isSearchModalOpen,
+    onOpenChange,
+  } = useDisclosure();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Item[]>([]);
+  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
+
+  const handleSearchChange = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (e: any) => {
+      const query = e.target.value;
+      setSearchQuery(query);
+
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+
+      const newTimeout = setTimeout(async () => {
+        try {
+          const result = await ItemService.getItemsSearchResults(query);
+
+          setSearchResults(result);
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+        }
+      }, 500);
+
+      setDebounceTimeout(newTimeout);
+    },
+    [debounceTimeout]
+  );
 
   return (
     <Navbar
@@ -129,6 +172,7 @@ export default function App() {
         </Link>
       </NavbarContent>
       <Input
+        className="hidden sm:block"
         classNames={{
           base: "max-w-[500px] h-10 sm:flex",
           mainWrapper: "h-full",
@@ -138,11 +182,86 @@ export default function App() {
         }}
         placeholder="Search..."
         size="sm"
-        startContent={
-          <SearchIcon size={18} width={undefined} height={undefined} />
-        }
+        startContent={<SearchIcon />}
         type="search"
       />
+
+      <Button
+        startContent={<SearchIcon />}
+        size="sm"
+        variant="light"
+        className="hover:opacity-100 sm:hidden"
+        onPress={() => onOpenChange()}
+      />
+
+      <Modal
+        isOpen={isSearchModalOpen}
+        onClose={onSearchModalClose}
+        placement="top"
+      >
+        <ModalContent>
+          <ModalBody>
+            <Input
+              label="Search"
+              className="mt-4"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              aria-label="Search"
+            />
+            <div className="mt-4">
+              {searchResults.length > 0 ? (
+                <ul className="space-y-4">
+                  {searchResults.map((result) => (
+                    <li key={result._id} className="flex items-center gap-4">
+                      <Image
+                        src={result.image}
+                        alt={result.name}
+                        width={64}
+                        height={64}
+                        className="object-cover"
+                      />
+                      <div>
+                        <h6 className="font-bold">{result.name}</h6>
+                        <p className="text-sm text-gray-500">
+                          {result.category}
+                        </p>
+                        <p className="text-sm">{result.description}</p>
+                        <div className="mt-2">
+                          {result.discount.active && (
+                            <span className="text-sm text-red-500">
+                              Discount: {result.discount.value}%
+                            </span>
+                          )}
+                          <span className="ml-2 text-sm text-gray-700">
+                            Price: ${result.price}
+                          </span>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Start Searching</p>
+              )}
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="primary"
+              onPress={() => {
+                const queryParams = new URLSearchParams(
+                  window.location.href.split("?")[1]
+                );
+                queryParams.set("text", searchQuery);
+                router.push(`/?${queryParams.toString()}`);
+                onSearchModalClose();
+              }}
+            >
+              View
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       <NavbarContent as="div" className="items-center" justify="end">
         <Popover
