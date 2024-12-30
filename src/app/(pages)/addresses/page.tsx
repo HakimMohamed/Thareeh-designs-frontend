@@ -373,6 +373,26 @@ const AddressesPage = () => {
                             placeholder="Enter phone number"
                           />
                         </div>
+                        <RadioGroup
+                          color="warning"
+                          label="Address type"
+                          name="address.type"
+                          orientation="horizontal"
+                          value={editForm?.type}
+                          onChange={(e) =>
+                            handleEditChange("type", e.target.value)
+                          }
+                        >
+                          <Radio description="All Day Delivery" value="home">
+                            Home
+                          </Radio>
+                          <Radio
+                            description="Delivery Between 9am to 6pm"
+                            value="office"
+                          >
+                            Office
+                          </Radio>
+                        </RadioGroup>
                         <div>
                           <label className="block text-gray-700 text-sm font-medium mb-1">
                             Details
@@ -394,6 +414,7 @@ const AddressesPage = () => {
                         <p>{`${address.city}, ${address.country}`}</p>
                         <p>{address.phone}</p>
                         {address.details && <p>{address.details}</p>}
+                        {address.type && <p>{address.type}</p>}
                       </>
                     )}
                   </div>
