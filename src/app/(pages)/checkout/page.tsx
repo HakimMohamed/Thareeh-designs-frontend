@@ -147,7 +147,10 @@ export default function CartPage() {
                       <Radio
                         key={address._id}
                         value={address._id!}
-                        onChange={(e) => setSelectedAddress(e.target.value)}
+                        onChange={(e) => {
+                          setAddNewAddress(false);
+                          setSelectedAddress(e.target.value);
+                        }}
                       >
                         {`${address.name.first} ${address.name.last}, ${address.city}, ${address.region}, ${address.country}, ${address.postalCode},  ${address.type},  ${address.details}`}
                       </Radio>
