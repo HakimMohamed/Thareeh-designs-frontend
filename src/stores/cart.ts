@@ -29,6 +29,7 @@ const useCartStore = create<CartState>((set, get) => ({
     } catch (error) {
       console.log("axios error", error);
       set({ isLoading: false });
+      set({ cart: null });
       return null;
     }
   },

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import useCartStore from "@/stores/cart";
@@ -81,15 +82,28 @@ export default function CartPage() {
 
   useEffect(() => {
     const fetchAddresses = async () => {
-      const result = await AddressService.getAddresses();
-      setAddresses(result);
-      if (result.length > 0) {
-        setSelectedAddress(result[0]._id ?? null);
+      try {
+        const result = await AddressService.getAddresses();
+        setAddresses(result);
+        if (result.length > 0) {
+          setSelectedAddress(result[0]._id ?? null);
+        }
+      } catch (err) {
+        console.log("no cart");
       }
     };
 
     fetchAddresses();
   }, []);
+
+  if (!isLoading && !cart) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
+        <p className="text-lg text-gray-600">Please add items to your cart.</p>
+      </div>
+    );
+  }
 
   return isLoading ? (
     <Spinner />
@@ -105,30 +119,36 @@ export default function CartPage() {
 
             const updatedForm = { ...formData };
 
-            if (addNewAddress) {
-              const foundAddress = addresses.find(
-                (address) => address._id === selectedAddress
-              );
-              if (foundAddress) {
-                updatedForm.address = foundAddress;
-                updatedForm.saveInfo = false;
-              } else {
-                throw new Error("Selected address not found");
-              }
+            const foundAddress = addresses.find(
+              (address) => address._id === selectedAddress
+            );
+            if (foundAddress) {
+              updatedForm.address = foundAddress;
+              updatedForm.saveInfo = false;
             }
 
-            const response = await OrdersService.createOrder(formData);
+            const response = await OrdersService.createOrder(updatedForm);
 
             const order: IOrder = response.data.data;
 
             toast.dismiss(); // Dismiss the loading toast
             toast.success("Order submitted successfully!");
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
             router.push(`/order-confirmation?id=${order._id}`);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
           } catch (err: any) {
-            toast.error("Something went wrong!");
+            console.log(err);
+            if (err?.response?.status === 404) {
+              toast.dismiss(); // Dismiss the loading toast
+              toast.success("Order submitted successfully!");
+              await new Promise((resolve) => setTimeout(resolve, 500));
+
+              router.push(`/orders`);
+            } else {
+              toast.dismiss(); // Dismiss the loading toast
+              toast.error("An error occurred while submitting the order.");
+            }
           }
         }}
       >
