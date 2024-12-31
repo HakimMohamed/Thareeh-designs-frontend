@@ -28,7 +28,6 @@ import {
 import { Cart } from "./icons/Icons";
 import { PrinterLogo } from "./PrinterLogo";
 import {
-  IconHearts,
   IconHomeLink,
   IconLifebuoy,
   IconLogout,
@@ -350,12 +349,6 @@ export default function App() {
                 <div className="flex items-center gap-2">
                   <IconLifebuoy size={24} stroke={1} />
                   <p>Support</p>
-                </div>
-              </DropdownItem>
-              <DropdownItem key="favorites">
-                <div className="flex items-center gap-2">
-                  <IconHearts size={24} stroke={1} />
-                  <p>Favorites</p>
                 </div>
               </DropdownItem>
               <DropdownItem key="logout" color="danger" onPress={logout}>
