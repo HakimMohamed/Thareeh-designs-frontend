@@ -210,7 +210,10 @@ export default function App() {
         {searchQuery && searchResults && searchResults.length > 0 && (
           <Card className="absolute top-full mt-2 w-full sm:w-[500px] z-10">
             <ul className="space-y-4">
-              <ItemsSearchResults searchResults={searchResults} />
+              <ItemsSearchResults
+                searchResults={searchResults}
+                setSearchQuery={setSearchQuery}
+              />
             </ul>
           </Card>
         )}
@@ -240,7 +243,10 @@ export default function App() {
             <div className="mt-4">
               {searchResults.length > 0 ? (
                 <ul className="space-y-4">
-                  <ItemsSearchResults searchResults={searchResults} />
+                  <ItemsSearchResults
+                    searchResults={searchResults}
+                    setSearchQuery={setSearchQuery}
+                  />
                 </ul>
               ) : (
                 <p>Start Searching</p>
