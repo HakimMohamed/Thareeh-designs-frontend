@@ -1,8 +1,8 @@
 import Filters from "../components/Filters";
-import ProductGrid from "../components/ItemCard";
 import { Item } from "../interfaces/Item.interface";
 import api from "../lib/api";
 import PaginationContainer from "../components/Pagination";
+import { ProductGrid } from "@/components/ItemCard";
 
 const pageSize = 10;
 

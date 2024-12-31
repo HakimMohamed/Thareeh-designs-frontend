@@ -23,6 +23,7 @@ import {
   ModalContent,
   ModalBody,
   ModalFooter,
+  Card,
 } from "@nextui-org/react";
 import { Cart } from "./icons/Icons";
 import { PrinterLogo } from "./PrinterLogo";
@@ -38,12 +39,12 @@ import { useCallback, useEffect, useState } from "react";
 import useCartStore from "@/stores/cart";
 import { useAuthStore } from "@/stores/auth";
 import { useAuthModal } from "@/stores/auth-modal";
-import Image from "next/image";
 // import { useAuthModal } from "@/stores/auth-modal";
 import SearchIcon from "@mui/icons-material/Search";
 import CartModal from "./CartModal";
 import { ItemService } from "@/services/items";
 import { Item } from "@/interfaces/Item.interface";
+import ItemsSearchResults from "./ItemsSearch";
 
 export default function App() {
   const pathname = usePathname();
@@ -171,21 +172,49 @@ export default function App() {
           </Button>
         </Link>
       </NavbarContent>
-      <Input
-        className="hidden sm:block"
-        classNames={{
-          base: "max-w-[500px] h-10 sm:flex",
-          mainWrapper: "h-full",
-          input: "text-small",
-          inputWrapper:
-            "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-        }}
-        placeholder="Search..."
-        size="sm"
-        startContent={<SearchIcon />}
-        type="search"
-      />
-
+      <div className="relative flex justify-center">
+        {" "}
+        {/* Use flex and justify-center */}
+        <div className="w-full sm:w-[500px]">
+          {" "}
+          {/* Make input width responsive */}
+          <Input
+            className="hidden sm:block"
+            autoComplete="off"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const queryParams = new URLSearchParams(
+                  window.location.href.split("?")[1]
+                );
+                queryParams.set("text", searchQuery);
+                router.push(`/?${queryParams.toString()}`);
+                onSearchModalClose();
+              }
+            }}
+            classNames={{
+              base: "h-10 w-full",
+              mainWrapper: "h-full",
+              input: "text-small",
+              inputWrapper:
+                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+            }}
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            size="sm"
+            startContent={<SearchIcon />}
+            type="search"
+          />
+        </div>
+        {/* Card showing search results, positioned directly under the input */}
+        {searchQuery && searchResults && searchResults.length > 0 && (
+          <Card className="absolute top-full mt-2 w-full sm:w-[500px] z-10">
+            <ul className="space-y-4">
+              <ItemsSearchResults searchResults={searchResults} />
+            </ul>
+          </Card>
+        )}
+      </div>
       <Button
         startContent={<SearchIcon />}
         size="sm"
@@ -211,34 +240,7 @@ export default function App() {
             <div className="mt-4">
               {searchResults.length > 0 ? (
                 <ul className="space-y-4">
-                  {searchResults.map((result) => (
-                    <li key={result._id} className="flex items-center gap-4">
-                      <Image
-                        src={result.image}
-                        alt={result.name}
-                        width={64}
-                        height={64}
-                        className="object-cover"
-                      />
-                      <div>
-                        <h6 className="font-bold">{result.name}</h6>
-                        <p className="text-sm text-gray-500">
-                          {result.category}
-                        </p>
-                        <p className="text-sm">{result.description}</p>
-                        <div className="mt-2">
-                          {result.discount.active && (
-                            <span className="text-sm text-red-500">
-                              Discount: {result.discount.value}%
-                            </span>
-                          )}
-                          <span className="ml-2 text-sm text-gray-700">
-                            Price: ${result.price}
-                          </span>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
+                  <ItemsSearchResults searchResults={searchResults} />
                 </ul>
               ) : (
                 <p>Start Searching</p>

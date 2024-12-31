@@ -2,9 +2,9 @@ import { Item } from "@/interfaces/Item.interface";
 import api from "@/lib/api";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import ProductGrid from "@/components/ItemCard";
 import { Button } from "@nextui-org/react";
 import AddToCartButton from "@/components/AddToCartButton";
+import { ProductGrid } from "@/components/ItemCard";
 
 async function getProduct(id: string): Promise<Item | null> {
   try {

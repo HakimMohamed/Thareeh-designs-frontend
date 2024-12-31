@@ -86,6 +86,8 @@ const ItemCard: React.FC<Item> = ({
   );
 };
 
+export { ItemCard };
+
 interface ProductGridProps {
   products: Item[];
 }
@@ -108,4 +110,4 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   );
 };
 
-export default ProductGrid;
+export { ProductGrid };
