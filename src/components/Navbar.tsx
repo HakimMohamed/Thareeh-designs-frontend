@@ -171,14 +171,9 @@ export default function App() {
           </Button>
         </Link>
       </NavbarContent>
-      <div className="relative flex justify-center">
-        {" "}
-        {/* Use flex and justify-center */}
+      <div className="relative hidden sm:flex justify-center">
         <div className="w-full sm:w-[500px]">
-          {" "}
-          {/* Make input width responsive */}
           <Input
-            className="hidden sm:block"
             autoComplete="off"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -205,18 +200,19 @@ export default function App() {
             type="search"
           />
         </div>
-        {/* Card showing search results, positioned directly under the input */}
         {searchQuery && searchResults && searchResults.length > 0 && (
           <Card className="absolute top-full mt-2 w-full sm:w-[500px] z-10">
             <ul className="space-y-4">
               <ItemsSearchResults
                 searchResults={searchResults}
                 setSearchQuery={setSearchQuery}
+                onSearchModalClose={onSearchModalClose}
               />
             </ul>
           </Card>
         )}
       </div>
+
       <Button
         startContent={<SearchIcon />}
         size="sm"
@@ -245,6 +241,7 @@ export default function App() {
                   <ItemsSearchResults
                     searchResults={searchResults}
                     setSearchQuery={setSearchQuery}
+                    onSearchModalClose={onSearchModalClose}
                   />
                 </ul>
               ) : (

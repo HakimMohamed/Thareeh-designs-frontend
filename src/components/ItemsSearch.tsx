@@ -6,11 +6,13 @@ import Link from "next/link";
 interface ItemsSearchResultsProps {
   searchResults: Item[];
   setSearchQuery: (query: string) => void;
+  onSearchModalClose: () => void;
 }
 
 export default function ItemsSearchResults({
   searchResults,
   setSearchQuery,
+  onSearchModalClose,
 }: ItemsSearchResultsProps) {
   const resultsRef = useRef<HTMLUListElement>(null);
 
@@ -45,7 +47,10 @@ export default function ItemsSearchResults({
           <li key={result._id} className="cursor-pointer">
             <Link
               href={`/product/${result._id}`}
-              onClick={() => setSearchQuery("")}
+              onClick={() => {
+                onSearchModalClose();
+                setSearchQuery("");
+              }}
               className="flex items-center gap-4 p-4 border rounded-lg hover:shadow-lg transition-shadow"
             >
               <Image
