@@ -4,6 +4,7 @@ import { Item } from "../interfaces/Item.interface";
 import { Link } from "@nextui-org/react";
 import AddToCartButton from "./AddToCartButton";
 import { NoResultsFound } from "./NoItemsFound";
+import ItemQuantity from "./ItemQuantity";
 
 const truncateText = (text: string, length: number) => {
   if (text.length <= length) return text;
@@ -44,6 +45,8 @@ const ItemCard: React.FC<Item> = ({
                 -{discount.value}%
               </div>
             )}
+            {/* New Quantity Badge */}
+            <ItemQuantity itemId={_id} />
           </div>
         )}
       </Link>
