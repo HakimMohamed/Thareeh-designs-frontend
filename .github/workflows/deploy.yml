@@ -59,8 +59,8 @@ jobs:
 
           # Connect to EC2 and set up the application
           ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            cd /home/ubuntu/thareeh-frontend
-            
+            cd /home/ubuntu/thareeh-front
+
             # Extract the archive
             tar -xzf build.tar.gz
 
@@ -72,15 +72,19 @@ jobs:
               npm install -g pm2
             fi
 
+            # Install dependencies on the EC2 instance
+            npm install
+
             # Start or restart the application using PM2
             if ! pm2 describe thareeh-frontend > /dev/null; then
-              pm2 start dist/index.js --name thareeh-frontend
+              pm2 start npm --name "thareeh-frontend" -- run start
             else
               pm2 restart thareeh-frontend
             fi
 
             # Save the PM2 process list
             pm2 save
-            sudo systemctl restart nginx
 
+            # Restart Nginx (if necessary for proxy changes)
+            sudo systemctl restart nginx
           EOF
