@@ -59,7 +59,7 @@ jobs:
 
           # Connect to EC2 and set up the application
           ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            cd /home/ubuntu/thareeh-designs-frontend
+            cd /home/ubuntu/thareeh-frontend
             
             # Extract the archive
             tar -xzf build.tar.gz
