@@ -147,7 +147,7 @@ export default function Filters({
             <Popover isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
               <PopoverTrigger>
                 <Button
-                  className="w-full sm:w-[222px] sm:min-w-[200px] min-w-[200px]"
+                  className="w-full sm:w-[180px] sm:min-w-[180px] min-w-[180px]"
                   startContent={<TuneIcon />}
                   size="sm"
                 >
@@ -193,7 +193,7 @@ export default function Filters({
             <Select
               size="sm"
               defaultSelectedKeys={[sortOption]}
-              className="w-full sm:w-[222px] sm:min-w-[200px] min-w-[200px]"
+              className="w-full sm:w-[180px] sm:min-w-[180px] min-w-[180px]"
               onChange={(event) => handleSortChange(event.target.value)}
             >
               {options.map((option) => (

@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <SignUp />
       <SignIn />
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="w-full">
+      <div className="w-full mb-8">
         <div className="flex flex-col items-center w-full  mx-auto px-4 sm:px-6 lg:px-8">
           {children}
         </div>
