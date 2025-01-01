@@ -59,7 +59,7 @@ jobs:
 
           # Connect to EC2 and set up the application
           ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            cd /home/ubuntu/thareeh-designs-backend
+            cd /home/ubuntu/thareeh-designs-frontend
             
             # Extract the archive
             tar -xzf build.tar.gz
@@ -73,10 +73,10 @@ jobs:
             fi
 
             # Start or restart the application using PM2
-            if ! pm2 describe thareeh-backend > /dev/null; then
-              pm2 start dist/index.js --name thareeh-backend
+            if ! pm2 describe thareeh-frontend > /dev/null; then
+              pm2 start dist/index.js --name thareeh-frontend
             else
-              pm2 restart thareeh-backend
+              pm2 restart thareeh-frontend
             fi
 
             # Save the PM2 process list
