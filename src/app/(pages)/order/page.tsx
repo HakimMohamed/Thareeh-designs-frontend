@@ -59,7 +59,7 @@ const OrderDetailsPage = () => {
 
   if (!orderId) {
     return (
-      <Alert className="max-w-4xl mx-auto mt-8">
+      <Alert className="max-w-4xl mx-auto mt-8" description="error">
         No order ID provided in the URL.
       </Alert>
     );
