@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Clock, Package, MapPin, CreditCard, Loader2 } from "lucide-react";
 import { OrdersService } from "@/services/order";
-import { Alert, Card, CardHeader } from "@nextui-org/react";
+import { Card, CardHeader } from "@nextui-org/react";
 import { CardContent } from "@mui/material";
 import { IOrder } from "@/interfaces/order.interface";
 import Image from "next/image";
@@ -70,15 +70,11 @@ const OrderDetailsPage = () => {
   }
 
   if (error) {
-    return (
-      <Alert variant="destructive" className="max-w-4xl mx-auto mt-8">
-        {error}
-      </Alert>
-    );
+    return <p>{error}</p>;
   }
 
   if (!orderDetails) {
-    return <Alert className="max-w-4xl mx-auto mt-8">Order not found.</Alert>;
+    return <p className="max-w-4xl mx-auto mt-8">Order not found.</p>;
   }
 
   const calculateItemDiscount = (item: IOrder["items"][0]) => {
