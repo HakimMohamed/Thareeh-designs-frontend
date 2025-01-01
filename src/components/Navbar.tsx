@@ -16,7 +16,6 @@ import {
   Badge,
   PopoverContent,
   NavbarMenu,
-  NavbarMenuToggle,
   NavbarMenuItem,
   Modal,
   useDisclosure,
@@ -54,7 +53,6 @@ export default function App() {
     return pathname.startsWith(path);
   };
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuItems = [
     { title: "home", path: "/" },
     { title: "Categories", path: "/categories" },
@@ -113,7 +111,6 @@ export default function App() {
   return (
     <Navbar
       isBordered
-      onMenuOpenChange={setIsMenuOpen}
       classNames={{
         item: [
           "flex",
@@ -151,25 +148,20 @@ export default function App() {
       position="sticky"
     >
       <NavbarContent justify="start">
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="sm:hidden"
-        />
-        <Link href="/">
-          <Button
-            className="bg-transparent rounded transition-colors"
-            size="lg"
-          >
-            <NavbarBrand>
-              <div className="flex items-center">
-                <PrinterLogo />
-                <p className="hidden sm:block font-bold text-inherit">
-                  Thareeh Designs
-                </p>
-              </div>
-            </NavbarBrand>
-          </Button>
-        </Link>
+        <Button
+          className="bg-transparent rounded transition-colors"
+          size="lg"
+          onPress={() => router.push("/")}
+        >
+          <NavbarBrand>
+            <div className="flex items-center">
+              <PrinterLogo />
+              <p className="hidden sm:block font-bold text-inherit">
+                Thareeh Designs
+              </p>
+            </div>
+          </NavbarBrand>
+        </Button>
       </NavbarContent>
       <div className="relative hidden sm:flex justify-center">
         <div className="w-full sm:w-[500px]">
