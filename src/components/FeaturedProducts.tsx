@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import ProductGrid from "@/components/ItemCard";
 import api from "@/lib/api";
 import { Skeleton } from "@nextui-org/react";
+import { ProductGrid } from "./ItemCard";
 
 export default function FeaturedProducts() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
