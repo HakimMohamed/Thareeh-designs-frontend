@@ -28,7 +28,7 @@ jobs:
 
       # Archive the build output along with node_modules
       - name: Archive build output
-        run: tar -czf build.tar.gz .next node_modules package.json package-lock.json images
+        run: tar -czf build.tar.gz .next node_modules package.json package-lock.json public
 
       # Upload artifact using v4
       - name: Upload build artifact
