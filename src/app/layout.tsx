@@ -32,8 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextTopLoader />
-        <Providers>{children}</Providers>
-        <Footer />
+        <div className="min-h-screen flex flex-col justify-between">
+          <Providers>{children}</Providers>
+          <Footer />
+        </div>
       </body>
     </html>
   );
