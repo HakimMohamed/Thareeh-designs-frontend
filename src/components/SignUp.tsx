@@ -9,12 +9,7 @@ import {
   Form,
   InputOtp,
 } from "@nextui-org/react";
-import {
-  MailIcon,
-  GoogleIcon,
-  EyeSlashFilledIcon,
-  EyeFilledIcon,
-} from "./icons/Icons";
+import { MailIcon, EyeSlashFilledIcon, EyeFilledIcon } from "./icons/Icons";
 import { useAuthModal } from "../stores/auth-modal";
 import { useState } from "react";
 import { useAuthStore } from "@/stores/auth";
@@ -103,16 +98,6 @@ export default function SignUp() {
                       Sign up
                     </Button>
                   </div>
-                  <div className="mb-4">
-                    <Button
-                      className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 hover:bg-gray-100"
-                      color="primary"
-                      variant="bordered"
-                    >
-                      {GoogleIcon({ className: "w-5 h-5" })} Sign up with Google
-                    </Button>
-                  </div>
-
                   <p className="text-center text-sm text-gray-600 mb-4">
                     Already have an account?{" "}
                     <span
