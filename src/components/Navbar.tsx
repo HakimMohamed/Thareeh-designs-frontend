@@ -163,8 +163,8 @@ export default function App() {
           </NavbarBrand>
         </Button>
       </NavbarContent>
-      <div className="relative hidden sm:flex justify-center">
-        <div className="w-full sm:w-[500px]">
+      <div className="relative hidden sm:flex md:flex justify-center">
+        <div className="w-full sm:w-[200px] md:w-[300px]">
           <Input
             autoComplete="off"
             onKeyDown={(e) => {
