@@ -286,7 +286,24 @@ export default function App() {
         </Popover>
         {/* User Avatar and Dropdown */}
         <Dropdown placement="bottom-end">
-          <DropdownTrigger>
+          {user ? (
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform"
+                color="secondary"
+                disabled={isLoading}
+                name={user ? user.email.split("@")[0].toUpperCase() : "JH"}
+                style={{
+                  borderRadius: "50%",
+                  width: "35px",
+                  height: "35px",
+                  flexShrink: 0,
+                }}
+              />
+            </DropdownTrigger>
+          ) : (
             <Avatar
               isBordered
               as="button"
@@ -298,7 +315,7 @@ export default function App() {
                   setSignInIsOpen(true);
                 }
               }}
-              name={user ? user.email.split("@")[0].toUpperCase() : "JH"}
+              name={"JH"}
               style={{
                 borderRadius: "50%",
                 width: "35px",
@@ -306,7 +323,7 @@ export default function App() {
                 flexShrink: 0,
               }}
             />
-          </DropdownTrigger>
+          )}
 
           {user && (
             <DropdownMenu aria-label="Profile Actions" variant="flat">
