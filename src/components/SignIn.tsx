@@ -49,9 +49,15 @@ export default function SignIn() {
       await verifyOtp({ email, otp }); // Call the verifyOtp method from the auth store
       setSignInIsOpen(false);
       window.location.reload();
-    } catch (err: string | unknown) {
-      console.log("err");
-      setError(err || "Invalid OTP. Please try again.");
+    } catch (err: any) {
+      console.log(err);
+      if (err.response?.status === 410) {
+        setError("Blocked For 10 minutes due to multiple failed attempts.");
+      } else if (err.response?.status === 403) {
+        setError("Invalid OTP. Please try again.");
+      } else {
+        setError("An unexpected error occurred please contact support");
+      }
     } finally {
       setLoading(false); // Stop loading
     }
@@ -136,7 +142,7 @@ export default function SignIn() {
 
               {step === "otp" && (
                 <Form
-                  className="flex justify-content items-center"
+                  className="flex flex-col justify-center items-center"
                   validationBehavior="native"
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -167,6 +173,14 @@ export default function SignIn() {
                   >
                     Verify OTP
                   </Button>
+                  <Button
+                    className="w-full bg-gray-200 text-black font-medium rounded-lg py-2 mt-2"
+                    onPress={() => setStep("email")}
+                    type="button"
+                  >
+                    Back
+                  </Button>
+                  <p className="text-red-600 mt-2">{(error as string) || ""}</p>
                 </Form>
               )}
             </ModalBody>

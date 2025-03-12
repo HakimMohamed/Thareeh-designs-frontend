@@ -357,7 +357,14 @@ export default function App() {
                   <p>Support</p>
                 </div>
               </DropdownItem>
-              <DropdownItem key="logout" color="danger" onPress={logout}>
+              <DropdownItem
+                key="logout"
+                color="danger"
+                onPress={() => {
+                  logout();
+                  router.refresh();
+                }}
+              >
                 <div className="flex items-center gap-2">
                   <IconLogout size={24} stroke={1} />
                   <p>Log Out</p>

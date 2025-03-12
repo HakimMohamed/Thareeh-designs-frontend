@@ -117,9 +117,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       setTokens(accessToken, refreshToken);
       set({ user });
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || "Something went wrong";
-      return Promise.reject(errorMessage);
+      return Promise.reject(error);
     } finally {
       set({ isLoading: false }); // Ensure loading state is reset
     }
