@@ -6,8 +6,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "www.google.com",
       },
+      {
+        protocol: "https",
+        hostname: "d1lyd5qwhzw3jy.cloudfront.net",
+      },
     ],
-    domains: ["d1lyd5qwhzw3jy.cloudfront.net"],
   },
 };
 
