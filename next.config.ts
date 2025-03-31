@@ -7,6 +7,7 @@ const nextConfig = {
         hostname: "www.google.com",
       },
     ],
+    domains: ["d1lyd5qwhzw3jy.cloudfront.net"],
   },
 };
 
