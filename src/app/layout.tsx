@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import NextTopLoader from "nextjs-toploader";
-import Footer from "../components/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,7 +33,6 @@ export default function RootLayout({
         <NextTopLoader />
         <div className="min-h-screen flex flex-col justify-between">
           <Providers>{children}</Providers>
-          <Footer />
         </div>
       </body>
     </html>
