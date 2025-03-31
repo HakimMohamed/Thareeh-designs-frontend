@@ -1,7 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import { Item } from "../interfaces/Item.interface";
-import { Link } from "@nextui-org/react";
+import { Image, Link } from "@nextui-org/react";
 import AddToCartButton from "./AddToCartButton";
 import { NoResultsFound } from "./NoItemsFound";
 import ItemQuantity from "./ItemQuantity";
@@ -35,10 +34,8 @@ const ItemCard: React.FC<Item> = ({
             <Image
               src={image}
               alt={name}
-              fill
               className="object-cover transform group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              priority={false}
             />
             {discount.active && discount.value > 0 && (
               <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">

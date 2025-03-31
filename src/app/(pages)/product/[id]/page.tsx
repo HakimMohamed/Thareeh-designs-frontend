@@ -1,8 +1,7 @@
 import { Item } from "@/interfaces/Item.interface";
 import api from "@/lib/api";
 import { redirect } from "next/navigation";
-import Image from "next/image";
-import { Button } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import AddToCartButton from "@/components/AddToCartButton";
 import { ProductGrid } from "@/components/ItemCard";
 
@@ -57,9 +56,7 @@ export default async function ProductPage(props: {
               <Image
                 src={product.image}
                 alt={product.name}
-                fill
                 className="object-cover"
-                priority
               />
             </div>
 
