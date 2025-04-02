@@ -49,7 +49,7 @@ export default async function Page(props: {
   );
 
   const totalPages = Math.ceil(count / pageSize);
-
+  console.log(items);
   return (
     <div className="container mx-auto px-4 min-h-screen">
       <div className="max-w-screen-xl mx-auto space-y-6">

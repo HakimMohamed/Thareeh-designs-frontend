@@ -135,7 +135,7 @@ export default function CartPage() {
             toast.success("Order submitted successfully!");
 
             await new Promise((resolve) => setTimeout(resolve, 500));
-            router.push(`/order-confirmation?id=${order._id}`);
+            router.push(`/order?id=${order._id}`);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
           } catch (err: any) {
             console.log(err);

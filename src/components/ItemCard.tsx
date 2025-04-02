@@ -34,16 +34,14 @@ const ItemCard: React.FC<Item> = ({
             <Image
               src={image}
               alt={name}
-              className="object-cover transform group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
             />
-            {discount.active && discount.value > 0 && (
-              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
-                -{discount.value}%
+            <ItemQuantity itemId={_id} />
+            {discount?.active && discount?.value > 0 && (
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg z-10">
+                {discount.value}%
               </div>
             )}
-            {/* New Quantity Badge */}
-            <ItemQuantity itemId={_id} />
           </div>
         )}
       </Link>
