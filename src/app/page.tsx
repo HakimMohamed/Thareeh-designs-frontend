@@ -3,6 +3,7 @@ import { Item } from "../interfaces/Item.interface";
 import api from "../lib/api";
 import PaginationContainer from "../components/Pagination";
 import { ProductGrid } from "@/components/ItemCard";
+import { CategoriesCarousel } from "@/components/CategoriesCarousel";
 
 const pageSize = 10;
 
@@ -49,11 +50,13 @@ export default async function Page(props: {
   );
 
   const totalPages = Math.ceil(count / pageSize);
-  console.log(items);
   return (
     <div className="container mx-auto px-4 min-h-screen">
       <div className="max-w-screen-xl mx-auto space-y-6">
         {/* Filters directly without card wrapping */}
+        <div className="flex justify-center">
+          <CategoriesCarousel />
+        </div>
         <Filters
           itemsCount={count}
           selectedCats={categories}
