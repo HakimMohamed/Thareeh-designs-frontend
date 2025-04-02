@@ -57,13 +57,7 @@ export default async function Page(props: {
         <div className="flex justify-center">
           <CategoriesCarousel />
         </div>
-        <Filters
-          itemsCount={count}
-          selectedCats={categories}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          sort={sort}
-        />
+        <Filters itemsCount={count} sort={sort} />
 
         {/* Products Grid Section */}
         <div>
