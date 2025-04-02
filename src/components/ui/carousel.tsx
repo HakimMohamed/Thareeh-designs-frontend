@@ -260,5 +260,3 @@ export {
   CarouselPrevious,
   CarouselNext,
 }
-
-how about change the next and previous code to make it under the carousel 
