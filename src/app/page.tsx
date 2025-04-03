@@ -4,12 +4,12 @@ import api from "../lib/api";
 import PaginationContainer from "../components/Pagination";
 import { ProductGrid } from "@/components/ItemCard";
 import { CategoriesCarousel } from "@/components/CategoriesCarousel";
+import { ICategory } from "@/interfaces/category.interface";
 
 const pageSize = 10;
 
 const fetchItems = async (
   page: number,
-  categories: string,
   minPrice: string,
   maxPrice: string,
   sort: string,
@@ -17,12 +17,22 @@ const fetchItems = async (
 ): Promise<{ items: Item[]; count: number }> => {
   try {
     const response = await api.get(`/api/items`, {
-      params: { page, pageSize, categories, minPrice, maxPrice, sort, text },
+      params: { page, pageSize, minPrice, maxPrice, sort, text },
     });
     return response.data.data;
   } catch (err: unknown) {
     if (process.env.NODE_ENV === "development") console.error(err);
     return { items: [], count: 0 };
+  }
+};
+
+const fetchCategories = async (): Promise<ICategory[]> => {
+  try {
+    const response = await api.get(`/api/categories`);
+    return response.data.data;
+  } catch (err: unknown) {
+    console.error(err);
+    return [];
   }
 };
 
@@ -35,19 +45,14 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const page = Number(searchParams.page) || 1;
-  const categories = (searchParams.categories as string) || "";
   const minPrice = (searchParams.minPrice as string) || "";
   const maxPrice = (searchParams.maxPrice as string) || "";
   const sort = (searchParams.sort as string) || "";
   const text = (searchParams.text as string) || "";
-  const { items, count } = await fetchItems(
-    page,
-    categories,
-    minPrice,
-    maxPrice,
-    sort,
-    text
-  );
+  const [{ items, count }, categories] = await Promise.all([
+    fetchItems(page, minPrice, maxPrice, sort, text),
+    fetchCategories(),
+  ]);
 
   const totalPages = Math.ceil(count / pageSize);
   return (
@@ -55,7 +60,7 @@ export default async function Page(props: {
       <div className="max-w-screen-xl mx-auto space-y-6">
         {/* Filters directly without card wrapping */}
         <div className="flex justify-center">
-          <CategoriesCarousel />
+          <CategoriesCarousel categories={categories} />
         </div>
         <Filters itemsCount={count} sort={sort} />
 
