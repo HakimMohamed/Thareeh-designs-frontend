@@ -58,7 +58,7 @@ export function CategoriesCarousel() {
       plugins={[plugin.current]}
       className="w-full"
       onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.reset}
+      onMouseLeave={() => plugin.current.play()}
     >
       <CarouselContent className="flex mb-4">
         {categories.map((category) => (
