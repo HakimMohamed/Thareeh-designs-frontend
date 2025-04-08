@@ -70,7 +70,7 @@ export default async function Page(props: {
         </div>
 
         {/* Pagination Section */}
-        {count > 0 && (
+        {totalPages > 1 ? (
           <div className="flex justify-center">
             <div className="bg-white bg-opacity-90 shadow-lg p-4 rounded-xl">
               <PaginationContainer
@@ -79,7 +79,7 @@ export default async function Page(props: {
               />
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
