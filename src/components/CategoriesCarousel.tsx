@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from "@nextui-org/react";
 import { ICategory } from "@/interfaces/category.interface";
+import { useRouter } from "next/navigation";
 
 export function CategoriesCarousel({
   categories,
@@ -19,6 +20,7 @@ export function CategoriesCarousel({
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
   );
+  const router = useRouter();
 
   return (
     <Carousel
@@ -32,6 +34,11 @@ export function CategoriesCarousel({
           <CarouselItem
             key={category._id}
             className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
+            onClick={() =>
+              router.push(
+                `/categories/${category.name.toLowerCase().replace(/\s+/g, "-")}`
+              )
+            }
           >
             <div className="p-1">
               <Card>
