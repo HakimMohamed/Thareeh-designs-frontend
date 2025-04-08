@@ -27,10 +27,11 @@ const options: Selection[] = [
 export default function Filters({
   itemsCount,
   sort,
+  selectedCategory,
 }: {
   itemsCount: number;
-  selectedCats?: string;
   minPrice?: string;
+  selectedCategory?: string;
   maxPrice?: string;
   sort?: string;
 }) {
@@ -41,7 +42,11 @@ export default function Filters({
     setSortOption(key);
     const params = new URLSearchParams(window.location.search);
     params.set("sort", key);
-    router.push(`/?${params.toString()}`);
+    if (selectedCategory) {
+      router.push(`/categories/${selectedCategory}/?${params.toString()}`);
+    } else {
+      router.push(`/?${params.toString()}`);
+    }
   };
 
   return (
@@ -50,7 +55,7 @@ export default function Filters({
         <div className="flex items-center justify-between">
           {/* Left: Stickers title and count */}
           <div className="flex items-center gap-2">
-            <p className="font-bold">Stickers</p>
+            <p className="font-bold text-xl">{"Stickers"}</p>
             <p className="text-slate-500">({itemsCount})</p>
           </div>
           {/* Right: Slider and Sort grouped horizontally */}

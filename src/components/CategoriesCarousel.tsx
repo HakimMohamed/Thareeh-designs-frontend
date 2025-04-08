@@ -50,7 +50,11 @@ export function CategoriesCarousel({
                   <div className="absolute inset-0 bg-black opacity-50 transition-opacity duration-300 group-hover:opacity-30"></div>
                   <div className="relative z-10">
                     <span className="mt-2 text-lg font-medium text-white">
-                      {category.name}
+                      {category.name
+                        .replace(/-/g, " ")
+                        .split(" ")
+                        .map((word) => word[0].toUpperCase() + word.slice(1))
+                        .join(" ")}
                     </span>
                   </div>
                 </div>
