@@ -5,8 +5,6 @@ import PaginationContainer from "@/components/Pagination";
 import Filters from "@/components/Filters";
 import CategoryBanner from "@/components/CategoryBanner";
 import { ICategory } from "@/interfaces/category.interface";
-import { Button } from "@nextui-org/react";
-import Link from "next/link";
 
 const pageSize = 10;
 
@@ -66,13 +64,13 @@ export default async function Page(props: {
   return (
     <div className="container mx-auto px-4 min-h-screen">
       <div className="max-w-screen-xl mx-auto space-y-3">
-        {/* Filters directly without card wrapping */}
-        <Link href="/" className="flex items-center gap-2 mb-4">
-          <Button color="primary">Go Back</Button>
-        </Link>
         {category && <CategoryBanner category={category} />}
 
-        <Filters itemsCount={count} sort={sort} selectedCategory={categoryName} />
+        <Filters
+          itemsCount={count}
+          sort={sort}
+          selectedCategory={categoryName}
+        />
 
         {/* Products Grid Section */}
         <div>

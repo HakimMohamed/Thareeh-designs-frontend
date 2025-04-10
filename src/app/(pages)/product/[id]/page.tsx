@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { Button, Card, Image } from "@nextui-org/react";
 import AddToCartButton from "@/components/AddToCartButton";
 import { ProductGrid } from "@/components/ItemCard";
-import Link from "next/link";
 
 async function getProduct(id: string): Promise<Item | null> {
   try {
@@ -48,14 +47,9 @@ export default async function ProductPage(props: {
     : product.price;
 
   return (
-    <main className="min-h-screen  dark:bg-gray-900">
+    <main className="min-h-screen ">
       <div className="max-w-7xl mx-auto sm:px-4 lg:px-4">
-        <div className="flex justify-start mb-8">
-          <Link href="/">
-            <Button color="primary">Go Back</Button>
-          </Link>
-        </div>
-        <Card className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl shadow-gray-600/50 overflow-hidden">
+        <Card className="rounded-2xl shadow-xl shadow-gray-600/50 overflow-hidden">
           <div className="grid md:grid-cols-2 gap-8 p-8">
             {/* Product Image */}
             <div className="relative rounded-lg overflow-hidden">
