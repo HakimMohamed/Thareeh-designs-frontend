@@ -53,9 +53,16 @@ export default function Filters({
     <Card>
       <CardBody>
         <div className="flex items-center justify-between">
-          {/* Left: Stickers title and count */}
           <div className="flex items-center gap-2">
-            <p className="font-bold text-xl">{"Stickers"}</p>
+            <p className="font-bold text-xl">
+              {selectedCategory
+                ? selectedCategory
+                    .replace(/-/g, " ")
+                    .split(" ")
+                    .map((word) => word[0].toUpperCase() + word.slice(1))
+                    .join(" ")
+                : "Stickers"}
+            </p>
             <p className="text-slate-500">({itemsCount})</p>
           </div>
           {/* Right: Slider and Sort grouped horizontally */}

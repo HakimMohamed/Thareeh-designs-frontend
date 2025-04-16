@@ -3,8 +3,7 @@ import { Item } from "@/interfaces/Item.interface";
 import api from "@/lib/api";
 import PaginationContainer from "@/components/Pagination";
 import Filters from "@/components/Filters";
-import CategoryBanner from "@/components/CategoryBanner";
-import { ICategory } from "@/interfaces/category.interface";
+import Link from "next/link";
 
 const pageSize = 10;
 
@@ -27,17 +26,17 @@ const fetchItems = async (
   }
 };
 
-const fetchCategory = async (category: string): Promise<ICategory | null> => {
-  try {
-    const response = await api.get(`/api/categories/${category}`, {
-      params: { category },
-    });
-    return response.data.data;
-  } catch (err: unknown) {
-    console.error(err);
-    return null;
-  }
-};
+// const fetchCategory = async (category: string): Promise<ICategory | null> => {
+//   try {
+//     const response = await api.get(`/api/categories/${category}`, {
+//       params: { category },
+//     });
+//     return response.data.data;
+//   } catch (err: unknown) {
+//     console.error(err);
+//     return null;
+//   }
+// };
 
 type Params = Promise<{ name: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -55,16 +54,33 @@ export default async function Page(props: {
   const maxPrice = (searchParams.maxPrice as string) || "";
   const sort = (searchParams.sort as string) || "";
   const text = (searchParams.text as string) || "";
-  const [{ items, count }, category] = await Promise.all([
+  const [{ items, count }] = await Promise.all([
     fetchItems(page, minPrice, maxPrice, sort, text, categoryName),
-    fetchCategory(categoryName),
   ]);
 
   const totalPages = Math.ceil(count / pageSize);
   return (
     <div className="container mx-auto px-4 min-h-screen">
-      <div className="max-w-screen-xl mx-auto space-y-3">
-        {category && <CategoryBanner category={category} />}
+      <div className="max-w-screen-xl mx-auto space-y-6">
+        <Link href="/">
+          <span className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+              />
+            </svg>
+            Back to home page
+          </span>
+        </Link>
 
         <Filters
           itemsCount={count}
